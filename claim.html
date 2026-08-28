@@ -12,6 +12,7 @@
 
 <title>THE ROAD PROVIDES — Claim</title>
 
+<!-- LOGO / FAVICON -->
 <link
   rel="icon"
   type="image/png"
@@ -817,6 +818,9 @@ button.cta{
 
   display:block;
 
+  user-select:none;
+  -webkit-user-drag:none;
+
 }
 
 .wallet-name{
@@ -1396,7 +1400,7 @@ footer{
 
 <!-- =================================================
      HEADER
-================================================== -->
+===================================================== -->
 
 <section class="banner">
 
@@ -1412,7 +1416,7 @@ footer{
 
 <!-- =================================================
      PROFILE
-================================================== -->
+===================================================== -->
 
 <div class="profile">
 
@@ -1900,7 +1904,7 @@ footer{
         </strong>
 
         <span>
-          Connect wallet
+          Solana wallet
         </span>
 
       </span>
@@ -2042,7 +2046,6 @@ footer{
   data-step="4"
 >
 
-
   <div class="eyebrow">
 
     04 · YOUR ROAD
@@ -2051,7 +2054,6 @@ footer{
 
 
   <div class="confirm">
-
 
     <div class="small">
 
@@ -2129,6 +2131,7 @@ footer{
         alt="Roadman NFT"
         decoding="async"
         draggable="false"
+        oncontextmenu="return false"
       >
 
 
@@ -2220,11 +2223,6 @@ let currentHandle = "";
 let selectedWallet = "";
 
 let claim = null;
-
-
-/* =====================================================
-   CONNECTED WALLET
-===================================================== */
 
 let connectedWallet = "";
 
@@ -2329,6 +2327,41 @@ function setWalletError(message){
 }
 
 
+function clearWalletVisualState(){
+
+  document
+    .querySelectorAll(
+      ".wallet"
+    )
+    .forEach(
+      button => {
+
+        button.classList.remove(
+          "selected",
+          "connected"
+        );
+
+      }
+    );
+
+
+  $("phantomStatus")
+    .textContent =
+    "CONNECT";
+
+
+  $("solflareStatus")
+    .textContent =
+    "CONNECT";
+
+
+  $("metamaskStatus")
+    .textContent =
+    "CONNECT";
+
+}
+
+
 function setConnectedWallet(
   wallet,
   provider
@@ -2381,45 +2414,12 @@ function setConnectedWallet(
 }
 
 
-function clearConnectedWallet(){
-
-  connectedWallet =
-    "";
-
-  connectedProvider =
-    "";
-
-
-  $("walletInput")
-    .value =
-    "";
-
-
-  $("walletInput")
-    .readOnly =
-    false;
-
-
-  $("walletInput")
-    .style.borderColor =
-    "";
-
-
-  $("connectedWallet")
-    .style.display =
-    "none";
-
-
-  $("verifyBtn")
-    .disabled =
-    true;
-
-}
-
-
 function setWalletButtonConnected(
   walletName
 ){
+
+  clearWalletVisualState();
+
 
   document
     .querySelectorAll(
@@ -2434,6 +2434,7 @@ function setWalletButtonConnected(
         ){
 
           button.classList.add(
+            "selected",
             "connected"
           );
 
@@ -2467,6 +2468,20 @@ function setWalletButtonConnected(
       "CONNECTED";
 
   }
+
+}
+
+
+function setConnectionStatus(message){
+
+  $("verifyStatus")
+    .style.display =
+    "block";
+
+
+  $("verifyStatus")
+    .textContent =
+    message;
 
 }
 
@@ -2750,20 +2765,16 @@ $("sealBtn").onclick =
 
 
 /* =====================================================
-   DIRECT WALLET CONNECTION
+   PHANTOM
 ===================================================== */
 
 async function connectPhantom(){
 
   setWalletError("");
 
-  $("verifyStatus")
-    .style.display =
-    "block";
-
-  $("verifyStatus")
-    .textContent =
-    "> connecting to Phantom...";
+  setConnectionStatus(
+    "> connecting to Phantom..."
+  );
 
 
   try{
@@ -2808,9 +2819,10 @@ async function connectPhantom(){
       );
 
 
-      $("verifyStatus")
-        .textContent =
-        "> Phantom connected.";
+      setConnectionStatus(
+        "> Phantom connected."
+      );
+
 
       return true;
 
@@ -2836,10 +2848,6 @@ async function connectPhantom(){
         deeplink;
 
 
-      $("verifyStatus")
-        .textContent =
-        "> opening Phantom...";
-
       return true;
 
     }
@@ -2857,10 +2865,10 @@ async function connectPhantom(){
     );
 
 
-    $("verifyStatus")
-      .textContent =
+    setConnectionStatus(
       "> " +
-      error.message;
+      error.message
+    );
 
 
     setWalletError(
@@ -2875,17 +2883,17 @@ async function connectPhantom(){
 }
 
 
+/* =====================================================
+   SOLFLARE
+===================================================== */
+
 async function connectSolflare(){
 
   setWalletError("");
 
-  $("verifyStatus")
-    .style.display =
-    "block";
-
-  $("verifyStatus")
-    .textContent =
-    "> connecting to Solflare...";
+  setConnectionStatus(
+    "> connecting to Solflare..."
+  );
 
 
   try{
@@ -2946,9 +2954,10 @@ async function connectSolflare(){
       );
 
 
-      $("verifyStatus")
-        .textContent =
-        "> Solflare connected.";
+      setConnectionStatus(
+        "> Solflare connected."
+      );
+
 
       return true;
 
@@ -2978,10 +2987,6 @@ async function connectSolflare(){
         deeplink;
 
 
-      $("verifyStatus")
-        .textContent =
-        "> opening Solflare...";
-
       return true;
 
     }
@@ -2999,10 +3004,10 @@ async function connectSolflare(){
     );
 
 
-    $("verifyStatus")
-      .textContent =
+    setConnectionStatus(
       "> " +
-      error.message;
+      error.message
+    );
 
 
     setWalletError(
@@ -3017,51 +3022,102 @@ async function connectSolflare(){
 }
 
 
+/* =====================================================
+   METAMASK SOLANA
+===================================================== */
+
 async function connectMetaMask(){
 
   setWalletError("");
 
-  $("verifyStatus")
-    .style.display =
-    "block";
-
-  $("verifyStatus")
-    .textContent =
-    "> connecting to MetaMask...";
+  setConnectionStatus(
+    "> connecting to MetaMask Solana..."
+  );
 
 
   try{
 
+    /*
+     * MetaMask's Solana provider.
+     *
+     * We intentionally DO NOT use
+     * window.ethereum here because that
+     * returns an EVM 0x... account.
+     */
+
+    const provider =
+      window.solana;
+
+
     if(
-      window.ethereum
+      provider &&
+      (
+        provider.isMetaMask ||
+        provider.isMetaMaskSolana ||
+        provider._metamask
+      )
     ){
 
-      const accounts =
-        await window.ethereum.request({
-
-          method:
-            "eth_requestAccounts"
-
-        });
+      let publicKey = null;
 
 
-      const address =
-        accounts?.[0];
+      /*
+       * Some MetaMask Solana integrations
+       * expose connect() directly.
+       */
+
+      if(
+        typeof provider.connect ===
+        "function"
+      ){
+
+        const response =
+          await provider.connect();
+
+
+        publicKey =
+          response
+            ?.publicKey
+            ?.toString() ||
+          provider
+            ?.publicKey
+            ?.toString() ||
+          null;
+
+      }
 
 
       if(
-        !address
+        !publicKey &&
+        typeof provider.getPublicKey ===
+        "function"
+      ){
+
+        publicKey =
+          (
+            await provider.getPublicKey()
+          )
+          ?.toString() ||
+          null;
+
+      }
+
+
+      if(
+        !validSolanaAddress(
+          publicKey
+        )
       ){
 
         throw new Error(
-          "MetaMask did not return an account."
+          "MetaMask connected, but no valid Solana wallet address was returned."
         );
 
       }
 
 
       setConnectedWallet(
-        address,
+        publicKey,
         "MetaMask"
       );
 
@@ -3071,14 +3127,19 @@ async function connectMetaMask(){
       );
 
 
-      $("verifyStatus")
-        .textContent =
-        "> MetaMask connected.";
+      setConnectionStatus(
+        "> MetaMask Solana connected."
+      );
+
 
       return true;
 
     }
 
+
+    /*
+     * Mobile fallback.
+     */
 
     if(
       isMobile()
@@ -3100,31 +3161,27 @@ async function connectMetaMask(){
         deeplink;
 
 
-      $("verifyStatus")
-        .textContent =
-        "> opening MetaMask...";
-
       return true;
 
     }
 
 
     throw new Error(
-      "MetaMask was not detected in this browser."
+      "MetaMask Solana provider was not detected."
     );
 
   }catch(error){
 
     console.error(
-      "METAMASK:",
+      "METAMASK SOLANA:",
       error
     );
 
 
-    $("verifyStatus")
-      .textContent =
+    setConnectionStatus(
       "> " +
-      error.message;
+      error.message
+    );
 
 
     setWalletError(
@@ -3140,7 +3197,7 @@ async function connectMetaMask(){
 
 
 /* =====================================================
-   MANUAL WALLET
+   MANUAL
 ===================================================== */
 
 function enableManualWallet(){
@@ -3148,9 +3205,11 @@ function enableManualWallet(){
   connectedWallet =
     "";
 
-
   connectedProvider =
     "Manual";
+
+
+  clearWalletVisualState();
 
 
   $("walletBox")
@@ -3165,6 +3224,11 @@ function enableManualWallet(){
 
   $("walletInput")
     .value =
+    "";
+
+
+  $("walletInput")
+    .style.borderColor =
     "";
 
 
@@ -3189,6 +3253,11 @@ function enableManualWallet(){
 
   setWalletError("");
 
+
+  setConnectionStatus(
+    "> manual wallet mode."
+  );
+
 }
 
 
@@ -3210,16 +3279,19 @@ document
             button.dataset.wallet;
 
 
-          document
-            .querySelectorAll(
-              ".wallet"
-            )
-            .forEach(
-              b =>
-                b.classList.remove(
-                  "selected"
-                )
-            );
+          if(
+            selectedWallet ===
+            "Manual"
+          ){
+
+            enableManualWallet();
+
+            return;
+
+          }
+
+
+          clearWalletVisualState();
 
 
           button.classList.add(
@@ -3230,6 +3302,41 @@ document
           $("walletBox")
             .style.display =
             "block";
+
+
+          /*
+           * Prevent the old wallet
+           * from remaining active visually.
+           */
+
+          connectedWallet =
+            "";
+
+          connectedProvider =
+            "";
+
+
+          $("walletInput")
+            .value =
+            "";
+
+          $("walletInput")
+            .readOnly =
+            false;
+
+          $("walletInput")
+            .style.borderColor =
+            "";
+
+
+          $("connectedWallet")
+            .style.display =
+            "none";
+
+
+          $("verifyBtn")
+            .disabled =
+            true;
 
 
           if(
@@ -3267,16 +3374,6 @@ document
 
           }
 
-
-          if(
-            selectedWallet ===
-            "Manual"
-          ){
-
-            enableManualWallet();
-
-          }
-
         };
 
     }
@@ -3291,6 +3388,11 @@ $("walletInput")
   .addEventListener(
     "input",
     function(){
+
+      /*
+       * Only Manual mode can edit
+       * the wallet address.
+       */
 
       if(
         connectedProvider !==
@@ -3672,6 +3774,119 @@ function loadNFT(n){
 
 
   tryNext();
+
+}
+
+
+/* =====================================================
+   NFT PROTECTION
+===================================================== */
+
+const nftFrame =
+  document.querySelector(
+    ".nft-frame"
+  );
+
+
+const nftImg =
+  $("nftImg");
+
+
+if(nftFrame){
+
+  nftFrame.addEventListener(
+    "contextmenu",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "dragstart",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "selectstart",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "copy",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "cut",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "touchstart",
+    function(event){
+
+      if(
+        event.touches &&
+        event.touches.length ===
+        1
+      ){
+
+        event.preventDefault();
+
+      }
+
+    },
+    {
+      passive:false
+    }
+  );
+
+}
+
+
+if(nftImg){
+
+  nftImg.addEventListener(
+    "contextmenu",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftImg.addEventListener(
+    "dragstart",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
 
 }
 
