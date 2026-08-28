@@ -1,4 +1,3 @@
-```javascript
 const { neon } = require("@neondatabase/serverless");
 
 const TOTAL_SPOTS = 100;
@@ -7,7 +6,9 @@ const TOTAL_SPOTS = 100;
 // CONFIG
 // =====================================================
 
-// MANTER TRUE DURANTE OS TESTES
+// TEST MODE
+// TRUE = permite testar sem possuir $ROAD
+// FALSE = usa a verificação real
 const TEST_MODE = true;
 
 const TEST_KEY =
@@ -261,7 +262,6 @@ async function getRandomAvailableSpot(sql) {
 
   const available =
     await sql`
-
       SELECT
         spot
 
@@ -277,8 +277,7 @@ async function getRandomAvailableSpot(sql) {
         FROM roadman_claims r
 
         WHERE
-          r.spot =
-          s.spot
+          r.spot = s.spot
 
       )
 
@@ -286,12 +285,15 @@ async function getRandomAvailableSpot(sql) {
         RANDOM()
 
       LIMIT 1
-
     `;
 
 
-  if (!available.length) {
+  if (
+    !available.length
+  ) {
+
     return null;
+
   }
 
 
@@ -307,7 +309,6 @@ async function getRandomAvailableSpot(sql) {
 // =====================================================
 
 export default async function handler(req, res) {
-
 
   // ===================================================
   // OPTIONS
@@ -494,7 +495,6 @@ export default async function handler(req, res) {
 
     const existingHandle =
       await sql`
-
         SELECT
 
           id,
@@ -513,7 +513,6 @@ export default async function handler(req, res) {
           LOWER(${xHandle})
 
         LIMIT 1
-
       `;
 
 
@@ -547,7 +546,6 @@ export default async function handler(req, res) {
 
     const existingWallet =
       await sql`
-
         SELECT
 
           id,
@@ -565,7 +563,6 @@ export default async function handler(req, res) {
           ${wallet}
 
         LIMIT 1
-
       `;
 
 
@@ -763,7 +760,6 @@ export default async function handler(req, res) {
 
     const inserted =
       await sql`
-
         INSERT INTO roadman_claims
         (
 
@@ -837,7 +833,6 @@ export default async function handler(req, res) {
           holding_status,
 
           nft_status
-
       `;
 
 
@@ -947,9 +942,9 @@ export default async function handler(req, res) {
     );
 
 
-    // ===============================================
+    // =============================================
     // UNIQUE CONSTRAINT
-    // ===============================================
+    // =============================================
 
     if (
       error?.code ===
@@ -973,9 +968,9 @@ export default async function handler(req, res) {
     }
 
 
-    // ===============================================
+    // =============================================
     // DATABASE ERROR
-    // ===============================================
+    // =============================================
 
     return json(
       res,
@@ -994,4 +989,3 @@ export default async function handler(req, res) {
   }
 
 }
-```
