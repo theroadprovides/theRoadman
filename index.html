@@ -1026,6 +1026,16 @@ button.cta{
 
   overflow:hidden;
 
+  /*
+   * Proteção visual/interativa.
+   */
+  user-select:none;
+  -webkit-user-select:none;
+
+  -webkit-touch-callout:none;
+
+  -webkit-user-drag:none;
+
 }
 
 .nft-img{
@@ -1045,6 +1055,47 @@ button.cta{
   background:#050505;
 
   image-rendering:auto;
+
+  /*
+   * Proteção contra seleção,
+   * arraste e toque prolongado.
+   */
+  user-select:none;
+  -webkit-user-select:none;
+
+  -webkit-user-drag:none;
+
+  -webkit-touch-callout:none;
+
+  pointer-events:none;
+
+  -webkit-tap-highlight-color:transparent;
+
+}
+
+.nft-frame::after{
+
+  content:"";
+
+  position:absolute;
+
+  inset:5px;
+
+  z-index:5;
+
+  border-radius:8px;
+
+  background:transparent;
+
+  pointer-events:auto;
+
+  user-select:none;
+
+  -webkit-user-select:none;
+
+  -webkit-touch-callout:none;
+
+  -webkit-user-drag:none;
 
 }
 
@@ -1363,6 +1414,7 @@ footer{
       src="desert_roadman_badge.png"
       alt="The Roadman"
       draggable="false"
+      oncontextmenu="return false"
     >
 
   </div>
@@ -1464,6 +1516,7 @@ footer{
     <button
       class="marker active"
       data-step="1"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1478,6 +1531,7 @@ footer{
     <button
       class="marker"
       data-step="2"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1492,6 +1546,7 @@ footer{
     <button
       class="marker"
       data-step="3"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1506,6 +1561,7 @@ footer{
     <button
       class="marker"
       data-step="4"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1594,6 +1650,7 @@ footer{
     <button
       class="cta accent"
       id="enterBtn"
+      type="button"
     >
 
       Enter
@@ -2041,7 +2098,11 @@ footer{
   <div class="nft">
 
 
-    <div class="nft-frame">
+    <div
+      class="nft-frame"
+      id="nftFrame"
+      oncontextmenu="return false"
+    >
 
 
       <img
@@ -2050,6 +2111,7 @@ footer{
         alt="Roadman NFT"
         decoding="async"
         draggable="false"
+        oncontextmenu="return false"
       >
 
 
@@ -2114,21 +2176,17 @@ footer{
 
 <script>
 
-
 /* =====================================================
    CONFIG
 ===================================================== */
 
 const TOTAL = 100;
 
-
 const API_SPOTS =
   "/api/spots";
 
-
 const API_CLAIM =
   "/api/claim";
-
 
 const TEST_KEY =
   "ROADMAN_TEST_2026";
@@ -2964,6 +3022,165 @@ function loadNFT(n){
   tryNext();
 
 }
+
+
+/* =====================================================
+   NFT PROTECTION
+===================================================== */
+
+const nftFrame =
+  $("nftFrame");
+
+
+const nftImg =
+  $("nftImg");
+
+
+if(nftFrame){
+
+  nftFrame.addEventListener(
+    "contextmenu",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "dragstart",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "selectstart",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "copy",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "cut",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftFrame.addEventListener(
+    "touchstart",
+    function(event){
+
+      /*
+       * Impede o gesto padrão de
+       * pressionar e segurar a imagem
+       * em navegadores móveis.
+       */
+      if(
+        event.touches &&
+        event.touches.length === 1
+      ){
+
+        event.preventDefault();
+
+      }
+
+    },
+    {
+      passive:false
+    }
+  );
+
+}
+
+
+if(nftImg){
+
+  nftImg.addEventListener(
+    "contextmenu",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+
+  nftImg.addEventListener(
+    "dragstart",
+    function(event){
+
+      event.preventDefault();
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   GLOBAL PROTECTION
+===================================================== */
+
+document.addEventListener(
+  "dragstart",
+  function(event){
+
+    if(
+      event.target ===
+        nftImg ||
+      event.target.closest?.(
+        "#nftFrame"
+      )
+    ){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  "contextmenu",
+  function(event){
+
+    if(
+      event.target ===
+        nftImg ||
+      event.target.closest?.(
+        "#nftFrame"
+      )
+    ){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
 
 
 /* =====================================================
