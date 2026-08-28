@@ -1,14 +1,40 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
 <title>THE ROAD PROVIDES — The First 100</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- LOGO / FAVICON -->
+<link
+  rel="icon"
+  type="image/png"
+  href="desert_roadman_badge.png"
+>
 
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link
+  rel="preconnect"
+  href="https://fonts.googleapis.com"
+>
+
+<link
+  rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin
+>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+>
 
 <style>
 
@@ -45,6 +71,12 @@ body{
 body{
   overflow:hidden;
   overscroll-behavior:none;
+
+  /*
+   * Proteção contra seleção de conteúdo.
+   */
+  user-select:none;
+  -webkit-user-select:none;
 }
 
 .wrap{
@@ -156,6 +188,12 @@ body{
   background:var(--cell);
 
   isolation:isolate;
+
+  /*
+   * Proteção contra seleção.
+   */
+  user-select:none;
+  -webkit-user-select:none;
 }
 
 .tile:hover{
@@ -245,11 +283,18 @@ body{
 
   backface-visibility:hidden;
 
-  /*
-   * Mantém a imagem estável durante
-   * o carregamento e o zoom.
-   */
   contain:paint;
+
+  /*
+   * Proteção contra seleção,
+   * arraste e menu de contexto.
+   */
+  user-select:none;
+  -webkit-user-select:none;
+
+  -webkit-user-drag:none;
+
+  pointer-events:auto;
 }
 
 .tile:hover .content{
@@ -277,13 +322,43 @@ body{
 
 
 /* =====================================================
+   PROTECTION LAYER
+===================================================== */
+
+.protection-layer{
+
+  position:absolute;
+
+  inset:0;
+
+  z-index:4;
+
+  background:
+    transparent;
+
+  /*
+   * Permite que o zoom visual
+   * continue funcionando no tile,
+   * mas impede interação direta
+   * com a superfície da imagem.
+   */
+  user-select:none;
+  -webkit-user-select:none;
+
+  -webkit-user-drag:none;
+
+  pointer-events:auto;
+}
+
+
+/* =====================================================
    NUMBER
 ===================================================== */
 
 .num{
   position:absolute;
 
-  z-index:3;
+  z-index:5;
 
   left:3px;
   bottom:2px;
@@ -307,6 +382,9 @@ body{
 
   transition:
     opacity .15s;
+
+  user-select:none;
+  -webkit-user-select:none;
 }
 
 .tile:hover .num{
@@ -337,6 +415,9 @@ body{
 
   transition:
     opacity .15s;
+
+  user-select:none;
+  -webkit-user-select:none;
 }
 
 
@@ -544,6 +625,7 @@ body{
 }
 
 </style>
+
 </head>
 
 
@@ -635,15 +717,8 @@ const IMAGE_FOLDER =
   "images/";
 
 const API =
-  "/.netlify/functions/spots";
+  "/api/spots";
 
-/*
- * Número de imagens carregadas
- * simultaneamente.
- *
- * Um valor moderado evita travar
- * celular e navegador.
- */
 const LOAD_CONCURRENCY = 12;
 
 
@@ -744,7 +819,6 @@ function loadImage(tile){
 
       }
 
-
       if(
         tile.dataset.loading ===
           "true"
@@ -755,7 +829,6 @@ function loadImage(tile){
         return;
 
       }
-
 
       tile.dataset.loading =
         "true";
@@ -813,6 +886,7 @@ function loadImage(tile){
             empty.style.opacity =
               "0";
 
+
             setTimeout(
               function(){
 
@@ -848,10 +922,6 @@ function loadImage(tile){
         };
 
 
-      /*
-       * Mantém a referência da imagem
-       * disponível até o onload.
-       */
       image.src =
         src;
 
@@ -899,6 +969,16 @@ function createTile(number){
     "content";
 
 
+  const protection =
+    document.createElement(
+      "div"
+    );
+
+
+  protection.className =
+    "protection-layer";
+
+
   const num =
     document.createElement(
       "div"
@@ -930,6 +1010,7 @@ function createTile(number){
 
   tile.append(
     content,
+    protection,
     num,
     empty
   );
@@ -966,16 +1047,143 @@ for(
 
 
 /* =====================================================
-   FAST IMAGE PRELOAD
+   PROTECTION
 ===================================================== */
 
 /*
- * Carrega as imagens em grupos paralelos.
- *
- * Diferentemente do IntersectionObserver,
- * isso funciona muito melhor aqui porque
- * a galeria inteira já está dentro da viewport.
+ * Impede menu de contexto,
+ * arraste e seleção dentro
+ * da galeria.
  */
+
+document.addEventListener(
+  "contextmenu",
+  function(event){
+
+    event.preventDefault();
+
+  }
+);
+
+
+document.addEventListener(
+  "dragstart",
+  function(event){
+
+    event.preventDefault();
+
+  }
+);
+
+
+document.addEventListener(
+  "selectstart",
+  function(event){
+
+    event.preventDefault();
+
+  }
+);
+
+
+/*
+ * Impede alguns atalhos comuns
+ * usados para salvar/copiar
+ * o conteúdo da página.
+ */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    const key =
+      String(
+        event.key || ""
+      ).toLowerCase();
+
+
+    const blocked =
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      [
+        "s",
+        "u",
+        "c",
+        "p"
+      ].includes(
+        key
+      );
+
+
+    if(blocked){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
+
+
+/*
+ * Protege também os tiles
+ * individualmente.
+ */
+
+document
+  .querySelectorAll(
+    ".tile"
+  )
+  .forEach(
+    tile => {
+
+      tile.addEventListener(
+        "contextmenu",
+        function(event){
+
+          event.preventDefault();
+
+        }
+      );
+
+
+      tile.addEventListener(
+        "dragstart",
+        function(event){
+
+          event.preventDefault();
+
+        }
+      );
+
+
+      tile.addEventListener(
+        "mousedown",
+        function(event){
+
+          /*
+           * Bloqueia botão direito.
+           */
+          if(
+            event.button === 2
+          ){
+
+            event.preventDefault();
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+/* =====================================================
+   FAST IMAGE PRELOAD
+===================================================== */
 
 async function preloadAllImages(){
 
@@ -1047,11 +1255,6 @@ async function preloadAllImages(){
 
 loadClaims();
 
-
-/*
- * Inicia o carregamento das imagens
- * imediatamente após montar a grade.
- */
 preloadAllImages();
 
 
@@ -1068,3 +1271,4 @@ setInterval(
 
 </body>
 </html>
+```
