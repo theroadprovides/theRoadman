@@ -1,0 +1,2995 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<title>THE ROAD PROVIDES — Claim</title>
+
+<!-- LOGO / FAVICON -->
+<link
+  rel="icon"
+  type="image/png"
+  href="desert_roadman_badge.png"
+>
+
+<link
+  rel="preconnect"
+  href="https://fonts.googleapis.com"
+>
+
+<link
+  rel="preconnect"
+  href="https://fonts.gstatic.com"
+  crossorigin
+>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+>
+
+<style>
+
+:root{
+
+  --bg:#000;
+  --raise:#16181c;
+  --border:#2f3336;
+
+  --ink:#e7e9ea;
+  --dim:#71767b;
+
+  --blue:#1d9bf0;
+  --green:#00ba7c;
+  --red:#f4212e;
+
+  --display:'Anton',sans-serif;
+  --body:'Inter',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+
+}
+
+*{
+
+  box-sizing:border-box;
+
+  margin:0;
+  padding:0;
+
+}
+
+html,
+body{
+
+  width:100%;
+  min-height:100%;
+
+  background:var(--bg);
+
+  color:var(--ink);
+
+  font-family:var(--body);
+
+}
+
+body{
+
+  overflow-x:hidden;
+
+}
+
+.wrap{
+
+  width:min(700px,100%);
+
+  min-height:100svh;
+
+  margin:auto;
+
+  padding-bottom:12px;
+
+}
+
+
+/* =====================================================
+   BANNER
+===================================================== */
+
+.banner{
+
+  height:clamp(
+    135px,
+    22svh,
+    180px
+  );
+
+  position:relative;
+
+  display:grid;
+
+  place-items:center;
+
+  overflow:hidden;
+
+  border-bottom:
+    1px solid var(--border);
+
+}
+
+.banner:before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+
+    radial-gradient(
+      ellipse 65% 110% at 30% 20%,
+      rgba(255,255,255,.055),
+      transparent 62%
+    ),
+
+    repeating-linear-gradient(
+      115deg,
+      rgba(255,255,255,.018) 0,
+      transparent 2px,
+      transparent 40px
+    );
+
+}
+
+.banner h1{
+
+  position:relative;
+
+  font:
+    clamp(36px,8vw,58px)/.92
+    var(--display);
+
+  text-align:center;
+
+  letter-spacing:.01em;
+
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+.profile{
+
+  display:flex;
+
+  align-items:flex-end;
+
+  padding:0 22px;
+
+  margin-top:-27px;
+
+  position:relative;
+
+}
+
+.avatar{
+
+  width:62px;
+  height:62px;
+
+  border-radius:50%;
+
+  background:var(--raise);
+
+  border:
+    3px solid var(--border);
+
+  display:grid;
+
+  place-items:center;
+
+  overflow:hidden;
+
+}
+
+.avatar img{
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  display:block;
+
+  border-radius:50%;
+
+}
+
+.identity{
+
+  padding:10px 22px 0;
+
+}
+
+.status{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:7px;
+
+  font:
+    10.5px
+    var(--mono);
+
+  letter-spacing:.06em;
+
+  color:var(--green);
+
+  margin-bottom:5px;
+
+}
+
+.status:before{
+
+  content:"";
+
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:var(--green);
+
+}
+
+.name{
+
+  font-size:19px;
+
+  font-weight:800;
+
+}
+
+.handle{
+
+  font-size:12.5px;
+
+  color:var(--dim);
+
+  margin:2px 0 7px;
+
+}
+
+.bio{
+
+  font-size:13px;
+
+  line-height:1.45;
+
+}
+
+.bio b{
+
+  color:var(--blue);
+
+}
+
+
+/* =====================================================
+   LINKS
+===================================================== */
+
+.links{
+
+  display:flex;
+
+  gap:8px;
+
+  margin:10px 22px 0;
+
+}
+
+.links a{
+
+  flex:1;
+
+  text-align:center;
+
+  text-decoration:none;
+
+  border-radius:999px;
+
+  padding:8px 12px;
+
+  font-size:11.5px;
+
+  font-weight:700;
+
+}
+
+.x{
+
+  border:
+    1px solid var(--border);
+
+  color:var(--ink);
+
+}
+
+.roadbtn{
+
+  background:var(--blue);
+
+  color:#fff;
+
+}
+
+
+/* =====================================================
+   ROAD PROGRESS
+===================================================== */
+
+.road{
+
+  padding:18px 22px 0;
+
+}
+
+.line{
+
+  height:2px;
+
+  background:var(--border);
+
+  margin:0 12px;
+
+  position:relative;
+
+}
+
+.fill{
+
+  position:absolute;
+
+  left:0;
+  top:0;
+
+  height:100%;
+
+  width:8.33%;
+
+  background:var(--blue);
+
+  transition:.25s;
+
+}
+
+.markers{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  margin-top:-8px;
+
+}
+
+.marker{
+
+  border:0;
+
+  background:none;
+
+  color:inherit;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:6px;
+
+  font:
+    8.5px
+    var(--mono);
+
+  text-transform:uppercase;
+
+  cursor:pointer;
+
+}
+
+.dot{
+
+  width:15px;
+  height:15px;
+
+  border-radius:50%;
+
+  border:
+    2px solid var(--border);
+
+  background:#000;
+
+}
+
+.marker.active .dot{
+
+  background:var(--blue);
+
+  border-color:var(--blue);
+
+}
+
+.marker.done .dot{
+
+  border-color:var(--blue);
+
+}
+
+.marker.done .dot:after{
+
+  content:"";
+
+  display:block;
+
+  width:5px;
+  height:5px;
+
+  border-radius:50%;
+
+  background:var(--blue);
+
+  margin:3px;
+
+}
+
+.marker-label{
+
+  color:var(--dim);
+
+}
+
+.marker.active .marker-label,
+.marker.done .marker-label{
+
+  color:var(--ink);
+
+}
+
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+.panel{
+
+  margin:20px 22px 0;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:16px;
+
+  background:var(--raise);
+
+  padding:22px;
+
+  min-height:310px;
+
+}
+
+.step{
+
+  display:none;
+
+}
+
+.step.active{
+
+  display:block;
+
+  animation:
+    in .22s ease;
+
+}
+
+@keyframes in{
+
+  from{
+
+    opacity:0;
+
+    transform:
+      translateY(4px);
+
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:none;
+
+  }
+
+}
+
+.eyebrow{
+
+  font:
+    10.5px
+    var(--mono);
+
+  color:var(--blue);
+
+  letter-spacing:.08em;
+
+  margin-bottom:7px;
+
+}
+
+.step h2{
+
+  font:
+    23px/1
+    var(--display);
+
+  text-transform:uppercase;
+
+  margin-bottom:9px;
+
+}
+
+.step p{
+
+  font-size:13px;
+
+  line-height:1.5;
+
+  color:var(--dim);
+
+  margin-bottom:16px;
+
+}
+
+.terminal{
+
+  font:
+    11px/1.8
+    var(--mono);
+
+  color:var(--dim);
+
+  margin-bottom:16px;
+
+}
+
+.ok{
+
+  color:var(--green);
+
+}
+
+.ready{
+
+  color:var(--blue);
+
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.field{
+
+  display:flex;
+
+  gap:8px;
+
+}
+
+.field input{
+
+  flex:1;
+
+  min-width:0;
+
+}
+
+input{
+
+  background:#000;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:10px;
+
+  color:var(--ink);
+
+  font:
+    13px
+    var(--mono);
+
+  padding:11px 13px;
+
+  outline:0;
+
+  width:100%;
+
+  transition:.2s;
+
+}
+
+input:focus{
+
+  border-color:var(--blue);
+
+}
+
+input.invalid{
+
+  border-color:var(--red);
+
+  animation:
+    shake .25s;
+
+}
+
+@keyframes shake{
+
+  25%{
+
+    transform:
+      translateX(-4px);
+
+  }
+
+  75%{
+
+    transform:
+      translateX(4px);
+
+  }
+
+}
+
+button.cta{
+
+  border:0;
+
+  border-radius:999px;
+
+  padding:11px 19px;
+
+  font:
+    700 12px
+    var(--body);
+
+  cursor:pointer;
+
+}
+
+.accent{
+
+  background:var(--blue);
+
+  color:#fff;
+
+}
+
+.accent:disabled{
+
+  opacity:.45;
+
+  cursor:not-allowed;
+
+}
+
+.ghost{
+
+  background:transparent;
+
+  color:var(--ink);
+
+  border:
+    1px solid var(--border)!important;
+
+}
+
+.nav{
+
+  display:flex;
+
+  gap:8px;
+
+  margin-top:8px;
+
+}
+
+.nav>*{
+
+  flex:1;
+
+}
+
+
+/* =====================================================
+   WALLET
+===================================================== */
+
+.wallets{
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:8px;
+
+  margin-bottom:13px;
+
+}
+
+.wallet{
+
+  background:#000;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:10px;
+
+  color:var(--ink);
+
+  padding:12px;
+
+  text-align:left;
+
+  font-size:12px;
+
+  cursor:pointer;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  transition:
+    border-color .2s,
+    background .2s,
+    transform .15s;
+
+}
+
+.wallet:hover{
+
+  border-color:#555;
+
+}
+
+.wallet:active{
+
+  transform:scale(.98);
+
+}
+
+.wallet.selected{
+
+  border-color:var(--blue);
+
+  background:
+    rgba(29,155,240,.07);
+
+}
+
+.wallet-logo{
+
+  width:26px;
+  height:26px;
+
+  flex:0 0 26px;
+
+  object-fit:contain;
+
+  display:block;
+
+}
+
+.wallet-name{
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  gap:2px;
+
+}
+
+.wallet-name strong{
+
+  font-size:12px;
+
+  font-weight:700;
+
+}
+
+.wallet-name span{
+
+  font:
+    8.5px
+    var(--mono);
+
+  color:var(--dim);
+
+}
+
+.wallet.manual{
+
+  justify-content:flex-start;
+
+}
+
+.manual-icon{
+
+  width:26px;
+  height:26px;
+
+  flex:0 0 26px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:7px;
+
+  display:grid;
+
+  place-items:center;
+
+  font-size:13px;
+
+  color:var(--dim);
+
+}
+
+.hint{
+
+  font:
+    10.5px
+    var(--mono);
+
+  color:var(--dim);
+
+  margin-bottom:7px;
+
+}
+
+.error{
+
+  color:var(--red);
+
+  font:
+    10.5px
+    var(--mono);
+
+  margin-top:7px;
+
+  display:none;
+
+}
+
+
+/* =====================================================
+   CONFIRM
+===================================================== */
+
+.confirm{
+
+  text-align:center;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:13px;
+
+  padding:17px;
+
+  margin-bottom:12px;
+
+}
+
+.small{
+
+  font:
+    10px
+    var(--mono);
+
+  color:var(--dim);
+
+  text-transform:uppercase;
+
+  letter-spacing:.08em;
+
+}
+
+.spot{
+
+  font:
+    36px
+    var(--display);
+
+  margin:5px 0 10px;
+
+}
+
+.rows{
+
+  border-top:
+    1px solid var(--border);
+
+  padding-top:8px;
+
+  font:
+    10.5px
+    var(--mono);
+
+  text-align:left;
+
+}
+
+.rows div{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  padding:4px 0;
+
+  color:var(--dim);
+
+}
+
+.rows span:last-child{
+
+  color:var(--ink);
+
+  text-align:right;
+
+  max-width:70%;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+}
+
+.green{
+
+  color:var(--green)!important;
+
+}
+
+
+/* =====================================================
+   NFT
+===================================================== */
+
+.nft{
+
+  text-align:center;
+
+}
+
+.nft-frame{
+
+  width:min(
+    220px,
+    55vw
+  );
+
+  aspect-ratio:1;
+
+  margin:
+    0 auto 9px;
+
+  padding:5px;
+
+  border:
+    1px solid var(--blue);
+
+  border-radius:12px;
+
+  background:#050505;
+
+  box-shadow:
+    0 0 25px
+    rgba(29,155,240,.14);
+
+  overflow:hidden;
+
+}
+
+.nft-img{
+
+  width:100%;
+
+  height:100%;
+
+  display:block;
+
+  border-radius:8px;
+
+  object-fit:cover;
+
+  object-position:center;
+
+  background:#050505;
+
+  image-rendering:auto;
+
+}
+
+.nft-fallback{
+
+  width:100%;
+  height:100%;
+
+  display:none;
+
+  place-items:center;
+
+  font:
+    10px
+    var(--mono);
+
+  color:var(--dim);
+
+}
+
+.nft-title{
+
+  font:
+    18px
+    var(--display);
+
+  text-transform:uppercase;
+
+}
+
+.nft-sub{
+
+  font-size:11px;
+
+  color:var(--dim);
+
+  margin-top:3px;
+
+}
+
+.bottom-action{
+
+  margin-top:10px;
+
+  width:100%;
+
+}
+
+.rule{
+
+  font:
+    10px/1.5
+    var(--mono);
+
+  color:var(--dim);
+
+  margin-top:12px;
+
+  border-top:
+    1px solid var(--border);
+
+  padding-top:10px;
+
+}
+
+.rule strong{
+
+  color:var(--ink);
+
+}
+
+
+/* =====================================================
+   TEST MODE
+===================================================== */
+
+.test-mode{
+
+  display:none;
+
+  margin-top:10px;
+
+  padding:7px 10px;
+
+  border:
+    1px solid
+    rgba(29,155,240,.35);
+
+  border-radius:8px;
+
+  font:
+    9px
+    var(--mono);
+
+  color:var(--blue);
+
+  text-align:center;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer{
+
+  text-align:center;
+
+  font:
+    9.5px
+    var(--mono);
+
+  color:var(--dim);
+
+  padding:
+    10px 20px 0;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:480px){
+
+  .banner{
+
+    height:150px;
+
+  }
+
+  .panel{
+
+    margin-top:17px;
+
+    padding:18px;
+
+    min-height:0;
+
+  }
+
+  .road{
+
+    padding-top:15px;
+
+  }
+
+  .links{
+
+    margin-top:8px;
+
+  }
+
+  .step h2{
+
+    font-size:21px;
+
+  }
+
+  .nft-frame{
+
+    width:min(
+      190px,
+      48vw
+    );
+
+  }
+
+  .wallet{
+
+    padding:10px;
+
+  }
+
+  .wallet-logo,
+  .manual-icon{
+
+    width:23px;
+    height:23px;
+
+    flex-basis:23px;
+
+  }
+
+  .wallet-name strong{
+
+    font-size:11px;
+
+  }
+
+  .wallet-name span{
+
+    font-size:8px;
+
+  }
+
+}
+
+
+/* =====================================================
+   SHORT SCREENS
+===================================================== */
+
+@media(max-height:720px){
+
+  .banner{
+
+    height:120px;
+
+  }
+
+  .profile{
+
+    margin-top:-22px;
+
+  }
+
+  .avatar{
+
+    width:52px;
+    height:52px;
+
+  }
+
+  .identity{
+
+    padding-top:7px;
+
+  }
+
+  .bio{
+
+    display:none;
+
+  }
+
+  .links{
+
+    margin-top:7px;
+
+  }
+
+  .road{
+
+    padding-top:11px;
+
+  }
+
+  .panel{
+
+    margin-top:13px;
+
+    padding:16px;
+
+    min-height:0;
+
+  }
+
+  .step p{
+
+    margin-bottom:10px;
+
+  }
+
+  .terminal{
+
+    margin-bottom:10px;
+
+  }
+
+  .nft-frame{
+
+    width:150px;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="wrap">
+
+
+<!-- =================================================
+     HEADER
+================================================== -->
+
+<section class="banner">
+
+  <h1>
+
+    THE ROAD<br>
+    PROVIDES
+
+  </h1>
+
+</section>
+
+
+<!-- =================================================
+     PROFILE
+================================================== -->
+
+<div class="profile">
+
+  <div class="avatar">
+
+    <img
+      src="desert_roadman_badge.png"
+      alt="The Roadman"
+      draggable="false"
+    >
+
+  </div>
+
+</div>
+
+
+<section class="identity">
+
+  <div class="status">
+
+    CLAIM OPEN
+
+  </div>
+
+
+  <div class="name">
+
+    theRoadMan
+
+  </div>
+
+
+  <div class="handle">
+
+    @theroadprovides ·
+
+    <span id="spotsHeader">
+
+      100 free spots
+
+    </span>
+
+  </div>
+
+
+  <div class="bio">
+
+    The first 100 NFTs go to those who
+    walked with <b>$ROAD</b>
+    before the road was paved.
+
+  </div>
+
+</section>
+
+
+<!-- =================================================
+     LINKS
+===================================================== -->
+
+<div class="links">
+
+  <a
+    class="x"
+    href="https://x.com/theroadprovides"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    Follow on X
+
+  </a>
+
+
+  <a
+    class="roadbtn"
+    href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+
+    Buy $ROAD
+
+  </a>
+
+</div>
+
+
+<!-- =================================================
+     PROGRESS
+================================================== -->
+
+<div class="road">
+
+  <div class="line">
+
+    <div
+      class="fill"
+      id="fill"
+    ></div>
+
+  </div>
+
+
+  <div class="markers">
+
+    <button
+      class="marker active"
+      data-step="1"
+    >
+
+      <span class="dot"></span>
+
+      <span class="marker-label">
+        Enter
+      </span>
+
+    </button>
+
+
+    <button
+      class="marker"
+      data-step="2"
+    >
+
+      <span class="dot"></span>
+
+      <span class="marker-label">
+        Seal
+      </span>
+
+    </button>
+
+
+    <button
+      class="marker"
+      data-step="3"
+    >
+
+      <span class="dot"></span>
+
+      <span class="marker-label">
+        Wallet
+      </span>
+
+    </button>
+
+
+    <button
+      class="marker"
+      data-step="4"
+    >
+
+      <span class="dot"></span>
+
+      <span class="marker-label">
+        Sealed
+      </span>
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =================================================
+     MAIN PANEL
+===================================================== -->
+
+<main class="panel">
+
+
+<!-- =================================================
+     STEP 1
+===================================================== -->
+
+<section
+  class="step active"
+  data-step="1"
+>
+
+  <div class="eyebrow">
+
+    01 · ENTER THE ROAD
+
+  </div>
+
+
+  <h2>
+
+    Confirm your handle
+
+  </h2>
+
+
+  <p>
+
+    Your spot is tied to your X profile.
+    Enter your handle to continue.
+
+  </p>
+
+
+  <div class="terminal">
+
+    &gt; spots remaining:
+
+    <span
+      class="ready"
+      id="spots"
+    >
+
+      100 / 100
+
+    </span>
+
+    <br>
+
+    &gt; one person · one NFT · one wallet
+
+  </div>
+
+
+  <div class="field">
+
+    <input
+      id="handle"
+      type="text"
+      placeholder="@yourhandle"
+      autocomplete="off"
+      maxlength="50"
+    >
+
+
+    <button
+      class="cta accent"
+      id="enterBtn"
+    >
+
+      Enter
+
+    </button>
+
+  </div>
+
+
+  <div
+    class="error"
+    id="handleError"
+  >
+
+    Enter your X handle to continue.
+
+  </div>
+
+
+  <div class="rule">
+
+    <strong>Eligibility:</strong>
+
+    The first 100 eligible $ROAD holders
+    who remain holding through the qualification
+    period will receive the corresponding NFT.
+
+    One person · one wallet · one NFT.
+
+  </div>
+
+</section>
+
+
+<!-- =================================================
+     STEP 2
+===================================================== -->
+
+<section
+  class="step"
+  data-step="2"
+>
+
+  <div class="eyebrow">
+
+    02 · SEAL THE SPOT
+
+  </div>
+
+
+  <h2>
+
+    Reserve your number
+
+  </h2>
+
+
+  <p>
+
+    Your spot will be assigned by the
+    Roadman database.
+
+  </p>
+
+
+  <div class="terminal">
+
+    &gt; handle detected:
+
+    <span
+      class="ok"
+      id="echo"
+    ></span>
+
+    <br>
+
+    &gt; waiting for wallet verification...
+
+  </div>
+
+
+  <div class="nav">
+
+    <button
+      class="cta ghost"
+      data-back="1"
+    >
+
+      Back
+
+    </button>
+
+
+    <button
+      class="cta accent"
+      id="sealBtn"
+    >
+
+      Continue
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =================================================
+     STEP 3
+===================================================== -->
+
+<section
+  class="step"
+  data-step="3"
+>
+
+  <div class="eyebrow">
+
+    03 · VERIFY WALLET
+
+  </div>
+
+
+  <h2>
+
+    Connect the eligible wallet
+
+  </h2>
+
+
+  <p>
+
+    Select your wallet and paste the
+    Solana address that will participate
+    in the Roadman qualification.
+
+  </p>
+
+
+  <!-- WALLET BUTTONS -->
+
+  <div class="wallets">
+
+
+    <!-- PHANTOM -->
+
+    <button
+      class="wallet"
+      data-wallet="Phantom"
+      type="button"
+    >
+
+      <img
+        class="wallet-logo"
+        src="images/phantom.png"
+        alt="Phantom"
+        draggable="false"
+      >
+
+      <span class="wallet-name">
+
+        <strong>
+          Phantom
+        </strong>
+
+        <span>
+          Solana wallet
+        </span>
+
+      </span>
+
+    </button>
+
+
+    <!-- SOLFLARE -->
+
+    <button
+      class="wallet"
+      data-wallet="Solflare"
+      type="button"
+    >
+
+      <img
+        class="wallet-logo"
+        src="images/solflare.png"
+        alt="Solflare"
+        draggable="false"
+      >
+
+      <span class="wallet-name">
+
+        <strong>
+          Solflare
+        </strong>
+
+        <span>
+          Solana wallet
+        </span>
+
+      </span>
+
+    </button>
+
+
+    <!-- METAMASK -->
+
+    <button
+      class="wallet"
+      data-wallet="MetaMask"
+      type="button"
+    >
+
+      <img
+        class="wallet-logo"
+        src="images/metamask.png"
+        alt="MetaMask"
+        draggable="false"
+      >
+
+      <span class="wallet-name">
+
+        <strong>
+          MetaMask
+        </strong>
+
+        <span>
+          Wallet
+        </span>
+
+      </span>
+
+    </button>
+
+
+    <!-- MANUAL -->
+
+    <button
+      class="wallet manual"
+      data-wallet="Manual"
+      type="button"
+    >
+
+      <span class="manual-icon">
+        +
+      </span>
+
+      <span class="wallet-name">
+
+        <strong>
+          Paste address
+        </strong>
+
+        <span>
+          Enter manually
+        </span>
+
+      </span>
+
+    </button>
+
+
+  </div>
+
+
+  <div
+    id="walletBox"
+    style="display:none"
+  >
+
+    <div
+      class="hint"
+      id="walletHint"
+    >
+
+      Paste your Solana wallet address below.
+
+    </div>
+
+
+    <input
+      id="walletInput"
+      placeholder="Solana wallet address"
+      autocomplete="off"
+      spellcheck="false"
+    >
+
+
+    <div
+      class="error"
+      id="walletError"
+    ></div>
+
+  </div>
+
+
+  <div
+    class="terminal"
+    id="verifyStatus"
+    style="
+      display:none;
+      margin-top:8px;
+    "
+  ></div>
+
+
+  <div
+    class="test-mode"
+    id="testMode"
+  >
+
+    TEST MODE · $ROAD verification simulated
+
+  </div>
+
+
+  <div class="nav">
+
+    <button
+      class="cta ghost"
+      data-back="2"
+      type="button"
+    >
+
+      Back
+
+    </button>
+
+
+    <button
+      class="cta accent"
+      id="verifyBtn"
+      disabled
+      type="button"
+    >
+
+      Verify & continue
+
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- =================================================
+     STEP 4
+===================================================== -->
+
+<section
+  class="step"
+  data-step="4"
+>
+
+  <div class="eyebrow">
+
+    04 · YOUR ROAD
+
+  </div>
+
+
+  <div class="confirm">
+
+    <div class="small">
+
+      early access secured
+
+    </div>
+
+
+    <div
+      class="spot"
+      id="finalSpot"
+    >
+
+      SPOT #001
+
+    </div>
+
+
+    <div class="rows">
+
+
+      <div>
+
+        <span>
+          handle
+        </span>
+
+        <span id="finalHandle">
+          —
+        </span>
+
+      </div>
+
+
+      <div>
+
+        <span>
+          wallet
+        </span>
+
+        <span id="finalWallet">
+          —
+        </span>
+
+      </div>
+
+
+      <div>
+
+        <span>
+          status
+        </span>
+
+        <span class="green">
+          ON THE ROAD · SEALED
+        </span>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- NFT -->
+
+  <div class="nft">
+
+    <div class="nft-frame">
+
+      <img
+        id="nftImg"
+        class="nft-img"
+        alt="Roadman NFT"
+        decoding="async"
+        draggable="false"
+      >
+
+
+      <div
+        class="nft-fallback"
+        id="nftFallback"
+      >
+
+        ROAD IMAGE UNAVAILABLE
+
+      </div>
+
+    </div>
+
+
+    <div class="nft-title">
+
+      Your Road is Sealed
+
+    </div>
+
+
+    <div class="nft-sub">
+
+      Your reserved artwork is shown above.
+
+    </div>
+
+  </div>
+
+
+  <button
+    class="cta accent bottom-action"
+    id="galleryBtn"
+    type="button"
+  >
+
+    View The First 100
+
+  </button>
+
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+  THE ROAD PROVIDES ·
+  100 early access spots ·
+  1 NFT per person
+
+</footer>
+
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   CONFIG
+===================================================== */
+
+const TOTAL = 100;
+
+const API_SPOTS =
+  "/api/spot";
+
+const API_CLAIM =
+  "/api/claim";
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let step = 1;
+
+let currentHandle = "";
+
+let selectedWallet = "";
+
+let claim = null;
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+const $ =
+  id =>
+    document.getElementById(id);
+
+
+function normalizeHandle(value){
+
+  let v =
+    String(value || "")
+      .trim();
+
+  if(!v){
+
+    return "";
+
+  }
+
+  if(!v.startsWith("@")){
+
+    v =
+      "@" + v;
+
+  }
+
+  return v;
+
+}
+
+
+function maskWallet(wallet){
+
+  if(
+    !wallet ||
+    wallet.length <= 10
+  ){
+
+    return wallet;
+
+  }
+
+  return (
+    wallet.slice(0,5) +
+    "..." +
+    wallet.slice(-5)
+  );
+
+}
+
+
+/* =====================================================
+   STEP CONTROL
+===================================================== */
+
+function setStep(n){
+
+  step = n;
+
+
+  document
+    .querySelectorAll(".step")
+    .forEach(
+      el => {
+
+        el.classList.toggle(
+          "active",
+          Number(
+            el.dataset.step
+          ) === n
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(".marker")
+    .forEach(
+      el => {
+
+        const s =
+          Number(
+            el.dataset.step
+          );
+
+
+        el.classList.toggle(
+          "active",
+          s === n
+        );
+
+
+        el.classList.toggle(
+          "done",
+          s < n
+        );
+
+      }
+    );
+
+
+  $("fill").style.width =
+    (
+      (
+        ((n - 1) / 3) * 91
+      ) +
+      8.33
+    ) +
+    "%";
+
+}
+
+
+/* =====================================================
+   SPOTS
+===================================================== */
+
+async function updateSpots(){
+
+  try{
+
+    const response =
+      await fetch(
+        API_SPOTS,
+        {
+          method:"GET",
+          cache:"no-store"
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(
+      !response.ok ||
+      !data.success
+    ){
+
+      throw new Error(
+        "Unable to read spots."
+      );
+
+    }
+
+
+    const remaining =
+      Number(
+        data.remaining
+      );
+
+
+    $("spots").textContent =
+      remaining +
+      " / " +
+      TOTAL;
+
+
+    $("spotsHeader").textContent =
+      remaining +
+      " free spots";
+
+
+    if(
+      remaining <= 0
+    ){
+
+      $("enterBtn")
+        .disabled =
+        true;
+
+      $("handle")
+        .disabled =
+        true;
+
+      $("handle")
+        .placeholder =
+        "No spots remaining";
+
+    }
+
+
+  }catch(error){
+
+    console.error(
+      "SPOTS:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   HANDLE
+===================================================== */
+
+function validHandle(){
+
+  const input =
+    $("handle");
+
+
+  const value =
+    normalizeHandle(
+      input.value
+    );
+
+
+  if(!value){
+
+    input.classList.add(
+      "invalid"
+    );
+
+
+    $("handleError")
+      .textContent =
+      "Enter your X handle to continue.";
+
+
+    $("handleError")
+      .style.display =
+      "block";
+
+
+    input.focus();
+
+
+    setTimeout(
+      () =>
+        input.classList.remove(
+          "invalid"
+        ),
+      350
+    );
+
+
+    return false;
+
+  }
+
+
+  input.value =
+    value;
+
+
+  currentHandle =
+    value;
+
+
+  $("echo").textContent =
+    value;
+
+
+  $("handleError")
+    .style.display =
+    "none";
+
+
+  return true;
+
+}
+
+
+/* =====================================================
+   STEP 1
+===================================================== */
+
+$("enterBtn").onclick =
+  function(){
+
+    if(
+      validHandle()
+    ){
+
+      setStep(2);
+
+    }
+
+  };
+
+
+$("handle")
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key ===
+        "Enter"
+      ){
+
+        event.preventDefault();
+
+        $("enterBtn").click();
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
+   STEP 2
+===================================================== */
+
+$("sealBtn").onclick =
+  function(){
+
+    if(!currentHandle){
+
+      setStep(1);
+
+      return;
+
+    }
+
+
+    setStep(3);
+
+  };
+
+
+/* =====================================================
+   BACK BUTTONS
+===================================================== */
+
+document
+  .querySelectorAll(
+    "[data-back]"
+  )
+  .forEach(
+    button => {
+
+      button.onclick =
+        function(){
+
+          setStep(
+            Number(
+              button.dataset.back
+            )
+          );
+
+        };
+
+    }
+  );
+
+
+/* =====================================================
+   WALLET SELECTION
+===================================================== */
+
+document
+  .querySelectorAll(
+    ".wallet"
+  )
+  .forEach(
+    button => {
+
+      button.onclick =
+        function(){
+
+          selectedWallet =
+            button.dataset.wallet;
+
+
+          document
+            .querySelectorAll(
+              ".wallet"
+            )
+            .forEach(
+              b =>
+                b.classList.remove(
+                  "selected"
+                )
+            );
+
+
+          button.classList.add(
+            "selected"
+          );
+
+
+          $("walletBox")
+            .style.display =
+            "block";
+
+
+          if(
+            selectedWallet ===
+            "Manual"
+          ){
+
+            $("walletHint")
+              .textContent =
+              "Paste your Solana wallet address below.";
+
+          }else{
+
+            $("walletHint")
+              .textContent =
+              selectedWallet +
+              " selected — paste the wallet address below.";
+
+          }
+
+
+          $("walletInput")
+            .focus();
+
+        };
+
+    }
+  );
+
+
+/* =====================================================
+   WALLET INPUT
+===================================================== */
+
+$("walletInput")
+  .addEventListener(
+    "input",
+    function(){
+
+      const wallet =
+        this.value.trim();
+
+
+      $("verifyBtn")
+        .disabled =
+        wallet.length < 32;
+
+
+      $("walletError")
+        .style.display =
+        "none";
+
+
+      $("verifyStatus")
+        .style.display =
+        "none";
+
+    }
+  );
+
+
+/* =====================================================
+   CLAIM
+===================================================== */
+
+async function submitClaim(
+  handle,
+  wallet
+){
+
+  const status =
+    $("verifyStatus");
+
+
+  const errorBox =
+    $("walletError");
+
+
+  status.style.display =
+    "block";
+
+
+  status.className =
+    "terminal";
+
+
+  status.textContent =
+    "> connecting to Roadman database...";
+
+
+  errorBox.style.display =
+    "none";
+
+
+  try{
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          250
+        )
+    );
+
+
+    status.textContent =
+      "> verifying wallet...";
+
+
+    const response =
+      await fetch(
+        API_CLAIM,
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+
+              x_handle:
+                handle,
+
+              wallet:
+                wallet,
+
+              test_key:
+                TEST_KEY
+
+            })
+
+        }
+      );
+
+
+    let data;
+
+
+    try{
+
+      data =
+        await response.json();
+
+    }catch{
+
+      throw new Error(
+        "Invalid server response."
+      );
+
+    }
+
+
+    if(
+      !response.ok ||
+      !data.success
+    ){
+
+      throw new Error(
+        data.error ||
+        "Unable to create claim."
+      );
+
+    }
+
+
+    return data;
+
+
+  }catch(error){
+
+    console.error(
+      "CLAIM:",
+      error
+    );
+
+
+    errorBox.textContent =
+      error.message;
+
+
+    errorBox.style.display =
+      "block";
+
+
+    status.textContent =
+      "> " +
+      error.message;
+
+
+    return null;
+
+  }
+
+}
+
+
+/* =====================================================
+   VERIFY / CONTINUE
+===================================================== */
+
+$("verifyBtn").onclick =
+  async function(){
+
+    const wallet =
+      $("walletInput")
+        .value
+        .trim();
+
+
+    if(
+      wallet.length < 32
+    ){
+
+      $("walletError")
+        .textContent =
+        "Enter a valid Solana wallet address.";
+
+      $("walletError")
+        .style.display =
+        "block";
+
+      return;
+
+    }
+
+
+    if(!currentHandle){
+
+      setStep(1);
+
+      return;
+
+    }
+
+
+    $("verifyBtn")
+      .disabled =
+      true;
+
+
+    const result =
+      await submitClaim(
+        currentHandle,
+        wallet
+      );
+
+
+    if(!result){
+
+      $("verifyBtn")
+        .disabled =
+        false;
+
+      return;
+
+    }
+
+
+    /* ---------------------------------------------
+       CLAIM SUCCESS
+    --------------------------------------------- */
+
+    claim =
+      result.claim;
+
+
+    if(
+      result.test_mode
+    ){
+
+      $("testMode")
+        .style.display =
+        "block";
+
+    }
+
+
+    $("finalSpot")
+      .textContent =
+      "SPOT #" +
+      String(
+        claim.spot
+      ).padStart(
+        3,
+        "0"
+      );
+
+
+    $("finalHandle")
+      .textContent =
+      claim.x_handle;
+
+
+    $("finalWallet")
+      .textContent =
+      maskWallet(
+        claim.wallet
+      );
+
+
+    loadNFT(
+      claim.spot
+    );
+
+
+    updateSpots();
+
+
+    setStep(4);
+
+  };
+
+
+/* =====================================================
+   NFT IMAGE
+===================================================== */
+
+function loadNFT(n){
+
+  const img =
+    $("nftImg");
+
+
+  const fallback =
+    $("nftFallback");
+
+
+  const number =
+    String(n)
+      .padStart(
+        3,
+        "0"
+      );
+
+
+  img.style.display =
+    "none";
+
+
+  fallback.style.display =
+    "none";
+
+
+  img.removeAttribute(
+    "src"
+  );
+
+
+  const formats =
+    [
+      "png",
+      "webp",
+      "jpg",
+      "jpeg"
+    ];
+
+
+  let index = 0;
+
+
+  function tryNext(){
+
+    if(
+      index >=
+      formats.length
+    ){
+
+      img.style.display =
+        "none";
+
+
+      fallback.style.display =
+        "grid";
+
+
+      return;
+
+    }
+
+
+    const src =
+      "images/" +
+      number +
+      "." +
+      formats[index++];
+
+
+    img.onload =
+      function(){
+
+        img.style.display =
+          "block";
+
+
+        fallback.style.display =
+          "none";
+
+      };
+
+
+    img.onerror =
+      tryNext;
+
+
+    img.src =
+      src;
+
+  }
+
+
+  tryNext();
+
+}
+
+
+/* =====================================================
+   GALLERY
+===================================================== */
+
+$("galleryBtn")
+  .onclick =
+  function(){
+
+    window.location.assign(
+      "roadman-gallery.html"
+    );
+
+  };
+
+
+/* =====================================================
+   MARKERS
+===================================================== */
+
+document
+  .querySelectorAll(
+    ".marker"
+  )
+  .forEach(
+    marker => {
+
+      marker.onclick =
+        function(){
+
+          const n =
+            Number(
+              marker.dataset.step
+            );
+
+
+          if(
+            n <= step
+          ){
+
+            setStep(n);
+
+          }
+
+        };
+
+    }
+  );
+
+
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+
+setStep(1);
+
+updateSpots();
+
+</script>
+
+</body>
+
+</html>
+```

@@ -1,0 +1,9 @@
+{
+  "name": "the-road-provides",
+  "version": "1.0.0",
+  "private": true,
+  "description": "THE ROAD PROVIDES - Early Access",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0"
+  }
+}
