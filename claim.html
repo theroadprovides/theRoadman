@@ -12,7 +12,6 @@
 
 <title>THE ROAD PROVIDES — Claim</title>
 
-<!-- LOGO / FAVICON -->
 <link
   rel="icon"
   type="image/png"
@@ -798,6 +797,15 @@ button.cta{
 
 }
 
+.wallet.connected{
+
+  border-color:var(--green);
+
+  background:
+    rgba(0,186,124,.06);
+
+}
+
 .wallet-logo{
 
   width:26px;
@@ -821,6 +829,8 @@ button.cta{
 
   gap:2px;
 
+  min-width:0;
+
 }
 
 .wallet-name strong{
@@ -838,6 +848,26 @@ button.cta{
     var(--mono);
 
   color:var(--dim);
+
+}
+
+.wallet-status{
+
+  margin-left:auto;
+
+  font:
+    8px
+    var(--mono);
+
+  color:var(--dim);
+
+  white-space:nowrap;
+
+}
+
+.wallet.connected .wallet-status{
+
+  color:var(--green);
 
 }
 
@@ -892,6 +922,29 @@ button.cta{
   margin-top:7px;
 
   display:none;
+
+}
+
+.connected-wallet{
+
+  margin-top:8px;
+
+  padding:8px 10px;
+
+  border:
+    1px solid rgba(0,186,124,.35);
+
+  border-radius:8px;
+
+  font:
+    9.5px
+    var(--mono);
+
+  color:var(--green);
+
+  display:none;
+
+  word-break:break-all;
 
 }
 
@@ -1243,6 +1296,12 @@ footer{
 
   }
 
+  .wallet-status{
+
+    display:none;
+
+  }
+
 }
 
 
@@ -1444,7 +1503,7 @@ footer{
 
 <!-- =================================================
      PROGRESS
-================================================== -->
+===================================================== -->
 
 <div class="road">
 
@@ -1463,6 +1522,7 @@ footer{
     <button
       class="marker active"
       data-step="1"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1477,6 +1537,7 @@ footer{
     <button
       class="marker"
       data-step="2"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1491,6 +1552,7 @@ footer{
     <button
       class="marker"
       data-step="3"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1505,6 +1567,7 @@ footer{
     <button
       class="marker"
       data-step="4"
+      type="button"
     >
 
       <span class="dot"></span>
@@ -1592,6 +1655,7 @@ footer{
     <button
       class="cta accent"
       id="enterBtn"
+      type="button"
     >
 
       Enter
@@ -1668,7 +1732,7 @@ footer{
 
     <br>
 
-    &gt; waiting for wallet verification...
+    &gt; waiting for wallet connection...
 
   </div>
 
@@ -1678,6 +1742,7 @@ footer{
     <button
       class="cta ghost"
       data-back="1"
+      type="button"
     >
 
       Back
@@ -1688,6 +1753,7 @@ footer{
     <button
       class="cta accent"
       id="sealBtn"
+      type="button"
     >
 
       Continue
@@ -1710,7 +1776,7 @@ footer{
 
   <div class="eyebrow">
 
-    03 · VERIFY WALLET
+    03 · CONNECT WALLET
 
   </div>
 
@@ -1724,14 +1790,11 @@ footer{
 
   <p>
 
-    Select your wallet and paste the
-    Solana address that will participate
-    in the Roadman qualification.
+    Choose your wallet to connect directly
+    through your browser extension or mobile app.
 
   </p>
 
-
-  <!-- WALLET BUTTONS -->
 
   <div class="wallets">
 
@@ -1751,6 +1814,7 @@ footer{
         draggable="false"
       >
 
+
       <span class="wallet-name">
 
         <strong>
@@ -1758,9 +1822,17 @@ footer{
         </strong>
 
         <span>
-          Solana wallet
+          Connect wallet
         </span>
 
+      </span>
+
+
+      <span
+        class="wallet-status"
+        id="phantomStatus"
+      >
+        CONNECT
       </span>
 
     </button>
@@ -1781,6 +1853,7 @@ footer{
         draggable="false"
       >
 
+
       <span class="wallet-name">
 
         <strong>
@@ -1788,9 +1861,17 @@ footer{
         </strong>
 
         <span>
-          Solana wallet
+          Connect wallet
         </span>
 
+      </span>
+
+
+      <span
+        class="wallet-status"
+        id="solflareStatus"
+      >
+        CONNECT
       </span>
 
     </button>
@@ -1811,6 +1892,7 @@ footer{
         draggable="false"
       >
 
+
       <span class="wallet-name">
 
         <strong>
@@ -1818,9 +1900,17 @@ footer{
         </strong>
 
         <span>
-          Wallet
+          Connect wallet
         </span>
 
+      </span>
+
+
+      <span
+        class="wallet-status"
+        id="metamaskStatus"
+      >
+        CONNECT
       </span>
 
     </button>
@@ -1837,6 +1927,7 @@ footer{
       <span class="manual-icon">
         +
       </span>
+
 
       <span class="wallet-name">
 
@@ -1866,7 +1957,7 @@ footer{
       id="walletHint"
     >
 
-      Paste your Solana wallet address below.
+      Connect your wallet to continue.
 
     </div>
 
@@ -1877,6 +1968,12 @@ footer{
       autocomplete="off"
       spellcheck="false"
     >
+
+
+    <div
+      class="connected-wallet"
+      id="connectedWallet"
+    ></div>
 
 
     <div
@@ -1945,6 +2042,7 @@ footer{
   data-step="4"
 >
 
+
   <div class="eyebrow">
 
     04 · YOUR ROAD
@@ -1953,6 +2051,7 @@ footer{
 
 
   <div class="confirm">
+
 
     <div class="small">
 
@@ -2018,11 +2117,11 @@ footer{
   </div>
 
 
-  <!-- NFT -->
-
   <div class="nft">
 
+
     <div class="nft-frame">
+
 
       <img
         id="nftImg"
@@ -2042,6 +2141,7 @@ footer{
 
       </div>
 
+
     </div>
 
 
@@ -2057,6 +2157,7 @@ footer{
       Your reserved artwork is shown above.
 
     </div>
+
 
   </div>
 
@@ -2099,10 +2200,13 @@ footer{
 const TOTAL = 100;
 
 const API_SPOTS =
-  "/api/spot";
+  "/api/spots";
 
 const API_CLAIM =
   "/api/claim";
+
+const TEST_KEY =
+  "ROADMAN_TEST_2026";
 
 
 /* =====================================================
@@ -2116,6 +2220,15 @@ let currentHandle = "";
 let selectedWallet = "";
 
 let claim = null;
+
+
+/* =====================================================
+   CONNECTED WALLET
+===================================================== */
+
+let connectedWallet = "";
+
+let connectedProvider = "";
 
 
 /* =====================================================
@@ -2139,12 +2252,14 @@ function normalizeHandle(value){
 
   }
 
+
   if(!v.startsWith("@")){
 
     v =
       "@" + v;
 
   }
+
 
   return v;
 
@@ -2162,11 +2277,196 @@ function maskWallet(wallet){
 
   }
 
+
   return (
     wallet.slice(0,5) +
     "..." +
     wallet.slice(-5)
   );
+
+}
+
+
+function isMobile(){
+
+  return (
+    /Android|iPhone|iPad|iPod/i
+      .test(
+        navigator.userAgent
+      )
+  );
+
+}
+
+
+function validSolanaAddress(address){
+
+  return (
+    typeof address === "string" &&
+    address.length >= 32 &&
+    address.length <= 44 &&
+    /^[1-9A-HJ-NP-Za-km-z]+$/.test(
+      address
+    )
+  );
+
+}
+
+
+function setWalletError(message){
+
+  $("walletError")
+    .textContent =
+    message || "";
+
+
+  $("walletError")
+    .style.display =
+    message
+      ? "block"
+      : "none";
+
+}
+
+
+function setConnectedWallet(
+  wallet,
+  provider
+){
+
+  connectedWallet =
+    wallet;
+
+  connectedProvider =
+    provider;
+
+
+  $("walletInput")
+    .value =
+    wallet;
+
+
+  $("walletInput")
+    .readOnly =
+    true;
+
+
+  $("walletInput")
+    .style.borderColor =
+    "var(--green)";
+
+
+  $("connectedWallet")
+    .textContent =
+    "CONNECTED · " +
+    provider +
+    " · " +
+    maskWallet(wallet);
+
+
+  $("connectedWallet")
+    .style.display =
+    "block";
+
+
+  $("verifyBtn")
+    .disabled =
+    false;
+
+
+  $("walletHint")
+    .textContent =
+    "Wallet connected successfully.";
+
+}
+
+
+function clearConnectedWallet(){
+
+  connectedWallet =
+    "";
+
+  connectedProvider =
+    "";
+
+
+  $("walletInput")
+    .value =
+    "";
+
+
+  $("walletInput")
+    .readOnly =
+    false;
+
+
+  $("walletInput")
+    .style.borderColor =
+    "";
+
+
+  $("connectedWallet")
+    .style.display =
+    "none";
+
+
+  $("verifyBtn")
+    .disabled =
+    true;
+
+}
+
+
+function setWalletButtonConnected(
+  walletName
+){
+
+  document
+    .querySelectorAll(
+      ".wallet"
+    )
+    .forEach(
+      button => {
+
+        if(
+          button.dataset.wallet ===
+          walletName
+        ){
+
+          button.classList.add(
+            "connected"
+          );
+
+        }
+
+      }
+    );
+
+
+  const statusIds = {
+
+    Phantom:
+      "phantomStatus",
+
+    Solflare:
+      "solflareStatus",
+
+    MetaMask:
+      "metamaskStatus"
+
+  };
+
+
+  const status =
+    $(statusIds[walletName]);
+
+
+  if(status){
+
+    status.textContent =
+      "CONNECTED";
+
+  }
 
 }
 
@@ -2293,9 +2593,11 @@ async function updateSpots(){
         .disabled =
         true;
 
+
       $("handle")
         .disabled =
         true;
+
 
       $("handle")
         .placeholder =
@@ -2448,29 +2750,446 @@ $("sealBtn").onclick =
 
 
 /* =====================================================
-   BACK BUTTONS
+   DIRECT WALLET CONNECTION
 ===================================================== */
 
-document
-  .querySelectorAll(
-    "[data-back]"
-  )
-  .forEach(
-    button => {
+async function connectPhantom(){
 
-      button.onclick =
-        function(){
+  setWalletError("");
 
-          setStep(
-            Number(
-              button.dataset.back
-            )
-          );
+  $("verifyStatus")
+    .style.display =
+    "block";
 
-        };
+  $("verifyStatus")
+    .textContent =
+    "> connecting to Phantom...";
+
+
+  try{
+
+    if(
+      window.phantom?.solana
+    ){
+
+      const provider =
+        window.phantom.solana;
+
+
+      const response =
+        await provider.connect();
+
+
+      const publicKey =
+        response?.publicKey?.toString();
+
+
+      if(
+        !validSolanaAddress(
+          publicKey
+        )
+      ){
+
+        throw new Error(
+          "Phantom returned an invalid Solana address."
+        );
+
+      }
+
+
+      setConnectedWallet(
+        publicKey,
+        "Phantom"
+      );
+
+
+      setWalletButtonConnected(
+        "Phantom"
+      );
+
+
+      $("verifyStatus")
+        .textContent =
+        "> Phantom connected.";
+
+      return true;
 
     }
-  );
+
+
+    if(
+      isMobile()
+    ){
+
+      const currentUrl =
+        window.location.href;
+
+
+      const deeplink =
+        "https://phantom.app/ul/browse/" +
+        encodeURIComponent(
+          currentUrl
+        );
+
+
+      window.location.href =
+        deeplink;
+
+
+      $("verifyStatus")
+        .textContent =
+        "> opening Phantom...";
+
+      return true;
+
+    }
+
+
+    throw new Error(
+      "Phantom extension was not detected in this browser."
+    );
+
+  }catch(error){
+
+    console.error(
+      "PHANTOM:",
+      error
+    );
+
+
+    $("verifyStatus")
+      .textContent =
+      "> " +
+      error.message;
+
+
+    setWalletError(
+      error.message
+    );
+
+
+    return false;
+
+  }
+
+}
+
+
+async function connectSolflare(){
+
+  setWalletError("");
+
+  $("verifyStatus")
+    .style.display =
+    "block";
+
+  $("verifyStatus")
+    .textContent =
+    "> connecting to Solflare...";
+
+
+  try{
+
+    if(
+      window.solflare
+    ){
+
+      const provider =
+        window.solflare;
+
+
+      if(
+        !provider.isSolflare
+      ){
+
+        throw new Error(
+          "Solflare provider was not detected."
+        );
+
+      }
+
+
+      if(
+        !provider.isConnected
+      ){
+
+        await provider.connect();
+
+      }
+
+
+      const publicKey =
+        provider.publicKey?.toString();
+
+
+      if(
+        !validSolanaAddress(
+          publicKey
+        )
+      ){
+
+        throw new Error(
+          "Solflare returned an invalid Solana address."
+        );
+
+      }
+
+
+      setConnectedWallet(
+        publicKey,
+        "Solflare"
+      );
+
+
+      setWalletButtonConnected(
+        "Solflare"
+      );
+
+
+      $("verifyStatus")
+        .textContent =
+        "> Solflare connected.";
+
+      return true;
+
+    }
+
+
+    if(
+      isMobile()
+    ){
+
+      const currentUrl =
+        window.location.href;
+
+
+      const deeplink =
+        "https://solflare.com/ul/v1/browse/" +
+        encodeURIComponent(
+          currentUrl
+        ) +
+        "?ref=" +
+        encodeURIComponent(
+          currentUrl
+        );
+
+
+      window.location.href =
+        deeplink;
+
+
+      $("verifyStatus")
+        .textContent =
+        "> opening Solflare...";
+
+      return true;
+
+    }
+
+
+    throw new Error(
+      "Solflare extension was not detected in this browser."
+    );
+
+  }catch(error){
+
+    console.error(
+      "SOLFLARE:",
+      error
+    );
+
+
+    $("verifyStatus")
+      .textContent =
+      "> " +
+      error.message;
+
+
+    setWalletError(
+      error.message
+    );
+
+
+    return false;
+
+  }
+
+}
+
+
+async function connectMetaMask(){
+
+  setWalletError("");
+
+  $("verifyStatus")
+    .style.display =
+    "block";
+
+  $("verifyStatus")
+    .textContent =
+    "> connecting to MetaMask...";
+
+
+  try{
+
+    if(
+      window.ethereum
+    ){
+
+      const accounts =
+        await window.ethereum.request({
+
+          method:
+            "eth_requestAccounts"
+
+        });
+
+
+      const address =
+        accounts?.[0];
+
+
+      if(
+        !address
+      ){
+
+        throw new Error(
+          "MetaMask did not return an account."
+        );
+
+      }
+
+
+      setConnectedWallet(
+        address,
+        "MetaMask"
+      );
+
+
+      setWalletButtonConnected(
+        "MetaMask"
+      );
+
+
+      $("verifyStatus")
+        .textContent =
+        "> MetaMask connected.";
+
+      return true;
+
+    }
+
+
+    if(
+      isMobile()
+    ){
+
+      const currentUrl =
+        window.location.href;
+
+
+      const deeplink =
+        "https://metamask.app.link/dapp/" +
+        currentUrl.replace(
+          /^https?:\/\//,
+          ""
+        );
+
+
+      window.location.href =
+        deeplink;
+
+
+      $("verifyStatus")
+        .textContent =
+        "> opening MetaMask...";
+
+      return true;
+
+    }
+
+
+    throw new Error(
+      "MetaMask was not detected in this browser."
+    );
+
+  }catch(error){
+
+    console.error(
+      "METAMASK:",
+      error
+    );
+
+
+    $("verifyStatus")
+      .textContent =
+      "> " +
+      error.message;
+
+
+    setWalletError(
+      error.message
+    );
+
+
+    return false;
+
+  }
+
+}
+
+
+/* =====================================================
+   MANUAL WALLET
+===================================================== */
+
+function enableManualWallet(){
+
+  connectedWallet =
+    "";
+
+
+  connectedProvider =
+    "Manual";
+
+
+  $("walletBox")
+    .style.display =
+    "block";
+
+
+  $("walletInput")
+    .readOnly =
+    false;
+
+
+  $("walletInput")
+    .value =
+    "";
+
+
+  $("walletInput")
+    .focus();
+
+
+  $("walletHint")
+    .textContent =
+    "Paste your Solana wallet address below.";
+
+
+  $("connectedWallet")
+    .style.display =
+    "none";
+
+
+  $("verifyBtn")
+    .disabled =
+    true;
+
+
+  setWalletError("");
+
+}
 
 
 /* =====================================================
@@ -2485,7 +3204,7 @@ document
     button => {
 
       button.onclick =
-        function(){
+        async function(){
 
           selectedWallet =
             button.dataset.wallet;
@@ -2515,25 +3234,48 @@ document
 
           if(
             selectedWallet ===
-            "Manual"
+            "Phantom"
           ){
 
-            $("walletHint")
-              .textContent =
-              "Paste your Solana wallet address below.";
+            await connectPhantom();
 
-          }else{
-
-            $("walletHint")
-              .textContent =
-              selectedWallet +
-              " selected — paste the wallet address below.";
+            return;
 
           }
 
 
-          $("walletInput")
-            .focus();
+          if(
+            selectedWallet ===
+            "Solflare"
+          ){
+
+            await connectSolflare();
+
+            return;
+
+          }
+
+
+          if(
+            selectedWallet ===
+            "MetaMask"
+          ){
+
+            await connectMetaMask();
+
+            return;
+
+          }
+
+
+          if(
+            selectedWallet ===
+            "Manual"
+          ){
+
+            enableManualWallet();
+
+          }
 
         };
 
@@ -2550,23 +3292,28 @@ $("walletInput")
     "input",
     function(){
 
+      if(
+        connectedProvider !==
+        "Manual"
+      ){
+
+        return;
+
+      }
+
+
       const wallet =
         this.value.trim();
 
 
       $("verifyBtn")
         .disabled =
-        wallet.length < 32;
+        !validSolanaAddress(
+          wallet
+        );
 
 
-      $("walletError")
-        .style.display =
-        "none";
-
-
-      $("verifyStatus")
-        .style.display =
-        "none";
+      setWalletError("");
 
     }
   );
@@ -2719,18 +3466,21 @@ $("verifyBtn").onclick =
   async function(){
 
     const wallet =
+      connectedWallet ||
       $("walletInput")
         .value
         .trim();
 
 
     if(
-      wallet.length < 32
+      !validSolanaAddress(
+        wallet
+      )
     ){
 
       $("walletError")
         .textContent =
-        "Enter a valid Solana wallet address.";
+        "Connect a valid Solana wallet first.";
 
       $("walletError")
         .style.display =
@@ -2772,10 +3522,6 @@ $("verifyBtn").onclick =
 
     }
 
-
-    /* ---------------------------------------------
-       CLAIM SUCCESS
-    --------------------------------------------- */
 
     claim =
       result.claim;
@@ -2992,4 +3738,3 @@ updateSpots();
 </body>
 
 </html>
-```
