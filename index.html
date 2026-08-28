@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -202,7 +201,6 @@ body{
 
 }
 
-/* SOMENTE LOGO ADICIONADA */
 .avatar img{
 
   width:100%;
@@ -766,6 +764,29 @@ button.cta{
 
   cursor:pointer;
 
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  transition:
+    border-color .2s,
+    background .2s,
+    transform .15s;
+
+}
+
+.wallet:hover{
+
+  border-color:#555;
+
+}
+
+.wallet:active{
+
+  transform:scale(.98);
+
 }
 
 .wallet.selected{
@@ -774,6 +795,77 @@ button.cta{
 
   background:
     rgba(29,155,240,.07);
+
+}
+
+.wallet-logo{
+
+  width:26px;
+  height:26px;
+
+  flex:0 0 26px;
+
+  object-fit:contain;
+
+  display:block;
+
+}
+
+.wallet-name{
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  gap:2px;
+
+}
+
+.wallet-name strong{
+
+  font-size:12px;
+
+  font-weight:700;
+
+}
+
+.wallet-name span{
+
+  font:
+    8.5px
+    var(--mono);
+
+  color:var(--dim);
+
+}
+
+.wallet.manual{
+
+  justify-content:flex-start;
+
+}
+
+.manual-icon{
+
+  width:26px;
+  height:26px;
+
+  flex:0 0 26px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius:7px;
+
+  display:grid;
+
+  place-items:center;
+
+  font-size:13px;
+
+  color:var(--dim);
 
 }
 
@@ -1123,6 +1215,34 @@ footer{
 
   }
 
+  .wallet{
+
+    padding:10px;
+
+  }
+
+  .wallet-logo,
+  .manual-icon{
+
+    width:23px;
+    height:23px;
+
+    flex-basis:23px;
+
+  }
+
+  .wallet-name strong{
+
+    font-size:11px;
+
+  }
+
+  .wallet-name span{
+
+    font-size:8px;
+
+  }
+
 }
 
 
@@ -1217,7 +1337,7 @@ footer{
 
 <!-- =================================================
      HEADER
-================================================== -->
+===================================================== -->
 
 <section class="banner">
 
@@ -1233,13 +1353,12 @@ footer{
 
 <!-- =================================================
      PROFILE
-================================================== -->
+===================================================== -->
 
 <div class="profile">
 
   <div class="avatar">
 
-    <!-- SOMENTE LOGO ADICIONADA -->
     <img
       src="desert_roadman_badge.png"
       alt="The Roadman"
@@ -1293,7 +1412,7 @@ footer{
 
 <!-- =================================================
      LINKS
-================================================== -->
+===================================================== -->
 
 <div class="links">
 
@@ -1325,7 +1444,7 @@ footer{
 
 <!-- =================================================
      PROGRESS
-================================================== -->
+===================================================== -->
 
 <div class="road">
 
@@ -1405,14 +1524,14 @@ footer{
 
 <!-- =================================================
      MAIN PANEL
-================================================== -->
+===================================================== -->
 
 <main class="panel">
 
 
 <!-- =================================================
      STEP 1
-================================================== -->
+===================================================== -->
 
 <section
   class="step active"
@@ -1511,7 +1630,7 @@ footer{
 
 <!-- =================================================
      STEP 2
-================================================== -->
+===================================================== -->
 
 <section
   class="step"
@@ -1561,6 +1680,7 @@ footer{
     <button
       class="cta ghost"
       data-back="1"
+      type="button"
     >
 
       Back
@@ -1571,6 +1691,7 @@ footer{
     <button
       class="cta accent"
       id="sealBtn"
+      type="button"
     >
 
       Continue
@@ -1584,7 +1705,7 @@ footer{
 
 <!-- =================================================
      STEP 3
-================================================== -->
+===================================================== -->
 
 <section
   class="step"
@@ -1607,51 +1728,137 @@ footer{
 
   <p>
 
-    Paste the Solana wallet that will
-    participate in the Roadman qualification.
+    Select your wallet and paste the
+    Solana address that will participate
+    in the Roadman qualification.
 
   </p>
 
 
+  <!-- =================================================
+       WALLET BUTTONS
+  ================================================== -->
+
   <div class="wallets">
 
+
+    <!-- PHANTOM -->
 
     <button
       class="wallet"
       data-wallet="Phantom"
+      type="button"
     >
 
-      Phantom
+      <img
+        class="wallet-logo"
+        src="images/phantom.png"
+        alt="Phantom"
+        draggable="false"
+      >
+
+
+      <span class="wallet-name">
+
+        <strong>
+          Phantom
+        </strong>
+
+        <span>
+          Solana wallet
+        </span>
+
+      </span>
 
     </button>
 
+
+    <!-- SOLFLARE -->
 
     <button
       class="wallet"
       data-wallet="Solflare"
+      type="button"
     >
 
-      Solflare
+      <img
+        class="wallet-logo"
+        src="images/solflare.png"
+        alt="Solflare"
+        draggable="false"
+      >
+
+
+      <span class="wallet-name">
+
+        <strong>
+          Solflare
+        </strong>
+
+        <span>
+          Solana wallet
+        </span>
+
+      </span>
 
     </button>
 
 
+    <!-- METAMASK -->
+
     <button
       class="wallet"
-      data-wallet="Backpack"
+      data-wallet="MetaMask"
+      type="button"
     >
 
-      Backpack
+      <img
+        class="wallet-logo"
+        src="images/metamask.png"
+        alt="MetaMask"
+        draggable="false"
+      >
+
+
+      <span class="wallet-name">
+
+        <strong>
+          MetaMask
+        </strong>
+
+        <span>
+          Wallet
+        </span>
+
+      </span>
 
     </button>
 
 
+    <!-- MANUAL -->
+
     <button
-      class="wallet"
+      class="wallet manual"
       data-wallet="Manual"
+      type="button"
     >
 
-      Paste address
+      <span class="manual-icon">
+        +
+      </span>
+
+
+      <span class="wallet-name">
+
+        <strong>
+          Paste address
+        </strong>
+
+        <span>
+          Enter manually
+        </span>
+
+      </span>
 
     </button>
 
@@ -1718,6 +1925,7 @@ footer{
     <button
       class="cta ghost"
       data-back="2"
+      type="button"
     >
 
       Back
@@ -1729,6 +1937,7 @@ footer{
       class="cta accent"
       id="verifyBtn"
       disabled
+      type="button"
     >
 
       Verify & continue
@@ -1743,7 +1952,7 @@ footer{
 
 <!-- =================================================
      STEP 4
-================================================== -->
+===================================================== -->
 
 <section
   class="step"
@@ -1877,6 +2086,7 @@ footer{
   <button
     class="cta accent bottom-action"
     id="galleryBtn"
+    type="button"
   >
 
     View The First 100
@@ -1913,11 +2123,11 @@ const TOTAL = 100;
 
 
 const API_SPOTS =
-  "/.netlify/functions/spots";
+  "/api/spots";
 
 
 const API_CLAIM =
-  "/.netlify/functions/claim";
+  "/api/claim";
 
 
 const TEST_KEY =
@@ -2107,6 +2317,27 @@ async function updateSpots(){
       " free spots";
 
 
+    if(
+      remaining <= 0
+    ){
+
+      $("enterBtn")
+        .disabled =
+        true;
+
+
+      $("handle")
+        .disabled =
+        true;
+
+
+      $("handle")
+        .placeholder =
+        "No spots remaining";
+
+    }
+
+
   }catch(error){
 
     console.error(
@@ -2140,6 +2371,11 @@ function validHandle(){
     input.classList.add(
       "invalid"
     );
+
+
+    $("handleError")
+      .textContent =
+      "Enter your X handle to continue.";
 
 
     $("handleError")
@@ -2361,6 +2597,11 @@ $("walletInput")
         .style.display =
         "none";
 
+
+      $("verifyStatus")
+        .style.display =
+        "none";
+
     }
   );
 
@@ -2399,6 +2640,15 @@ async function submitClaim(
 
 
   try{
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          250
+        )
+    );
+
 
     status.textContent =
       "> verifying wallet...";
@@ -2512,6 +2762,25 @@ $("verifyBtn").onclick =
       wallet.length < 32
     ){
 
+      $("walletError")
+        .textContent =
+        "Enter a valid Solana wallet address.";
+
+
+      $("walletError")
+        .style.display =
+        "block";
+
+
+      return;
+
+    }
+
+
+    if(!currentHandle){
+
+      setStep(1);
+
       return;
 
     }
@@ -2617,10 +2886,6 @@ function loadNFT(n){
       );
 
 
-  /* ---------------------------------------------
-     RESET
-  --------------------------------------------- */
-
   img.style.display =
     "none";
 
@@ -2634,105 +2899,69 @@ function loadNFT(n){
   );
 
 
-  /* ---------------------------------------------
-     PRIMARY IMAGE
-     PNG ORIGINAL
-  --------------------------------------------- */
-
-  const png =
-    "images/" +
-    number +
-    ".png";
+  const formats =
+    [
+      "png",
+      "webp",
+      "jpg",
+      "jpeg"
+    ];
 
 
-  img.onload =
-    function(){
+  let index = 0;
+
+
+  function tryNext(){
+
+    if(
+      index >=
+      formats.length
+    ){
 
       img.style.display =
-        "block";
+        "none";
 
 
       fallback.style.display =
-        "none";
-
-    };
+        "grid";
 
 
-  img.onerror =
-    function(){
+      return;
 
-      /* -------------------------------------------
-         FALLBACK TO OTHER FORMATS
-      ------------------------------------------- */
-
-      const formats =
-        [
-          "webp",
-          "jpg",
-          "jpeg"
-        ];
+    }
 
 
-      let index = 0;
+    const src =
+      "images/" +
+      number +
+      "." +
+      formats[index++];
 
 
-      function tryNext(){
+    img.onload =
+      function(){
 
-        if(
-          index >=
-          formats.length
-        ){
-
-          img.style.display =
-            "none";
+        img.style.display =
+          "block";
 
 
-          fallback.style.display =
-            "grid";
+        fallback.style.display =
+          "none";
+
+      };
 
 
-          return;
-
-        }
-
-
-        const src =
-          "images/" +
-          number +
-          "." +
-          formats[index++];
+    img.onerror =
+      tryNext;
 
 
-        img.onload =
-          function(){
+    img.src =
+      src;
 
-            img.style.display =
-              "block";
-
-
-            fallback.style.display =
-              "none";
-
-          };
+  }
 
 
-        img.onerror =
-          tryNext;
-
-
-        img.src =
-          src;
-
-      }
-
-
-      tryNext();
-
-    };
-
-
-  img.src =
-    png;
+  tryNext();
 
 }
 
@@ -2790,6 +3019,8 @@ document
    INITIAL LOAD
 ===================================================== */
 
+setStep(1);
+
 updateSpots();
 
 </script>
@@ -2797,4 +3028,3 @@ updateSpots();
 </body>
 
 </html>
-```
