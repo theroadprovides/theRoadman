@@ -55,24 +55,15 @@ html,
 body{
   width:100%;
   min-height:100%;
+
   background:var(--bg);
   color:var(--ink);
+
   font-family:var(--body);
 }
 
 body{
   overflow-x:hidden;
-  -webkit-user-select:none;
-  user-select:none;
-  -webkit-touch-callout:none;
-}
-
-/* PRINT PROTECTION */
-@media print{
-  html,
-  body{
-    display:none !important;
-  }
 }
 
 .wrap{
@@ -88,15 +79,20 @@ body{
 
 .banner{
   height:clamp(135px,22svh,180px);
+
   position:relative;
+
   display:grid;
   place-items:center;
+
   overflow:hidden;
+
   border-bottom:1px solid var(--border);
 }
 
 .banner:before{
   content:"";
+
   position:absolute;
   inset:0;
 
@@ -106,7 +102,6 @@ body{
       rgba(255,255,255,.055),
       transparent 62%
     ),
-
     repeating-linear-gradient(
       115deg,
       rgba(255,255,255,.018) 0,
@@ -133,8 +128,10 @@ body{
 .profile{
   display:flex;
   align-items:flex-end;
+
   padding:0 22px;
   margin-top:-27px;
+
   position:relative;
 }
 
@@ -143,6 +140,7 @@ body{
   height:62px;
 
   border-radius:50%;
+
   background:var(--raise);
 
   border:3px solid var(--border);
@@ -156,8 +154,11 @@ body{
 .avatar img{
   width:100%;
   height:100%;
+
   object-fit:cover;
+
   display:block;
+
   border-radius:50%;
 
   user-select:none;
@@ -180,6 +181,7 @@ body{
   font:10.5px var(--mono);
 
   letter-spacing:.06em;
+
   color:var(--green);
 
   margin-bottom:5px;
@@ -192,6 +194,7 @@ body{
   height:6px;
 
   border-radius:50%;
+
   background:var(--green);
 }
 
@@ -203,6 +206,7 @@ body{
 .handle{
   font-size:12.5px;
   color:var(--dim);
+
   margin:2px 0 7px;
 }
 
@@ -222,22 +226,22 @@ body{
 .links{
   display:flex;
   gap:8px;
+
   margin:10px 22px 0;
 }
 
 .links a{
   flex:1;
+
   text-align:center;
   text-decoration:none;
 
   border-radius:999px;
+
   padding:8px 12px;
 
   font-size:11.5px;
   font-weight:700;
-
-  -webkit-user-select:none;
-  user-select:none;
 }
 
 .x{
@@ -260,6 +264,7 @@ body{
 
 .line{
   height:2px;
+
   background:var(--border);
 
   margin:0 12px;
@@ -269,6 +274,7 @@ body{
 
 .fill{
   position:absolute;
+
   left:0;
   top:0;
 
@@ -290,14 +296,17 @@ body{
 .marker{
   border:0;
   background:none;
+
   color:inherit;
 
   display:flex;
   flex-direction:column;
   align-items:center;
+
   gap:6px;
 
   font:8.5px var(--mono);
+
   text-transform:uppercase;
 
   cursor:pointer;
@@ -310,6 +319,7 @@ body{
   border-radius:50%;
 
   border:2px solid var(--border);
+
   background:#000;
 }
 
@@ -354,6 +364,7 @@ body{
   margin:20px 22px 0;
 
   border:1px solid var(--border);
+
   border-radius:16px;
 
   background:var(--raise);
@@ -369,6 +380,7 @@ body{
 
 .step.active{
   display:block;
+
   animation:in .22s ease;
 }
 
@@ -386,14 +398,17 @@ body{
 
 .eyebrow{
   font:10.5px var(--mono);
+
   color:var(--blue);
 
   letter-spacing:.08em;
+
   margin-bottom:7px;
 }
 
 .step h2{
   font:23px/1 var(--display);
+
   text-transform:uppercase;
 
   margin-bottom:9px;
@@ -401,15 +416,19 @@ body{
 
 .step p{
   font-size:13px;
+
   line-height:1.5;
 
   color:var(--dim);
+
   margin-bottom:16px;
 }
 
 .terminal{
   font:11px/1.8 var(--mono);
+
   color:var(--dim);
+
   margin-bottom:16px;
 }
 
@@ -439,6 +458,7 @@ input{
   background:#000;
 
   border:1px solid var(--border);
+
   border-radius:10px;
 
   color:var(--ink);
@@ -448,12 +468,10 @@ input{
   padding:11px 13px;
 
   outline:0;
+
   width:100%;
 
   transition:.2s;
-
-  -webkit-user-select:text;
-  user-select:text;
 }
 
 input:focus{
@@ -462,6 +480,7 @@ input:focus{
 
 input.invalid{
   border-color:var(--red);
+
   animation:shake .25s;
 }
 
@@ -484,9 +503,6 @@ button.cta{
   font:700 12px var(--body);
 
   cursor:pointer;
-
-  -webkit-user-select:none;
-  user-select:none;
 }
 
 .accent{
@@ -509,6 +525,7 @@ button.cta{
 .nav{
   display:flex;
   gap:8px;
+
   margin-top:8px;
 }
 
@@ -522,9 +539,11 @@ button.cta{
 
 .wallets{
   display:grid;
+
   grid-template-columns:1fr 1fr;
 
   gap:8px;
+
   margin-bottom:13px;
 }
 
@@ -532,6 +551,7 @@ button.cta{
   background:#000;
 
   border:1px solid var(--border);
+
   border-radius:10px;
 
   color:var(--ink);
@@ -546,15 +566,13 @@ button.cta{
 
   display:flex;
   align-items:center;
+
   gap:10px;
 
   transition:
     border-color .2s,
     background .2s,
     transform .15s;
-
-  -webkit-user-select:none;
-  user-select:none;
 }
 
 .wallet:hover{
@@ -586,6 +604,7 @@ button.cta{
   flex:0 0 26px;
 
   object-fit:contain;
+
   display:block;
 
   user-select:none;
@@ -594,6 +613,7 @@ button.cta{
 
 .wallet-name{
   display:flex;
+
   flex-direction:column;
 
   justify-content:center;
@@ -638,17 +658,20 @@ button.cta{
   flex:0 0 26px;
 
   border:1px solid var(--border);
+
   border-radius:7px;
 
   display:grid;
   place-items:center;
 
   font-size:13px;
+
   color:var(--dim);
 }
 
 .hint{
   font:10.5px var(--mono);
+
   color:var(--dim);
 
   margin-bottom:7px;
@@ -670,6 +693,7 @@ button.cta{
   padding:8px 10px;
 
   border:1px solid rgba(0,186,124,.35);
+
   border-radius:8px;
 
   font:9.5px var(--mono);
@@ -689,9 +713,11 @@ button.cta{
   text-align:center;
 
   border:1px solid var(--border);
+
   border-radius:13px;
 
   padding:17px;
+
   margin-bottom:12px;
 }
 
@@ -701,6 +727,7 @@ button.cta{
   color:var(--dim);
 
   text-transform:uppercase;
+
   letter-spacing:.08em;
 }
 
@@ -766,6 +793,7 @@ button.cta{
   padding:5px;
 
   border:1px solid var(--blue);
+
   border-radius:12px;
 
   background:#050505;
@@ -778,8 +806,9 @@ button.cta{
 
   position:relative;
 
-  -webkit-user-select:none;
   user-select:none;
+
+  -webkit-user-select:none;
 
   -webkit-touch-callout:none;
 }
@@ -793,6 +822,7 @@ button.cta{
   border-radius:8px;
 
   object-fit:cover;
+
   object-position:center;
 
   background:#050505;
@@ -803,14 +833,11 @@ button.cta{
   -webkit-user-select:none;
 
   -webkit-user-drag:none;
+
   -webkit-touch-callout:none;
 
   pointer-events:none;
 }
-
-/* =====================================================
-   WATERMARK
-===================================================== */
 
 .nft-watermark{
   position:absolute;
@@ -833,6 +860,7 @@ button.cta{
 
 .nft-watermark-inner{
   display:flex;
+
   flex-direction:column;
 
   align-items:center;
@@ -870,7 +898,6 @@ button.cta{
   font-weight:500;
 }
 
-/* SECOND WATERMARK */
 .nft-watermark-corner{
   position:absolute;
 
@@ -900,19 +927,6 @@ button.cta{
   max-width:85%;
 }
 
-/* Anti-image interaction layer */
-.nft-protection-layer{
-  position:absolute;
-
-  inset:0;
-
-  z-index:10;
-
-  background:transparent;
-
-  pointer-events:auto;
-}
-
 .nft-fallback{
   width:100%;
   height:100%;
@@ -928,11 +942,13 @@ button.cta{
 
 .nft-title{
   font:18px var(--display);
+
   text-transform:uppercase;
 }
 
 .nft-sub{
   font-size:11px;
+
   color:var(--dim);
 
   margin-top:3px;
@@ -940,23 +956,8 @@ button.cta{
 
 .bottom-action{
   margin-top:10px;
+
   width:100%;
-}
-
-.rule{
-  font:10px/1.5 var(--mono);
-
-  color:var(--dim);
-
-  margin-top:12px;
-
-  border-top:1px solid var(--border);
-
-  padding-top:10px;
-}
-
-.rule strong{
-  color:var(--ink);
 }
 
 /* =====================================================
@@ -970,7 +971,9 @@ button.cta{
 
   padding:7px 10px;
 
-  border:1px solid rgba(29,155,240,.35);
+  border:
+    1px solid
+    rgba(29,155,240,.35);
 
   border-radius:8px;
 
@@ -1060,11 +1063,8 @@ footer{
   .nft-watermark-sub{
     font-size:7px;
   }
-}
 
-/* =====================================================
-   SHORT SCREENS
-===================================================== */
+}
 
 @media(max-height:720px){
 
@@ -1127,10 +1127,6 @@ footer{
 
 <div class="wrap">
 
-<!-- =================================================
-     HEADER
-===================================================== -->
-
 <section class="banner">
 
   <h1>
@@ -1139,10 +1135,6 @@ footer{
   </h1>
 
 </section>
-
-<!-- =================================================
-     PROFILE
-===================================================== -->
 
 <div class="profile">
 
@@ -1169,23 +1161,24 @@ footer{
   </div>
 
   <div class="handle">
+
     @theroadprovides ·
+
     <span id="spotsHeader">
-      100 free spots
+      100 first spots
     </span>
+
   </div>
 
   <div class="bio">
+
     The first 100 NFTs go to those who
     walked with <b>$ROAD</b>
     before the road was paved.
+
   </div>
 
 </section>
-
-<!-- =================================================
-     LINKS
-===================================================== -->
 
 <div class="links">
 
@@ -1209,10 +1202,6 @@ footer{
 
 </div>
 
-<!-- =================================================
-     PROGRESS
-===================================================== -->
-
 <div class="road">
 
   <div class="line">
@@ -1231,13 +1220,11 @@ footer{
       data-step="1"
       type="button"
     >
-
       <span class="dot"></span>
 
       <span class="marker-label">
         Enter
       </span>
-
     </button>
 
     <button
@@ -1245,13 +1232,11 @@ footer{
       data-step="2"
       type="button"
     >
-
       <span class="dot"></span>
 
       <span class="marker-label">
-        Seal
+        Continue
       </span>
-
     </button>
 
     <button
@@ -1259,13 +1244,11 @@ footer{
       data-step="3"
       type="button"
     >
-
       <span class="dot"></span>
 
       <span class="marker-label">
         Wallet
       </span>
-
     </button>
 
     <button
@@ -1273,28 +1256,18 @@ footer{
       data-step="4"
       type="button"
     >
-
       <span class="dot"></span>
 
       <span class="marker-label">
         Sealed
       </span>
-
     </button>
 
   </div>
 
 </div>
 
-<!-- =================================================
-     MAIN PANEL
-===================================================== -->
-
 <main class="panel">
-
-<!-- =================================================
-     STEP 1
-===================================================== -->
 
 <section
   class="step active"
@@ -1372,26 +1345,23 @@ footer{
 
 </section>
 
-<!-- =================================================
-     STEP 2
-===================================================== -->
-
 <section
   class="step"
   data-step="2"
 >
 
   <div class="eyebrow">
-    02 · SEAL THE SPOT
+    02 · CONTINUE THE ROAD
   </div>
 
   <h2>
-    Reserve your number
+    Connect your wallet
   </h2>
 
   <p>
-    Your spot will be assigned by the
-    Roadman database.
+    Your X handle is ready.
+    Connect the wallet that holds your $ROAD
+    to check eligibility and continue.
   </p>
 
   <div class="terminal">
@@ -1405,7 +1375,7 @@ footer{
 
     <br>
 
-    &gt; waiting for wallet connection...
+    &gt; next step: wallet verification
 
   </div>
 
@@ -1431,10 +1401,6 @@ footer{
 
 </section>
 
-<!-- =================================================
-     STEP 3
-===================================================== -->
-
 <section
   class="step"
   data-step="3"
@@ -1454,8 +1420,6 @@ footer{
   </p>
 
   <div class="wallets">
-
-    <!-- PHANTOM -->
 
     <button
       class="wallet"
@@ -1491,8 +1455,6 @@ footer{
 
     </button>
 
-    <!-- SOLFLARE -->
-
     <button
       class="wallet"
       data-wallet="Solflare"
@@ -1527,8 +1489,6 @@ footer{
 
     </button>
 
-    <!-- METAMASK -->
-
     <button
       class="wallet"
       data-wallet="MetaMask"
@@ -1562,8 +1522,6 @@ footer{
       </span>
 
     </button>
-
-    <!-- MANUAL -->
 
     <button
       class="wallet manual"
@@ -1660,10 +1618,6 @@ footer{
   </div>
 
 </section>
-
-<!-- =================================================
-     STEP 4
-===================================================== -->
 
 <section
   class="step"
@@ -1786,11 +1740,6 @@ footer{
         SEALED · SPOT #001
       </div>
 
-      <div
-        class="nft-protection-layer"
-        aria-hidden="true"
-      ></div>
-
     </div>
 
     <div class="nft-title">
@@ -1816,9 +1765,11 @@ footer{
 </main>
 
 <footer>
+
   THE ROAD PROVIDES ·
   100 early access spots ·
   1 NFT per person
+
 </footer>
 
 </div>
@@ -1831,11 +1782,14 @@ footer{
 
 const TOTAL = 100;
 
-const API_SPOTS = "/api/spots";
+const API_SPOTS =
+  "/api/spots";
 
-const API_CLAIM = "/api/claim";
+const API_CLAIM =
+  "/api/claim";
 
-const TEST_KEY = "ROADMAN_TEST_2026";
+const TEST_KEY =
+  "ROADMAN_TEST_2026";
 
 /* =====================================================
    STATE
@@ -1857,8 +1811,9 @@ let connectedProvider = "";
    HELPERS
 ===================================================== */
 
-const $ = id =>
-  document.getElementById(id);
+const $ =
+  id =>
+    document.getElementById(id);
 
 function normalizeHandle(value){
 
@@ -1883,7 +1838,9 @@ function maskWallet(wallet){
     !wallet ||
     wallet.length <= 10
   ){
+
     return wallet;
+
   }
 
   return (
@@ -1909,9 +1866,7 @@ function validSolanaAddress(address){
     typeof address === "string" &&
     address.length >= 32 &&
     address.length <= 44 &&
-    /^[1-9A-HJ-NP-Za-km-z]+$/.test(
-      address
-    )
+    /^[1-9A-HJ-NP-Za-km-z]+$/.test(address)
   );
 }
 
@@ -1954,46 +1909,52 @@ function clearWalletVisualState(){
     "CONNECT";
 }
 
+function resetWalletDisplay(){
+
+  connectedWallet = "";
+  connectedProvider = "";
+
+  $("walletInput").value = "";
+
+  $("walletInput").readOnly = false;
+
+  $("walletInput").style.borderColor = "";
+
+  $("connectedWallet").style.display = "none";
+
+  $("verifyBtn").disabled = true;
+
+  setWalletError("");
+}
+
 function setConnectedWallet(
   wallet,
   provider
 ){
 
-  connectedWallet =
-    wallet;
+  connectedWallet = wallet;
 
-  connectedProvider =
-    provider;
+  connectedProvider = provider;
 
-  $("walletInput")
-    .value =
-    wallet;
+  $("walletInput").value = wallet;
 
-  $("walletInput")
-    .readOnly =
-    true;
+  $("walletInput").readOnly = true;
 
-  $("walletInput")
-    .style.borderColor =
+  $("walletInput").style.borderColor =
     "var(--green)";
 
-  $("connectedWallet")
-    .textContent =
+  $("connectedWallet").textContent =
     "CONNECTED · " +
     provider +
     " · " +
     maskWallet(wallet);
 
-  $("connectedWallet")
-    .style.display =
+  $("connectedWallet").style.display =
     "block";
 
-  $("verifyBtn")
-    .disabled =
-    false;
+  $("verifyBtn").disabled = false;
 
-  $("walletHint")
-    .textContent =
+  $("walletHint").textContent =
     "Wallet connected successfully.";
 }
 
@@ -2057,6 +2018,44 @@ function setConnectionStatus(message){
 }
 
 /* =====================================================
+   PROVIDER WAIT
+===================================================== */
+
+async function waitForProvider(
+  getter,
+  attempts = 12,
+  delay = 250
+){
+
+  for(
+    let i = 0;
+    i < attempts;
+    i++
+  ){
+
+    const provider =
+      getter();
+
+    if(provider){
+
+      return provider;
+
+    }
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          delay
+        )
+    );
+
+  }
+
+  return null;
+}
+
+/* =====================================================
    STEP CONTROL
 ===================================================== */
 
@@ -2106,7 +2105,6 @@ function setStep(n){
       8.33
     ) +
     "%";
-
 }
 
 /* =====================================================
@@ -2152,22 +2150,17 @@ async function updateSpots(){
 
     $("spotsHeader").textContent =
       remaining +
-      " free spots";
+      " first spots";
 
     if(
       remaining <= 0
     ){
 
-      $("enterBtn")
-        .disabled =
-        true;
+      $("enterBtn").disabled = true;
 
-      $("handle")
-        .disabled =
-        true;
+      $("handle").disabled = true;
 
-      $("handle")
-        .placeholder =
+      $("handle").placeholder =
         "No spots remaining";
 
     }
@@ -2295,6 +2288,37 @@ $("sealBtn").onclick =
   };
 
 /* =====================================================
+   BACK BUTTONS
+===================================================== */
+
+document
+  .querySelectorAll("[data-back]")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      function(){
+
+        const target =
+          Number(
+            button.dataset.back
+          );
+
+        if(
+          target >= 1 &&
+          target < step
+        ){
+
+          setStep(target);
+
+        }
+
+      }
+    );
+
+  });
+
+/* =====================================================
    PHANTOM
 ===================================================== */
 
@@ -2308,18 +2332,34 @@ async function connectPhantom(){
 
   try{
 
-    if(
-      window.phantom?.solana
-    ){
+    const provider =
+      await waitForProvider(
+        () =>
+          window.phantom?.solana ||
+          (
+            window.solana?.isPhantom
+              ? window.solana
+              : null
+          )
+      );
 
-      const provider =
-        window.phantom.solana;
+    if(provider){
 
-      const response =
-        await provider.connect();
+      let response = null;
+
+      if(
+        typeof provider.connect ===
+        "function"
+      ){
+
+        response =
+          await provider.connect();
+
+      }
 
       const publicKey =
-        response?.publicKey?.toString();
+        response?.publicKey?.toString() ||
+        provider?.publicKey?.toString();
 
       if(
         !validSolanaAddress(
@@ -2328,7 +2368,7 @@ async function connectPhantom(){
       ){
 
         throw new Error(
-          "Phantom returned an invalid Solana address."
+          "Phantom connected, but no valid Solana address was returned."
         );
 
       }
@@ -2347,7 +2387,6 @@ async function connectPhantom(){
       );
 
       return true;
-
     }
 
     if(
@@ -2367,11 +2406,10 @@ async function connectPhantom(){
         deeplink;
 
       return true;
-
     }
 
     throw new Error(
-      "Phantom extension was not detected in this browser."
+      "Phantom wallet provider was not detected."
     );
 
   }catch(error){
@@ -2408,24 +2446,33 @@ async function connectSolflare(){
 
   try{
 
-    if(
-      window.solflare
-    ){
+    const provider =
+      await waitForProvider(
+        () =>
+          window.solflare ||
+          window.Solflare ||
+          (
+            window.solana?.isSolflare
+              ? window.solana
+              : null
+          )
+      );
 
-      const provider =
-        window.solflare;
+    if(provider){
 
       if(
-        !provider.isSolflare
+        provider.isSolflare === false
       ){
 
         throw new Error(
-          "Solflare provider was not detected."
+          "Invalid Solflare provider."
         );
 
       }
 
       if(
+        typeof provider.connect ===
+        "function" &&
         !provider.isConnected
       ){
 
@@ -2443,7 +2490,7 @@ async function connectSolflare(){
       ){
 
         throw new Error(
-          "Solflare returned an invalid Solana address."
+          "Solflare connected, but no valid Solana address was returned."
         );
 
       }
@@ -2462,7 +2509,6 @@ async function connectSolflare(){
       );
 
       return true;
-
     }
 
     if(
@@ -2486,11 +2532,10 @@ async function connectSolflare(){
         deeplink;
 
       return true;
-
     }
 
     throw new Error(
-      "Solflare extension was not detected in this browser."
+      "Solflare wallet provider was not detected."
     );
 
   }catch(error){
@@ -2528,37 +2573,67 @@ async function connectMetaMask(){
   try{
 
     const provider =
-      window.solana;
+      await waitForProvider(
+        () => {
 
-    if(
-      provider &&
-      (
-        provider.isMetaMask ||
-        provider.isMetaMaskSolana ||
-        provider._metamask
-      )
-    ){
+          const candidates = [
+            window.solana,
+            window.phantom?.solana,
+            window.ethereum
+          ];
 
-      let publicKey = null;
+          for(
+            const candidate of candidates
+          ){
+
+            if(
+              candidate &&
+              (
+                candidate.isMetaMaskSolana ||
+                (
+                  candidate.isMetaMask &&
+                  typeof candidate.connect ===
+                    "function"
+                )
+              )
+            ){
+
+              return candidate;
+
+            }
+
+          }
+
+          return null;
+
+        }
+      );
+
+    if(provider){
+
+      /*
+       * MetaMask Solana provider.
+       * We deliberately do not use the
+       * Ethereum request() method because
+       * that returns a 0x... EVM address.
+       */
+
+      let response = null;
 
       if(
         typeof provider.connect ===
         "function"
       ){
 
-        const response =
+        response =
           await provider.connect();
 
-        publicKey =
-          response
-            ?.publicKey
-            ?.toString() ||
-          provider
-            ?.publicKey
-            ?.toString() ||
-          null;
-
       }
+
+      let publicKey =
+        response?.publicKey?.toString() ||
+        provider?.publicKey?.toString() ||
+        null;
 
       if(
         !publicKey &&
@@ -2601,7 +2676,6 @@ async function connectMetaMask(){
       );
 
       return true;
-
     }
 
     if(
@@ -2622,7 +2696,6 @@ async function connectMetaMask(){
         deeplink;
 
       return true;
-
     }
 
     throw new Error(
@@ -2632,7 +2705,7 @@ async function connectMetaMask(){
   }catch(error){
 
     console.error(
-      "METAMASK SOLANA:",
+      "METAMASK:",
       error
     );
 
@@ -2655,50 +2728,40 @@ async function connectMetaMask(){
 
 function enableManualWallet(){
 
-  connectedWallet =
-    "";
-
-  connectedProvider =
-    "Manual";
-
   clearWalletVisualState();
 
-  $("walletBox")
-    .style.display =
+  connectedWallet = "";
+
+  connectedProvider = "Manual";
+
+  $("walletBox").style.display =
     "block";
 
-  $("walletInput")
-    .readOnly =
+  $("walletInput").readOnly =
     false;
 
-  $("walletInput")
-    .value =
+  $("walletInput").value =
     "";
 
-  $("walletInput")
-    .style.borderColor =
+  $("walletInput").style.borderColor =
     "";
 
-  $("walletInput")
-    .focus();
-
-  $("walletHint")
-    .textContent =
-    "Paste your Solana wallet address below.";
-
-  $("connectedWallet")
-    .style.display =
+  $("connectedWallet").style.display =
     "none";
 
-  $("verifyBtn")
-    .disabled =
+  $("verifyBtn").disabled =
     true;
+
+  $("walletHint").textContent =
+    "Paste your Solana wallet address below.";
 
   setWalletError("");
 
   setConnectionStatus(
     "> manual wallet mode."
   );
+
+  $("walletInput").focus();
 }
 
 /* =====================================================
@@ -2728,6 +2791,8 @@ document
 
         clearWalletVisualState();
 
+        resetWalletDisplay();
+
         button.classList.add(
           "selected"
         );
@@ -2735,32 +2800,6 @@ document
         $("walletBox")
           .style.display =
           "block";
-
-        connectedWallet =
-          "";
-
-        connectedProvider =
-          "";
-
-        $("walletInput")
-          .value =
-          "";
-
-        $("walletInput")
-          .readOnly =
-          false;
-
-        $("walletInput")
-          .style.borderColor =
-          "";
-
-        $("connectedWallet")
-          .style.display =
-          "none";
-
-        $("verifyBtn")
-          .disabled =
-          true;
 
         if(
           selectedWallet ===
@@ -2794,6 +2833,7 @@ document
           return;
 
         }
+
       };
 
   });
@@ -2998,7 +3038,7 @@ function updateWatermark(){
 }
 
 /* =====================================================
-   VERIFY / CONTINUE
+   VERIFY
 ===================================================== */
 
 $("verifyBtn").onclick =
@@ -3025,7 +3065,6 @@ $("verifyBtn").onclick =
         "block";
 
       return;
-
     }
 
     if(!currentHandle){
@@ -3033,7 +3072,6 @@ $("verifyBtn").onclick =
       setStep(1);
 
       return;
-
     }
 
     $("verifyBtn")
@@ -3053,7 +3091,6 @@ $("verifyBtn").onclick =
         false;
 
       return;
-
     }
 
     claim =
@@ -3154,7 +3191,6 @@ function loadNFT(n){
         "grid";
 
       return;
-
     }
 
     const src =
@@ -3202,75 +3238,49 @@ if(nftFrame){
   nftFrame.addEventListener(
     "contextmenu",
     function(event){
+
       event.preventDefault();
       event.stopPropagation();
+
     }
   );
 
   nftFrame.addEventListener(
     "dragstart",
     function(event){
+
       event.preventDefault();
       event.stopPropagation();
+
     }
   );
 
   nftFrame.addEventListener(
     "selectstart",
     function(event){
+
       event.preventDefault();
       event.stopPropagation();
+
     }
   );
 
   nftFrame.addEventListener(
     "copy",
     function(event){
+
       event.preventDefault();
       event.stopPropagation();
+
     }
   );
 
   nftFrame.addEventListener(
     "cut",
     function(event){
+
       event.preventDefault();
       event.stopPropagation();
-    }
-  );
-
-  nftFrame.addEventListener(
-    "touchstart",
-    function(event){
-
-      if(
-        event.touches &&
-        event.touches.length === 1
-      ){
-
-        event.preventDefault();
-
-      }
-
-    },
-    {
-      passive:false
-    }
-  );
-
-  nftFrame.addEventListener(
-    "pointerdown",
-    function(event){
-
-      if(
-        event.pointerType ===
-        "mouse" &&
-        event.button === 2
-      ){
-
-        event.preventDefault();
-
-      }
 
     }
   );
@@ -3282,37 +3292,33 @@ if(nftImg){
   nftImg.addEventListener(
     "contextmenu",
     function(event){
+
       event.preventDefault();
+
     }
   );
 
   nftImg.addEventListener(
     "dragstart",
     function(event){
+
       event.preventDefault();
+
     }
   );
 
 }
 
 /* =====================================================
-   GLOBAL PROTECTION
+   GLOBAL IMAGE PROTECTION
 ===================================================== */
-
-document.addEventListener(
-  "contextmenu",
-  function(event){
-
-    event.preventDefault();
-
-  }
-);
 
 document.addEventListener(
   "dragstart",
   function(event){
 
     if(
+      event.target &&
       event.target.tagName ===
       "IMG"
     ){
@@ -3325,97 +3331,15 @@ document.addEventListener(
 );
 
 document.addEventListener(
-  "selectstart",
-  function(event){
-
-    if(
-      event.target.closest(".nft-frame")
-    ){
-
-      event.preventDefault();
-
-    }
-
-  }
-);
-
-/*
-  Block common browser shortcuts.
-  We intentionally leave normal text entry
-  inside inputs alone.
-*/
-
-document.addEventListener(
-  "keydown",
-  function(event){
-
-    const tag =
-      event.target?.tagName;
-
-    const typing =
-      tag === "INPUT" ||
-      tag === "TEXTAREA";
-
-    if(
-      typing
-    ){
-
-      return;
-
-    }
-
-    const key =
-      String(
-        event.key || ""
-      ).toLowerCase();
-
-    const blocked =
-      (
-        event.ctrlKey ||
-        event.metaKey
-      ) &&
-      (
-        key === "s" ||
-        key === "u" ||
-        key === "c" ||
-        key === "x" ||
-        key === "p"
-      );
-
-    if(blocked){
-
-      event.preventDefault();
-
-    }
-
-    /*
-      PrintScreen cannot be reliably blocked by a
-      browser, but we can clear clipboard access
-      attempts and minimize common browser actions.
-    */
-
-    if(
-      event.key === "PrintScreen"
-    ){
-
-      event.preventDefault();
-
-    }
-
-  },
-  true
-);
-
-/* Clipboard API protection */
-
-document.addEventListener(
   "copy",
   function(event){
 
     if(
-      document
-        .activeElement
-        ?.closest(".nft-frame")
+      event.target &&
+      event.target.closest &&
+      event.target.closest(
+        ".nft-frame"
+      )
     ){
 
       event.preventDefault();
@@ -3431,9 +3355,11 @@ document.addEventListener(
   function(event){
 
     if(
-      document
-        .activeElement
-        ?.closest(".nft-frame")
+      event.target &&
+      event.target.closest &&
+      event.target.closest(
+        ".nft-frame"
+      )
     ){
 
       event.preventDefault();
@@ -3445,26 +3371,48 @@ document.addEventListener(
 );
 
 /* =====================================================
-   PRINT PROTECTION
+   COMMON SHORTCUT PROTECTION
 ===================================================== */
 
-window.addEventListener(
-  "beforeprint",
-  function(){
+document.addEventListener(
+  "keydown",
+  function(event){
 
-    document.body.dataset.printing =
-      "true";
+    const tag =
+      event.target?.tagName;
 
-  }
-);
+    if(
+      tag === "INPUT" ||
+      tag === "TEXTAREA"
+    ){
 
-window.addEventListener(
-  "afterprint",
-  function(){
+      return;
 
-    delete document.body.dataset.printing;
+    }
 
-  }
+    const key =
+      String(
+        event.key || ""
+      ).toLowerCase();
+
+    if(
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      (
+        key === "s" ||
+        key === "u" ||
+        key === "p"
+      )
+    ){
+
+      event.preventDefault();
+
+    }
+
+  },
+  true
 );
 
 /* =====================================================
@@ -3487,27 +3435,29 @@ $("galleryBtn")
 
 document
   .querySelectorAll(".marker")
-  .forEach(marker => {
+  .forEach(
+    marker => {
 
-    marker.onclick =
-      function(){
+      marker.onclick =
+        function(){
 
-        const n =
-          Number(
-            marker.dataset.step
-          );
+          const n =
+            Number(
+              marker.dataset.step
+            );
 
-        if(
-          n <= step
-        ){
+          if(
+            n <= step
+          ){
 
-          setStep(n);
+            setStep(n);
 
-        }
+          }
 
-      };
+        };
 
-  });
+    }
+  );
 
 /* =====================================================
    INITIAL LOAD
