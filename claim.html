@@ -1313,34 +1313,6 @@ button.cta{
 }
 
 /* =====================================================
-   TEST MODE
-===================================================== */
-
-.test-mode{
-
-  display:none;
-
-  margin-top:10px;
-
-  padding:7px 10px;
-
-  border:
-    1px solid
-    rgba(29,155,240,.35);
-
-  border-radius:8px;
-
-  font:
-    9px
-    var(--mono);
-
-  color:var(--blue);
-
-  text-align:center;
-
-}
-
-/* =====================================================
    FOOTER
 ===================================================== */
 
@@ -1594,13 +1566,8 @@ footer{
       data-step="1"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Enter
-      </span>
-
+      <span class="marker-label">Enter</span>
     </button>
 
     <button
@@ -1608,13 +1575,8 @@ footer{
       data-step="2"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Continue
-      </span>
-
+      <span class="marker-label">Continue</span>
     </button>
 
     <button
@@ -1622,13 +1584,8 @@ footer{
       data-step="3"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Wallet
-      </span>
-
+      <span class="marker-label">Wallet</span>
     </button>
 
     <button
@@ -1636,13 +1593,8 @@ footer{
       data-step="4"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Sealed
-      </span>
-
+      <span class="marker-label">Sealed</span>
     </button>
 
   </div>
@@ -1971,13 +1923,6 @@ footer{
     "
   ></div>
 
-  <div
-    class="test-mode"
-    id="testMode"
-  >
-    TEST MODE · $ROAD verification simulated
-  </div>
-
   <div class="nav">
 
     <button
@@ -2185,9 +2130,6 @@ const API_CLAIM =
 
 const TEST_KEY =
   "ROADMAN_TEST_2026";
-
-const SOLANA_MAINNET =
-  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
 
 /* =====================================================
    STATE
@@ -3644,16 +3586,6 @@ $("verifyBtn").onclick =
 
     claim =
       result.claim;
-
-    if(
-      result.test_mode
-    ){
-
-      $("testMode")
-        .style.display =
-        "block";
-
-    }
 
     $("finalSpot")
       .textContent =
