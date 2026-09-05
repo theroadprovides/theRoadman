@@ -50,6 +50,7 @@
 *{
 
   box-sizing:border-box;
+
   margin:0;
   padding:0;
 
@@ -62,6 +63,7 @@ body{
   min-height:100%;
 
   background:var(--bg);
+
   color:var(--ink);
 
   font-family:var(--body);
@@ -77,6 +79,7 @@ body{
 .wrap{
 
   width:min(700px,100%);
+
   min-height:100svh;
 
   margin:auto;
@@ -100,6 +103,7 @@ body{
   position:relative;
 
   display:grid;
+
   place-items:center;
 
   overflow:hidden;
@@ -198,6 +202,7 @@ body{
   border-radius:50%;
 
   user-select:none;
+
   -webkit-user-drag:none;
 
 }
@@ -244,6 +249,7 @@ body{
 .name{
 
   font-size:19px;
+
   font-weight:800;
 
 }
@@ -261,6 +267,7 @@ body{
 .bio{
 
   font-size:13px;
+
   line-height:1.45;
 
 }
@@ -372,12 +379,15 @@ body{
 .marker{
 
   border:0;
+
   background:none;
 
   color:inherit;
 
   display:flex;
+
   flex-direction:column;
+
   align-items:center;
 
   gap:6px;
@@ -409,6 +419,7 @@ body{
 .marker.active .dot{
 
   background:var(--blue);
+
   border-color:var(--blue);
 
 }
@@ -535,6 +546,7 @@ body{
 .step p{
 
   font-size:13px;
+
   line-height:1.5;
 
   color:var(--dim);
@@ -574,6 +586,7 @@ body{
 .field{
 
   display:flex;
+
   gap:8px;
 
 }
@@ -581,6 +594,7 @@ body{
 .field input{
 
   flex:1;
+
   min-width:0;
 
 }
@@ -793,6 +807,7 @@ button.cta{
   display:block;
 
   user-select:none;
+
   -webkit-user-drag:none;
 
 }
@@ -814,6 +829,7 @@ button.cta{
 .wallet-name strong{
 
   font-size:12px;
+
   font-weight:700;
 
 }
@@ -1057,7 +1073,9 @@ button.cta{
   position:relative;
 
   user-select:none;
+
   -webkit-user-select:none;
+
   -webkit-touch-callout:none;
 
 }
@@ -1065,6 +1083,7 @@ button.cta{
 .nft-img{
 
   width:100%;
+
   height:100%;
 
   display:block;
@@ -1072,6 +1091,7 @@ button.cta{
   border-radius:8px;
 
   object-fit:cover;
+
   object-position:center;
 
   background:#050505;
@@ -1079,9 +1099,11 @@ button.cta{
   image-rendering:auto;
 
   user-select:none;
+
   -webkit-user-select:none;
 
   -webkit-user-drag:none;
+
   -webkit-touch-callout:none;
 
   pointer-events:none;
@@ -1164,6 +1186,7 @@ button.cta{
   position:absolute;
 
   left:10px;
+
   bottom:10px;
 
   z-index:6;
@@ -1192,20 +1215,6 @@ button.cta{
   text-transform:uppercase;
 
   max-width:85%;
-
-}
-
-.nft-protection-layer{
-
-  position:absolute;
-
-  inset:0;
-
-  z-index:10;
-
-  background:transparent;
-
-  pointer-events:none;
 
 }
 
@@ -1515,10 +1524,8 @@ footer{
 <section class="banner">
 
   <h1>
-
     THE ROAD<br>
     PROVIDES
-
   </h1>
 
 </section>
@@ -2737,7 +2744,7 @@ document
 
           if(
             target >= 1 &&
-            target < step
+            target <= step
           ){
 
             setStep(target);
@@ -3750,17 +3757,8 @@ if(nftImg){
 }
 
 /* =====================================================
-   GLOBAL COPY / DRAG PROTECTION
+   GLOBAL IMAGE PROTECTION
 ===================================================== */
-
-document.addEventListener(
-  "contextmenu",
-  function(event){
-
-    event.preventDefault();
-
-  }
-);
 
 document.addEventListener(
   "dragstart",
