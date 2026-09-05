@@ -2161,7 +2161,15 @@ footer{
 
 </div>
 
-<script>
+<script type="module">
+
+/* =====================================================
+   METAMASK CONNECT SOLANA
+===================================================== */
+
+import {
+  createSolanaClient
+} from "https://esm.sh/@metamask/connect-solana?bundle";
 
 /* =====================================================
    CONFIG
@@ -2178,6 +2186,9 @@ const API_CLAIM =
 const TEST_KEY =
   "ROADMAN_TEST_2026";
 
+const SOLANA_MAINNET =
+  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
+
 /* =====================================================
    STATE
 ===================================================== */
@@ -2193,6 +2204,10 @@ let claim = null;
 let connectedWallet = "";
 
 let connectedProvider = "";
+
+let metaMaskSolanaClient = null;
+
+let metaMaskSolanaWallet = null;
 
 /* =====================================================
    HELPERS
@@ -2489,93 +2504,71 @@ function getSolflareProvider(){
 
 }
 
-function getMetaMaskSolanaProvider(){
+/* =====================================================
+   METAMASK SOLANA CLIENT
+===================================================== */
 
-  const candidates = [];
+async function initializeMetaMaskSolana(){
 
   if(
-    window.solana
+    metaMaskSolanaWallet
   ){
 
-    candidates.push(
-      window.solana
+    return metaMaskSolanaWallet;
+
+  }
+
+  setConnectionStatus(
+    "> initializing MetaMask Solana..."
+  );
+
+  metaMaskSolanaClient =
+    await createSolanaClient({
+
+      dapp:{
+
+        name:
+          "THE ROAD PROVIDES",
+
+        url:
+          window.location.href,
+
+        iconUrl:
+          new URL(
+            "desert_roadman_badge.png",
+            window.location.href
+          ).href
+
+      },
+
+      api:{
+
+        supportedNetworks:{
+
+          mainnet:
+            "https://api.mainnet-beta.solana.com"
+
+        }
+
+      }
+
+    });
+
+  metaMaskSolanaWallet =
+    metaMaskSolanaClient
+      .getWallet();
+
+  if(
+    !metaMaskSolanaWallet
+  ){
+
+    throw new Error(
+      "MetaMask Solana wallet could not be initialized."
     );
 
   }
 
-  if(
-    window.solanaWallet
-  ){
-
-    candidates.push(
-      window.solanaWallet
-    );
-
-  }
-
-  if(
-    window.metamask?.solana
-  ){
-
-    candidates.push(
-      window.metamask.solana
-    );
-
-  }
-
-  if(
-    window.MetaMask?.solana
-  ){
-
-    candidates.push(
-      window.MetaMask.solana
-    );
-
-  }
-
-  if(
-    window.ethereum?.providers &&
-    Array.isArray(
-      window.ethereum.providers
-    )
-  ){
-
-    candidates.push(
-      ...window.ethereum.providers
-    );
-
-  }
-
-  for(
-    const provider of candidates
-  ){
-
-    if(
-      provider &&
-      (
-        provider.isMetaMaskSolana ||
-        (
-          provider.isMetaMask &&
-          (
-            typeof provider.connect ===
-            "function"
-          ) &&
-          (
-            provider.publicKey ||
-            typeof provider.getPublicKey ===
-              "function"
-          )
-        )
-      )
-    ){
-
-      return provider;
-
-    }
-
-  }
-
-  return null;
+  return metaMaskSolanaWallet;
 
 }
 
@@ -2875,11 +2868,6 @@ async function connectPhantom(){
     let provider =
       getPhantomProvider();
 
-    /*
-     * Give the wallet extension a brief moment
-     * to inject its provider.
-     */
-
     if(!provider){
 
       await new Promise(
@@ -3119,97 +3107,66 @@ async function connectMetaMask(){
 
   try{
 
-    const provider =
-      getMetaMaskSolanaProvider();
+    const wallet =
+      await initializeMetaMaskSolana();
 
-    if(provider){
-
-      let response =
-        null;
-
-      if(
-        typeof provider.connect ===
-        "function"
-      ){
-
-        response =
-          await provider.connect();
-
-      }
-
-      let publicKey =
-        response?.publicKey?.toString() ||
-        provider?.publicKey?.toString() ||
-        null;
-
-      if(
-        !publicKey &&
-        typeof provider.getPublicKey ===
-        "function"
-      ){
-
-        publicKey =
-          (
-            await provider.getPublicKey()
-          )
-          ?.toString() ||
-          null;
-
-      }
-
-      if(
-        !validSolanaAddress(
-          publicKey
-        )
-      ){
-
-        throw new Error(
-          "MetaMask connected, but no valid Solana wallet address was returned."
-        );
-
-      }
-
-      setConnectedWallet(
-        publicKey,
-        "MetaMask"
-      );
-
-      setWalletButtonConnected(
-        "MetaMask"
-      );
-
-      setConnectionStatus(
-        "> MetaMask Solana connected."
-      );
-
-      return true;
-
-    }
+    const connectFeature =
+      wallet?.features?.[
+        "standard:connect"
+      ];
 
     if(
-      isMobile()
+      !connectFeature ||
+      typeof connectFeature.connect !==
+      "function"
     ){
 
-      const currentUrl =
-        window.location.href;
-
-      const deeplink =
-        "https://metamask.app.link/dapp/" +
-        currentUrl.replace(
-          /^https?:\/\//,
-          ""
-        );
-
-      window.location.href =
-        deeplink;
-
-      return true;
+      throw new Error(
+        "MetaMask Solana connection interface was not available."
+      );
 
     }
 
-    throw new Error(
-      "MetaMask Solana provider was not detected."
+    const result =
+      await connectFeature.connect();
+
+    const accounts =
+      result?.accounts || [];
+
+    const account =
+      accounts[0];
+
+    const publicKey =
+      account?.address ||
+      account?.publicKey?.toString() ||
+      "";
+
+    if(
+      !validSolanaAddress(
+        publicKey
+      )
+    ){
+
+      throw new Error(
+        "MetaMask did not return a valid Solana wallet address."
+      );
+
+    }
+
+    setConnectedWallet(
+      publicKey,
+      "MetaMask"
     );
+
+    setWalletButtonConnected(
+      "MetaMask"
+    );
+
+    setConnectionStatus(
+      "> MetaMask Solana connected."
+    );
+
+    return true;
 
   }catch(error){
 
@@ -3218,13 +3175,33 @@ async function connectMetaMask(){
       error
     );
 
+    let message =
+      error?.message ||
+      "Unable to connect to MetaMask Solana.";
+
+    if(
+      error?.code === 4001
+    ){
+
+      message =
+        "MetaMask connection was rejected.";
+
+    }else if(
+      error?.code === -32002
+    ){
+
+      message =
+        "A MetaMask request is already pending. Check the MetaMask extension.";
+
+    }
+
     setConnectionStatus(
       "> " +
-      error.message
+      message
     );
 
     setWalletError(
-      error.message
+      message
     );
 
     return false;
