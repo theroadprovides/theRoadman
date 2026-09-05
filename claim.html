@@ -29,6 +29,7 @@
 <style>
 
 :root{
+
   --bg:#000;
   --raise:#16181c;
   --border:#2f3336;
@@ -43,46 +44,45 @@
   --display:'Anton',sans-serif;
   --body:'Inter',sans-serif;
   --mono:'IBM Plex Mono',monospace;
+
 }
 
 *{
+
   box-sizing:border-box;
   margin:0;
   padding:0;
+
 }
 
 html,
 body{
+
   width:100%;
   min-height:100%;
+
   background:var(--bg);
   color:var(--ink);
+
   font-family:var(--body);
+
 }
 
 body{
+
   overflow-x:hidden;
-
-  -webkit-user-select:none;
-  user-select:none;
-
-  -webkit-touch-callout:none;
-}
-
-@media print{
-
-  html,
-  body{
-    display:none !important;
-  }
 
 }
 
 .wrap{
+
   width:min(700px,100%);
   min-height:100svh;
+
   margin:auto;
+
   padding-bottom:12px;
+
 }
 
 /* =====================================================
@@ -106,6 +106,7 @@ body{
 
   border-bottom:
     1px solid var(--border);
+
 }
 
 .banner:before{
@@ -130,6 +131,7 @@ body{
       transparent 2px,
       transparent 40px
     );
+
 }
 
 .banner h1{
@@ -143,6 +145,7 @@ body{
   text-align:center;
 
   letter-spacing:.01em;
+
 }
 
 /* =====================================================
@@ -160,6 +163,7 @@ body{
   margin-top:-27px;
 
   position:relative;
+
 }
 
 .avatar{
@@ -179,6 +183,7 @@ body{
   place-items:center;
 
   overflow:hidden;
+
 }
 
 .avatar img{
@@ -194,15 +199,13 @@ body{
 
   user-select:none;
   -webkit-user-drag:none;
-}
 
-/* =====================================================
-   IDENTITY
-===================================================== */
+}
 
 .identity{
 
   padding:10px 22px 0;
+
 }
 
 .status{
@@ -222,6 +225,7 @@ body{
   color:var(--green);
 
   margin-bottom:5px;
+
 }
 
 .status:before{
@@ -234,13 +238,14 @@ body{
   border-radius:50%;
 
   background:var(--green);
+
 }
 
 .name{
 
   font-size:19px;
-
   font-weight:800;
+
 }
 
 .handle{
@@ -250,18 +255,20 @@ body{
   color:var(--dim);
 
   margin:2px 0 7px;
+
 }
 
 .bio{
 
   font-size:13px;
-
   line-height:1.45;
+
 }
 
 .bio b{
 
   color:var(--blue);
+
 }
 
 /* =====================================================
@@ -275,6 +282,7 @@ body{
   gap:8px;
 
   margin:10px 22px 0;
+
 }
 
 .links a{
@@ -293,8 +301,6 @@ body{
 
   font-weight:700;
 
-  -webkit-user-select:none;
-  user-select:none;
 }
 
 .x{
@@ -303,6 +309,7 @@ body{
     1px solid var(--border);
 
   color:var(--ink);
+
 }
 
 .roadbtn{
@@ -310,6 +317,7 @@ body{
   background:var(--blue);
 
   color:#fff;
+
 }
 
 /* =====================================================
@@ -319,6 +327,7 @@ body{
 .road{
 
   padding:18px 22px 0;
+
 }
 
 .line{
@@ -330,6 +339,7 @@ body{
   margin:0 12px;
 
   position:relative;
+
 }
 
 .fill{
@@ -346,6 +356,7 @@ body{
   background:var(--blue);
 
   transition:.25s;
+
 }
 
 .markers{
@@ -355,20 +366,18 @@ body{
   justify-content:space-between;
 
   margin-top:-8px;
+
 }
 
 .marker{
 
   border:0;
-
   background:none;
 
   color:inherit;
 
   display:flex;
-
   flex-direction:column;
-
   align-items:center;
 
   gap:6px;
@@ -380,6 +389,7 @@ body{
   text-transform:uppercase;
 
   cursor:pointer;
+
 }
 
 .dot{
@@ -393,18 +403,20 @@ body{
     2px solid var(--border);
 
   background:#000;
+
 }
 
 .marker.active .dot{
 
   background:var(--blue);
-
   border-color:var(--blue);
+
 }
 
 .marker.done .dot{
 
   border-color:var(--blue);
+
 }
 
 .marker.done .dot:after{
@@ -421,17 +433,20 @@ body{
   background:var(--blue);
 
   margin:3px;
+
 }
 
 .marker-label{
 
   color:var(--dim);
+
 }
 
 .marker.active .marker-label,
 .marker.done .marker-label{
 
   color:var(--ink);
+
 }
 
 /* =====================================================
@@ -452,11 +467,13 @@ body{
   padding:22px;
 
   min-height:310px;
+
 }
 
 .step{
 
   display:none;
+
 }
 
 .step.active{
@@ -465,6 +482,7 @@ body{
 
   animation:
     in .22s ease;
+
 }
 
 @keyframes in{
@@ -475,6 +493,7 @@ body{
 
     transform:
       translateY(4px);
+
   }
 
   to{
@@ -482,6 +501,7 @@ body{
     opacity:1;
 
     transform:none;
+
   }
 
 }
@@ -497,6 +517,7 @@ body{
   letter-spacing:.08em;
 
   margin-bottom:7px;
+
 }
 
 .step h2{
@@ -508,17 +529,18 @@ body{
   text-transform:uppercase;
 
   margin-bottom:9px;
+
 }
 
 .step p{
 
   font-size:13px;
-
   line-height:1.5;
 
   color:var(--dim);
 
   margin-bottom:16px;
+
 }
 
 .terminal{
@@ -530,16 +552,19 @@ body{
   color:var(--dim);
 
   margin-bottom:16px;
+
 }
 
 .ok{
 
   color:var(--green);
+
 }
 
 .ready{
 
   color:var(--blue);
+
 }
 
 /* =====================================================
@@ -549,15 +574,15 @@ body{
 .field{
 
   display:flex;
-
   gap:8px;
+
 }
 
 .field input{
 
   flex:1;
-
   min-width:0;
+
 }
 
 input{
@@ -583,13 +608,12 @@ input{
 
   transition:.2s;
 
-  -webkit-user-select:text;
-  user-select:text;
 }
 
 input:focus{
 
   border-color:var(--blue);
+
 }
 
 input.invalid{
@@ -598,6 +622,7 @@ input.invalid{
 
   animation:
     shake .25s;
+
 }
 
 @keyframes shake{
@@ -606,12 +631,14 @@ input.invalid{
 
     transform:
       translateX(-4px);
+
   }
 
   75%{
 
     transform:
       translateX(4px);
+
   }
 
 }
@@ -630,8 +657,6 @@ button.cta{
 
   cursor:pointer;
 
-  -webkit-user-select:none;
-  user-select:none;
 }
 
 .accent{
@@ -639,6 +664,7 @@ button.cta{
   background:var(--blue);
 
   color:#fff;
+
 }
 
 .accent:disabled{
@@ -646,6 +672,7 @@ button.cta{
   opacity:.45;
 
   cursor:not-allowed;
+
 }
 
 .ghost{
@@ -656,6 +683,7 @@ button.cta{
 
   border:
     1px solid var(--border)!important;
+
 }
 
 .nav{
@@ -665,11 +693,13 @@ button.cta{
   gap:8px;
 
   margin-top:8px;
+
 }
 
 .nav>*{
 
   flex:1;
+
 }
 
 /* =====================================================
@@ -686,6 +716,7 @@ button.cta{
   gap:8px;
 
   margin-bottom:13px;
+
 }
 
 .wallet{
@@ -718,18 +749,18 @@ button.cta{
     background .2s,
     transform .15s;
 
-  -webkit-user-select:none;
-  user-select:none;
 }
 
 .wallet:hover{
 
   border-color:#555;
+
 }
 
 .wallet:active{
 
   transform:scale(.98);
+
 }
 
 .wallet.selected{
@@ -738,6 +769,7 @@ button.cta{
 
   background:
     rgba(29,155,240,.07);
+
 }
 
 .wallet.connected{
@@ -746,6 +778,7 @@ button.cta{
 
   background:
     rgba(0,186,124,.06);
+
 }
 
 .wallet-logo{
@@ -761,6 +794,7 @@ button.cta{
 
   user-select:none;
   -webkit-user-drag:none;
+
 }
 
 .wallet-name{
@@ -774,13 +808,14 @@ button.cta{
   gap:2px;
 
   min-width:0;
+
 }
 
 .wallet-name strong{
 
   font-size:12px;
-
   font-weight:700;
+
 }
 
 .wallet-name span{
@@ -790,6 +825,7 @@ button.cta{
     var(--mono);
 
   color:var(--dim);
+
 }
 
 .wallet-status{
@@ -803,16 +839,19 @@ button.cta{
   color:var(--dim);
 
   white-space:nowrap;
+
 }
 
 .wallet.connected .wallet-status{
 
   color:var(--green);
+
 }
 
 .wallet.manual{
 
   justify-content:flex-start;
+
 }
 
 .manual-icon{
@@ -834,6 +873,7 @@ button.cta{
   font-size:13px;
 
   color:var(--dim);
+
 }
 
 .hint{
@@ -845,6 +885,7 @@ button.cta{
   color:var(--dim);
 
   margin-bottom:7px;
+
 }
 
 .error{
@@ -858,6 +899,7 @@ button.cta{
   margin-top:7px;
 
   display:none;
+
 }
 
 .connected-wallet{
@@ -880,6 +922,7 @@ button.cta{
   display:none;
 
   word-break:break-all;
+
 }
 
 /* =====================================================
@@ -898,6 +941,7 @@ button.cta{
   padding:17px;
 
   margin-bottom:12px;
+
 }
 
 .small{
@@ -911,6 +955,7 @@ button.cta{
   text-transform:uppercase;
 
   letter-spacing:.08em;
+
 }
 
 .spot{
@@ -920,6 +965,7 @@ button.cta{
     var(--display);
 
   margin:5px 0 10px;
+
 }
 
 .rows{
@@ -934,6 +980,7 @@ button.cta{
     var(--mono);
 
   text-align:left;
+
 }
 
 .rows div{
@@ -947,6 +994,7 @@ button.cta{
   padding:4px 0;
 
   color:var(--dim);
+
 }
 
 .rows span:last-child{
@@ -960,11 +1008,13 @@ button.cta{
   overflow:hidden;
 
   text-overflow:ellipsis;
+
 }
 
 .green{
 
   color:var(--green)!important;
+
 }
 
 /* =====================================================
@@ -974,6 +1024,7 @@ button.cta{
 .nft{
 
   text-align:center;
+
 }
 
 .nft-frame{
@@ -1005,16 +1056,15 @@ button.cta{
 
   position:relative;
 
-  -webkit-user-select:none;
   user-select:none;
-
+  -webkit-user-select:none;
   -webkit-touch-callout:none;
+
 }
 
 .nft-img{
 
   width:100%;
-
   height:100%;
 
   display:block;
@@ -1022,7 +1072,6 @@ button.cta{
   border-radius:8px;
 
   object-fit:cover;
-
   object-position:center;
 
   background:#050505;
@@ -1030,14 +1079,13 @@ button.cta{
   image-rendering:auto;
 
   user-select:none;
-
   -webkit-user-select:none;
 
   -webkit-user-drag:none;
-
   -webkit-touch-callout:none;
 
   pointer-events:none;
+
 }
 
 .nft-watermark{
@@ -1059,6 +1107,7 @@ button.cta{
   overflow:hidden;
 
   z-index:5;
+
 }
 
 .nft-watermark-inner{
@@ -1091,6 +1140,7 @@ button.cta{
     0 1px 2px rgba(0,0,0,.7);
 
   white-space:nowrap;
+
 }
 
 .nft-watermark-main{
@@ -1098,6 +1148,7 @@ button.cta{
   font-size:15px;
 
   font-weight:700;
+
 }
 
 .nft-watermark-sub{
@@ -1105,6 +1156,7 @@ button.cta{
   font-size:8px;
 
   font-weight:500;
+
 }
 
 .nft-watermark-corner{
@@ -1112,7 +1164,6 @@ button.cta{
   position:absolute;
 
   left:10px;
-
   bottom:10px;
 
   z-index:6;
@@ -1141,6 +1192,7 @@ button.cta{
   text-transform:uppercase;
 
   max-width:85%;
+
 }
 
 .nft-protection-layer{
@@ -1153,7 +1205,8 @@ button.cta{
 
   background:transparent;
 
-  pointer-events:auto;
+  pointer-events:none;
+
 }
 
 .nft-fallback{
@@ -1170,6 +1223,7 @@ button.cta{
     var(--mono);
 
   color:var(--dim);
+
 }
 
 .nft-title{
@@ -1179,6 +1233,7 @@ button.cta{
     var(--display);
 
   text-transform:uppercase;
+
 }
 
 .nft-sub{
@@ -1188,6 +1243,7 @@ button.cta{
   color:var(--dim);
 
   margin-top:3px;
+
 }
 
 .bottom-action{
@@ -1195,6 +1251,7 @@ button.cta{
   margin-top:10px;
 
   width:100%;
+
 }
 
 .rule{
@@ -1211,11 +1268,13 @@ button.cta{
     1px solid var(--border);
 
   padding-top:10px;
+
 }
 
 .rule strong{
 
   color:var(--ink);
+
 }
 
 /* =====================================================
@@ -1243,6 +1302,7 @@ button.cta{
   color:var(--blue);
 
   text-align:center;
+
 }
 
 /* =====================================================
@@ -1261,6 +1321,7 @@ footer{
 
   padding:
     10px 20px 0;
+
 }
 
 /* =====================================================
@@ -1272,6 +1333,7 @@ footer{
   .banner{
 
     height:150px;
+
   }
 
   .panel{
@@ -1281,21 +1343,25 @@ footer{
     padding:18px;
 
     min-height:0;
+
   }
 
   .road{
 
     padding-top:15px;
+
   }
 
   .links{
 
     margin-top:8px;
+
   }
 
   .step h2{
 
     font-size:21px;
+
   }
 
   .nft-frame{
@@ -1304,11 +1370,13 @@ footer{
       190px,
       48vw
     );
+
   }
 
   .wallet{
 
     padding:10px;
+
   }
 
   .wallet-logo,
@@ -1318,31 +1386,37 @@ footer{
     height:23px;
 
     flex-basis:23px;
+
   }
 
   .wallet-name strong{
 
     font-size:11px;
+
   }
 
   .wallet-name span{
 
     font-size:8px;
+
   }
 
   .wallet-status{
 
     display:none;
+
   }
 
   .nft-watermark-main{
 
     font-size:12px;
+
   }
 
   .nft-watermark-sub{
 
     font-size:7px;
+
   }
 
 }
@@ -1356,37 +1430,44 @@ footer{
   .banner{
 
     height:120px;
+
   }
 
   .profile{
 
     margin-top:-22px;
+
   }
 
   .avatar{
 
     width:52px;
     height:52px;
+
   }
 
   .identity{
 
     padding-top:7px;
+
   }
 
   .bio{
 
     display:none;
+
   }
 
   .links{
 
     margin-top:7px;
+
   }
 
   .road{
 
     padding-top:11px;
+
   }
 
   .panel{
@@ -1396,21 +1477,25 @@ footer{
     padding:16px;
 
     min-height:0;
+
   }
 
   .step p{
 
     margin-bottom:10px;
+
   }
 
   .terminal{
 
     margin-bottom:10px;
+
   }
 
   .nft-frame{
 
     width:150px;
+
   }
 
 }
@@ -1430,8 +1515,10 @@ footer{
 <section class="banner">
 
   <h1>
+
     THE ROAD<br>
     PROVIDES
+
   </h1>
 
 </section>
@@ -2087,11 +2174,6 @@ footer{
       >
         SEALED · SPOT #001
       </div>
-
-      <div
-        class="nft-protection-layer"
-        aria-hidden="true"
-      ></div>
 
     </div>
 
@@ -3584,7 +3666,9 @@ function loadNFT(n){
 ===================================================== */
 
 const nftFrame =
-  $("nftFrame");
+  document.querySelector(
+    ".nft-frame"
+  );
 
 const nftImg =
   $("nftImg");
@@ -3641,41 +3725,6 @@ if(nftFrame){
     }
   );
 
-  nftFrame.addEventListener(
-    "touchstart",
-    function(event){
-
-      if(
-        event.touches &&
-        event.touches.length === 1
-      ){
-
-        event.preventDefault();
-
-      }
-
-    },
-    {
-      passive:false
-    }
-  );
-
-  nftFrame.addEventListener(
-    "pointerdown",
-    function(event){
-
-      if(
-        event.pointerType === "mouse" &&
-        event.button === 2
-      ){
-
-        event.preventDefault();
-
-      }
-
-    }
-  );
-
 }
 
 if(nftImg){
@@ -3701,7 +3750,7 @@ if(nftImg){
 }
 
 /* =====================================================
-   GLOBAL PROTECTION
+   GLOBAL COPY / DRAG PROTECTION
 ===================================================== */
 
 document.addEventListener(
@@ -3730,84 +3779,13 @@ document.addEventListener(
 );
 
 document.addEventListener(
-  "selectstart",
+  "copy",
   function(event){
 
     if(
       event.target.closest(
         ".nft-frame"
       )
-    ){
-
-      event.preventDefault();
-
-    }
-
-  }
-);
-
-document.addEventListener(
-  "keydown",
-  function(event){
-
-    const tag =
-      event.target?.tagName;
-
-    const typing =
-      tag === "INPUT" ||
-      tag === "TEXTAREA";
-
-    if(typing){
-
-      return;
-
-    }
-
-    const key =
-      String(
-        event.key || ""
-      ).toLowerCase();
-
-    const blocked =
-      (
-        event.ctrlKey ||
-        event.metaKey
-      ) &&
-      (
-        key === "s" ||
-        key === "u" ||
-        key === "c" ||
-        key === "x" ||
-        key === "p"
-      );
-
-    if(blocked){
-
-      event.preventDefault();
-
-    }
-
-    if(
-      event.key ===
-      "PrintScreen"
-    ){
-
-      event.preventDefault();
-
-    }
-
-  },
-  true
-);
-
-document.addEventListener(
-  "copy",
-  function(event){
-
-    if(
-      document
-        .activeElement
-        ?.closest(".nft-frame")
     ){
 
       event.preventDefault();
@@ -3823,9 +3801,9 @@ document.addEventListener(
   function(event){
 
     if(
-      document
-        .activeElement
-        ?.closest(".nft-frame")
+      event.target.closest(
+        ".nft-frame"
+      )
     ){
 
       event.preventDefault();
@@ -3836,27 +3814,45 @@ document.addEventListener(
   true
 );
 
-/* =====================================================
-   PRINT PROTECTION
-===================================================== */
+document.addEventListener(
+  "keydown",
+  function(event){
 
-window.addEventListener(
-  "beforeprint",
-  function(){
+    const tag =
+      event.target?.tagName;
 
-    document.body.dataset.printing =
-      "true";
+    if(
+      tag === "INPUT" ||
+      tag === "TEXTAREA"
+    ){
 
-  }
-);
+      return;
 
-window.addEventListener(
-  "afterprint",
-  function(){
+    }
 
-    delete document.body.dataset.printing;
+    const key =
+      String(
+        event.key || ""
+      ).toLowerCase();
 
-  }
+    if(
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      (
+        key === "s" ||
+        key === "u" ||
+        key === "p"
+      )
+    ){
+
+      event.preventDefault();
+
+    }
+
+  },
+  true
 );
 
 /* =====================================================
