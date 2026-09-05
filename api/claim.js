@@ -17,6 +17,17 @@ const TEST_KEY =
 const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
 
+// =====================================================
+// MINIMUM USD
+// =====================================================
+
+// Durante os testes reais:
+// US$1 = mínimo necessário
+//
+// Antes do lançamento:
+// alterar para 10
+const MIN_USD_REQUIRED = 1;
+
 
 // =====================================================
 // RESPONSE
@@ -105,6 +116,7 @@ async function getRoadBalance(wallet) {
   const rpc =
     "https://api.mainnet-beta.solana.com";
 
+
   const response =
     await fetch(
       rpc,
@@ -139,7 +151,10 @@ async function getRoadBalance(wallet) {
 
               {
                 encoding:
-                  "jsonParsed"
+                  "jsonParsed",
+
+                commitment:
+                  "finalized"
               }
 
             ]
@@ -193,10 +208,22 @@ async function getRoadBalance(wallet) {
     }
 
 
-    balance +=
+    const uiAmount =
       Number(
         amount.uiAmount || 0
       );
+
+
+    if (
+      Number.isFinite(
+        uiAmount
+      )
+    ) {
+
+      balance +=
+        uiAmount;
+
+    }
 
   }
 
@@ -226,7 +253,9 @@ async function getRoadPrice() {
 
 
     if (!response.ok) {
+
       return 0;
+
     }
 
 
@@ -234,14 +263,51 @@ async function getRoadPrice() {
       await response.json();
 
 
-    return Number(
-      data
-        ?.pairs
-        ?.find(
+    const pairs =
+      Array.isArray(
+        data?.pairs
+      )
+        ? data.pairs
+        : [];
+
+
+    // ===============================================
+    // ONLY VALID ROAD PAIRS
+    // ===============================================
+
+    const validPairs =
+      pairs
+        .filter(
           pair =>
-            pair?.priceUsd
+            pair?.chainId === "solana" &&
+            pair?.baseToken?.address === TOKEN_MINT &&
+            Number.isFinite(
+              Number(pair?.priceUsd)
+            ) &&
+            Number(pair?.priceUsd) > 0
         )
-        ?.priceUsd || 0
+        .sort(
+          (a, b) =>
+            Number(
+              b?.liquidity?.usd || 0
+            ) -
+            Number(
+              a?.liquidity?.usd || 0
+            )
+        );
+
+
+    if (
+      !validPairs.length
+    ) {
+
+      return 0;
+
+    }
+
+
+    return Number(
+      validPairs[0].priceUsd
     );
 
 
@@ -627,6 +693,10 @@ export default async function handler(req, res) {
 
     else {
 
+      // =============================================
+      // REAL $ROAD BALANCE
+      // =============================================
+
       balance =
         await getRoadBalance(
           wallet
@@ -657,6 +727,10 @@ export default async function handler(req, res) {
       }
 
 
+      // =============================================
+      // REAL $ROAD PRICE
+      // =============================================
+
       price =
         await getRoadPrice();
 
@@ -685,13 +759,22 @@ export default async function handler(req, res) {
       }
 
 
+      // =============================================
+      // USD VALUE
+      // =============================================
+
       usdValue =
         balance *
         price;
 
 
+      // =============================================
+      // MINIMUM VALUE
+      // =============================================
+
       if (
-        usdValue < 10
+        usdValue <
+        MIN_USD_REQUIRED
       ) {
 
         return json(
@@ -703,13 +786,19 @@ export default async function handler(req, res) {
               false,
 
             error:
-              `This wallet currently holds approximately US$${usdValue.toFixed(2)} in $ROAD. Minimum required is US$10.00.`,
+              `This wallet currently holds approximately US$${usdValue.toFixed(2)} in $ROAD. Minimum required is US$${MIN_USD_REQUIRED.toFixed(2)}.`,
 
             balance:
               balance,
 
+            road_price:
+              price,
+
             usd_value:
-              usdValue
+              usdValue,
+
+            minimum_required:
+              MIN_USD_REQUIRED
 
           }
         );
@@ -879,6 +968,9 @@ export default async function handler(req, res) {
 
         test_mode:
           testMode,
+
+        minimum_required:
+          MIN_USD_REQUIRED,
 
         message:
           testMode
