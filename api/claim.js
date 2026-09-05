@@ -9,7 +9,7 @@ const TOTAL_SPOTS = 100;
 // TEST MODE
 // TRUE = permite testar sem possuir $ROAD
 // FALSE = usa a verificação real
-const TEST_MODE = true;
+const TEST_MODE = false;
 
 const TEST_KEY =
   "ROADMAN_TEST_2026";
