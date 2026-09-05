@@ -55,15 +55,24 @@ html,
 body{
   width:100%;
   min-height:100%;
-
   background:var(--bg);
   color:var(--ink);
-
   font-family:var(--body);
 }
 
 body{
   overflow-x:hidden;
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+
+/* PRINT PROTECTION */
+@media print{
+  html,
+  body{
+    display:none !important;
+  }
 }
 
 .wrap{
@@ -79,20 +88,15 @@ body{
 
 .banner{
   height:clamp(135px,22svh,180px);
-
   position:relative;
-
   display:grid;
   place-items:center;
-
   overflow:hidden;
-
   border-bottom:1px solid var(--border);
 }
 
 .banner:before{
   content:"";
-
   position:absolute;
   inset:0;
 
@@ -102,6 +106,7 @@ body{
       rgba(255,255,255,.055),
       transparent 62%
     ),
+
     repeating-linear-gradient(
       115deg,
       rgba(255,255,255,.018) 0,
@@ -128,10 +133,8 @@ body{
 .profile{
   display:flex;
   align-items:flex-end;
-
   padding:0 22px;
   margin-top:-27px;
-
   position:relative;
 }
 
@@ -140,7 +143,6 @@ body{
   height:62px;
 
   border-radius:50%;
-
   background:var(--raise);
 
   border:3px solid var(--border);
@@ -154,11 +156,8 @@ body{
 .avatar img{
   width:100%;
   height:100%;
-
   object-fit:cover;
-
   display:block;
-
   border-radius:50%;
 
   user-select:none;
@@ -181,7 +180,6 @@ body{
   font:10.5px var(--mono);
 
   letter-spacing:.06em;
-
   color:var(--green);
 
   margin-bottom:5px;
@@ -194,7 +192,6 @@ body{
   height:6px;
 
   border-radius:50%;
-
   background:var(--green);
 }
 
@@ -206,7 +203,6 @@ body{
 .handle{
   font-size:12.5px;
   color:var(--dim);
-
   margin:2px 0 7px;
 }
 
@@ -226,22 +222,22 @@ body{
 .links{
   display:flex;
   gap:8px;
-
   margin:10px 22px 0;
 }
 
 .links a{
   flex:1;
-
   text-align:center;
   text-decoration:none;
 
   border-radius:999px;
-
   padding:8px 12px;
 
   font-size:11.5px;
   font-weight:700;
+
+  -webkit-user-select:none;
+  user-select:none;
 }
 
 .x{
@@ -264,7 +260,6 @@ body{
 
 .line{
   height:2px;
-
   background:var(--border);
 
   margin:0 12px;
@@ -274,7 +269,6 @@ body{
 
 .fill{
   position:absolute;
-
   left:0;
   top:0;
 
@@ -296,17 +290,14 @@ body{
 .marker{
   border:0;
   background:none;
-
   color:inherit;
 
   display:flex;
   flex-direction:column;
   align-items:center;
-
   gap:6px;
 
   font:8.5px var(--mono);
-
   text-transform:uppercase;
 
   cursor:pointer;
@@ -319,7 +310,6 @@ body{
   border-radius:50%;
 
   border:2px solid var(--border);
-
   background:#000;
 }
 
@@ -364,7 +354,6 @@ body{
   margin:20px 22px 0;
 
   border:1px solid var(--border);
-
   border-radius:16px;
 
   background:var(--raise);
@@ -380,7 +369,6 @@ body{
 
 .step.active{
   display:block;
-
   animation:in .22s ease;
 }
 
@@ -398,17 +386,14 @@ body{
 
 .eyebrow{
   font:10.5px var(--mono);
-
   color:var(--blue);
 
   letter-spacing:.08em;
-
   margin-bottom:7px;
 }
 
 .step h2{
   font:23px/1 var(--display);
-
   text-transform:uppercase;
 
   margin-bottom:9px;
@@ -416,19 +401,15 @@ body{
 
 .step p{
   font-size:13px;
-
   line-height:1.5;
 
   color:var(--dim);
-
   margin-bottom:16px;
 }
 
 .terminal{
   font:11px/1.8 var(--mono);
-
   color:var(--dim);
-
   margin-bottom:16px;
 }
 
@@ -458,7 +439,6 @@ input{
   background:#000;
 
   border:1px solid var(--border);
-
   border-radius:10px;
 
   color:var(--ink);
@@ -468,10 +448,12 @@ input{
   padding:11px 13px;
 
   outline:0;
-
   width:100%;
 
   transition:.2s;
+
+  -webkit-user-select:text;
+  user-select:text;
 }
 
 input:focus{
@@ -480,7 +462,6 @@ input:focus{
 
 input.invalid{
   border-color:var(--red);
-
   animation:shake .25s;
 }
 
@@ -503,6 +484,9 @@ button.cta{
   font:700 12px var(--body);
 
   cursor:pointer;
+
+  -webkit-user-select:none;
+  user-select:none;
 }
 
 .accent{
@@ -525,7 +509,6 @@ button.cta{
 .nav{
   display:flex;
   gap:8px;
-
   margin-top:8px;
 }
 
@@ -539,11 +522,9 @@ button.cta{
 
 .wallets{
   display:grid;
-
   grid-template-columns:1fr 1fr;
 
   gap:8px;
-
   margin-bottom:13px;
 }
 
@@ -551,7 +532,6 @@ button.cta{
   background:#000;
 
   border:1px solid var(--border);
-
   border-radius:10px;
 
   color:var(--ink);
@@ -566,13 +546,15 @@ button.cta{
 
   display:flex;
   align-items:center;
-
   gap:10px;
 
   transition:
     border-color .2s,
     background .2s,
     transform .15s;
+
+  -webkit-user-select:none;
+  user-select:none;
 }
 
 .wallet:hover{
@@ -604,7 +586,6 @@ button.cta{
   flex:0 0 26px;
 
   object-fit:contain;
-
   display:block;
 
   user-select:none;
@@ -613,7 +594,6 @@ button.cta{
 
 .wallet-name{
   display:flex;
-
   flex-direction:column;
 
   justify-content:center;
@@ -658,20 +638,17 @@ button.cta{
   flex:0 0 26px;
 
   border:1px solid var(--border);
-
   border-radius:7px;
 
   display:grid;
   place-items:center;
 
   font-size:13px;
-
   color:var(--dim);
 }
 
 .hint{
   font:10.5px var(--mono);
-
   color:var(--dim);
 
   margin-bottom:7px;
@@ -693,7 +670,6 @@ button.cta{
   padding:8px 10px;
 
   border:1px solid rgba(0,186,124,.35);
-
   border-radius:8px;
 
   font:9.5px var(--mono);
@@ -713,11 +689,9 @@ button.cta{
   text-align:center;
 
   border:1px solid var(--border);
-
   border-radius:13px;
 
   padding:17px;
-
   margin-bottom:12px;
 }
 
@@ -727,7 +701,6 @@ button.cta{
   color:var(--dim);
 
   text-transform:uppercase;
-
   letter-spacing:.08em;
 }
 
@@ -793,7 +766,6 @@ button.cta{
   padding:5px;
 
   border:1px solid var(--blue);
-
   border-radius:12px;
 
   background:#050505;
@@ -806,9 +778,8 @@ button.cta{
 
   position:relative;
 
-  user-select:none;
-
   -webkit-user-select:none;
+  user-select:none;
 
   -webkit-touch-callout:none;
 }
@@ -822,7 +793,6 @@ button.cta{
   border-radius:8px;
 
   object-fit:cover;
-
   object-position:center;
 
   background:#050505;
@@ -833,7 +803,6 @@ button.cta{
   -webkit-user-select:none;
 
   -webkit-user-drag:none;
-
   -webkit-touch-callout:none;
 
   pointer-events:none;
@@ -860,7 +829,6 @@ button.cta{
 
 .nft-watermark-inner{
   display:flex;
-
   flex-direction:column;
 
   align-items:center;
@@ -927,6 +895,18 @@ button.cta{
   max-width:85%;
 }
 
+.nft-protection-layer{
+  position:absolute;
+
+  inset:0;
+
+  z-index:10;
+
+  background:transparent;
+
+  pointer-events:auto;
+}
+
 .nft-fallback{
   width:100%;
   height:100%;
@@ -942,13 +922,11 @@ button.cta{
 
 .nft-title{
   font:18px var(--display);
-
   text-transform:uppercase;
 }
 
 .nft-sub{
   font-size:11px;
-
   color:var(--dim);
 
   margin-top:3px;
@@ -956,8 +934,23 @@ button.cta{
 
 .bottom-action{
   margin-top:10px;
-
   width:100%;
+}
+
+.rule{
+  font:10px/1.5 var(--mono);
+
+  color:var(--dim);
+
+  margin-top:12px;
+
+  border-top:1px solid var(--border);
+
+  padding-top:10px;
+}
+
+.rule strong{
+  color:var(--ink);
 }
 
 /* =====================================================
@@ -971,9 +964,7 @@ button.cta{
 
   padding:7px 10px;
 
-  border:
-    1px solid
-    rgba(29,155,240,.35);
+  border:1px solid rgba(29,155,240,.35);
 
   border-radius:8px;
 
@@ -1063,8 +1054,11 @@ footer{
   .nft-watermark-sub{
     font-size:7px;
   }
-
 }
+
+/* =====================================================
+   SHORT SCREENS
+===================================================== */
 
 @media(max-height:720px){
 
@@ -1127,6 +1121,10 @@ footer{
 
 <div class="wrap">
 
+<!-- =================================================
+     HEADER
+===================================================== -->
+
 <section class="banner">
 
   <h1>
@@ -1135,6 +1133,10 @@ footer{
   </h1>
 
 </section>
+
+<!-- =================================================
+     PROFILE
+===================================================== -->
 
 <div class="profile">
 
@@ -1161,24 +1163,23 @@ footer{
   </div>
 
   <div class="handle">
-
     @theroadprovides ·
-
     <span id="spotsHeader">
       100 first spots
     </span>
-
   </div>
 
   <div class="bio">
-
     The first 100 NFTs go to those who
     walked with <b>$ROAD</b>
     before the road was paved.
-
   </div>
 
 </section>
+
+<!-- =================================================
+     LINKS
+===================================================== -->
 
 <div class="links">
 
@@ -1202,6 +1203,10 @@ footer{
 
 </div>
 
+<!-- =================================================
+     PROGRESS
+===================================================== -->
+
 <div class="road">
 
   <div class="line">
@@ -1220,11 +1225,13 @@ footer{
       data-step="1"
       type="button"
     >
+
       <span class="dot"></span>
 
       <span class="marker-label">
         Enter
       </span>
+
     </button>
 
     <button
@@ -1232,11 +1239,13 @@ footer{
       data-step="2"
       type="button"
     >
+
       <span class="dot"></span>
 
       <span class="marker-label">
         Continue
       </span>
+
     </button>
 
     <button
@@ -1244,11 +1253,13 @@ footer{
       data-step="3"
       type="button"
     >
+
       <span class="dot"></span>
 
       <span class="marker-label">
         Wallet
       </span>
+
     </button>
 
     <button
@@ -1256,18 +1267,28 @@ footer{
       data-step="4"
       type="button"
     >
+
       <span class="dot"></span>
 
       <span class="marker-label">
         Sealed
       </span>
+
     </button>
 
   </div>
 
 </div>
 
+<!-- =================================================
+     MAIN PANEL
+===================================================== -->
+
 <main class="panel">
+
+<!-- =================================================
+     STEP 1
+===================================================== -->
 
 <section
   class="step active"
@@ -1345,6 +1366,10 @@ footer{
 
 </section>
 
+<!-- =================================================
+     STEP 2
+===================================================== -->
+
 <section
   class="step"
   data-step="2"
@@ -1401,6 +1426,10 @@ footer{
 
 </section>
 
+<!-- =================================================
+     STEP 3
+===================================================== -->
+
 <section
   class="step"
   data-step="3"
@@ -1420,6 +1449,8 @@ footer{
   </p>
 
   <div class="wallets">
+
+    <!-- PHANTOM -->
 
     <button
       class="wallet"
@@ -1455,6 +1486,8 @@ footer{
 
     </button>
 
+    <!-- SOLFLARE -->
+
     <button
       class="wallet"
       data-wallet="Solflare"
@@ -1489,6 +1522,8 @@ footer{
 
     </button>
 
+    <!-- METAMASK -->
+
     <button
       class="wallet"
       data-wallet="MetaMask"
@@ -1522,6 +1557,8 @@ footer{
       </span>
 
     </button>
+
+    <!-- MANUAL -->
 
     <button
       class="wallet manual"
@@ -1618,6 +1655,10 @@ footer{
   </div>
 
 </section>
+
+<!-- =================================================
+     STEP 4
+===================================================== -->
 
 <section
   class="step"
@@ -1740,6 +1781,11 @@ footer{
         SEALED · SPOT #001
       </div>
 
+      <div
+        class="nft-protection-layer"
+        aria-hidden="true"
+      ></div>
+
     </div>
 
     <div class="nft-title">
@@ -1765,11 +1811,7 @@ footer{
 </main>
 
 <footer>
-
-  THE ROAD PROVIDES ·
-  100 early access spots ·
-  1 NFT per person
-
+  THE ROAD PROVIDES · 100 early access spots · 1 NFT per person
 </footer>
 
 </div>
@@ -1822,11 +1864,16 @@ function normalizeHandle(value){
       .trim();
 
   if(!v){
+
     return "";
+
   }
 
   if(!v.startsWith("@")){
-    v = "@" + v;
+
+    v =
+      "@" + v;
+
   }
 
   return v;
@@ -1848,6 +1895,7 @@ function maskWallet(wallet){
     "..." +
     wallet.slice(-5)
   );
+
 }
 
 function isMobile(){
@@ -1858,6 +1906,7 @@ function isMobile(){
         navigator.userAgent
       )
   );
+
 }
 
 function validSolanaAddress(address){
@@ -1866,8 +1915,11 @@ function validSolanaAddress(address){
     typeof address === "string" &&
     address.length >= 32 &&
     address.length <= 44 &&
-    /^[1-9A-HJ-NP-Za-km-z]+$/.test(address)
+    /^[1-9A-HJ-NP-Za-km-z]+$/.test(
+      address
+    )
   );
+
 }
 
 function setWalletError(message){
@@ -1881,20 +1933,25 @@ function setWalletError(message){
     message
       ? "block"
       : "none";
+
 }
 
 function clearWalletVisualState(){
 
   document
-    .querySelectorAll(".wallet")
-    .forEach(button => {
+    .querySelectorAll(
+      ".wallet"
+    )
+    .forEach(
+      button => {
 
-      button.classList.remove(
-        "selected",
-        "connected"
-      );
+        button.classList.remove(
+          "selected",
+          "connected"
+        );
 
-    });
+      }
+    );
 
   $("phantomStatus")
     .textContent =
@@ -1907,24 +1964,7 @@ function clearWalletVisualState(){
   $("metamaskStatus")
     .textContent =
     "CONNECT";
-}
 
-function resetWalletDisplay(){
-
-  connectedWallet = "";
-  connectedProvider = "";
-
-  $("walletInput").value = "";
-
-  $("walletInput").readOnly = false;
-
-  $("walletInput").style.borderColor = "";
-
-  $("connectedWallet").style.display = "none";
-
-  $("verifyBtn").disabled = true;
-
-  setWalletError("");
 }
 
 function setConnectedWallet(
@@ -1932,30 +1972,43 @@ function setConnectedWallet(
   provider
 ){
 
-  connectedWallet = wallet;
+  connectedWallet =
+    wallet;
 
-  connectedProvider = provider;
+  connectedProvider =
+    provider;
 
-  $("walletInput").value = wallet;
+  $("walletInput")
+    .value =
+    wallet;
 
-  $("walletInput").readOnly = true;
+  $("walletInput")
+    .readOnly =
+    true;
 
-  $("walletInput").style.borderColor =
+  $("walletInput")
+    .style.borderColor =
     "var(--green)";
 
-  $("connectedWallet").textContent =
+  $("connectedWallet")
+    .textContent =
     "CONNECTED · " +
     provider +
     " · " +
     maskWallet(wallet);
 
-  $("connectedWallet").style.display =
+  $("connectedWallet")
+    .style.display =
     "block";
 
-  $("verifyBtn").disabled = false;
+  $("verifyBtn")
+    .disabled =
+    false;
 
-  $("walletHint").textContent =
+  $("walletHint")
+    .textContent =
     "Wallet connected successfully.";
+
 }
 
 function setWalletButtonConnected(
@@ -1965,22 +2018,26 @@ function setWalletButtonConnected(
   clearWalletVisualState();
 
   document
-    .querySelectorAll(".wallet")
-    .forEach(button => {
+    .querySelectorAll(
+      ".wallet"
+    )
+    .forEach(
+      button => {
 
-      if(
-        button.dataset.wallet ===
-        walletName
-      ){
+        if(
+          button.dataset.wallet ===
+          walletName
+        ){
 
-        button.classList.add(
-          "selected",
-          "connected"
-        );
+          button.classList.add(
+            "selected",
+            "connected"
+          );
+
+        }
 
       }
-
-    });
+    );
 
   const statusIds = {
 
@@ -2004,6 +2061,7 @@ function setWalletButtonConnected(
       "CONNECTED";
 
   }
+
 }
 
 function setConnectionStatus(message){
@@ -2015,44 +2073,7 @@ function setConnectionStatus(message){
   $("verifyStatus")
     .textContent =
     message;
-}
 
-/* =====================================================
-   PROVIDER WAIT
-===================================================== */
-
-async function waitForProvider(
-  getter,
-  attempts = 12,
-  delay = 250
-){
-
-  for(
-    let i = 0;
-    i < attempts;
-    i++
-  ){
-
-    const provider =
-      getter();
-
-    if(provider){
-
-      return provider;
-
-    }
-
-    await new Promise(
-      resolve =>
-        setTimeout(
-          resolve,
-          delay
-        )
-    );
-
-  }
-
-  return null;
 }
 
 /* =====================================================
@@ -2065,37 +2086,41 @@ function setStep(n){
 
   document
     .querySelectorAll(".step")
-    .forEach(el => {
+    .forEach(
+      el => {
 
-      el.classList.toggle(
-        "active",
-        Number(
-          el.dataset.step
-        ) === n
-      );
+        el.classList.toggle(
+          "active",
+          Number(
+            el.dataset.step
+          ) === n
+        );
 
-    });
+      }
+    );
 
   document
     .querySelectorAll(".marker")
-    .forEach(el => {
+    .forEach(
+      el => {
 
-      const s =
-        Number(
-          el.dataset.step
+        const s =
+          Number(
+            el.dataset.step
+          );
+
+        el.classList.toggle(
+          "active",
+          s === n
         );
 
-      el.classList.toggle(
-        "active",
-        s === n
-      );
+        el.classList.toggle(
+          "done",
+          s < n
+        );
 
-      el.classList.toggle(
-        "done",
-        s < n
-      );
-
-    });
+      }
+    );
 
   $("fill").style.width =
     (
@@ -2105,6 +2130,7 @@ function setStep(n){
       8.33
     ) +
     "%";
+
 }
 
 /* =====================================================
@@ -2156,11 +2182,16 @@ async function updateSpots(){
       remaining <= 0
     ){
 
-      $("enterBtn").disabled = true;
+      $("enterBtn")
+        .disabled =
+        true;
 
-      $("handle").disabled = true;
+      $("handle")
+        .disabled =
+        true;
 
-      $("handle").placeholder =
+      $("handle")
+        .placeholder =
         "No spots remaining";
 
     }
@@ -2173,6 +2204,7 @@ async function updateSpots(){
     );
 
   }
+
 }
 
 /* =====================================================
@@ -2214,6 +2246,7 @@ function validHandle(){
     );
 
     return false;
+
   }
 
   input.value =
@@ -2230,6 +2263,7 @@ function validHandle(){
     "none";
 
   return true;
+
 }
 
 /* =====================================================
@@ -2292,31 +2326,35 @@ $("sealBtn").onclick =
 ===================================================== */
 
 document
-  .querySelectorAll("[data-back]")
-  .forEach(button => {
+  .querySelectorAll(
+    "[data-back]"
+  )
+  .forEach(
+    button => {
 
-    button.addEventListener(
-      "click",
-      function(){
+      button.addEventListener(
+        "click",
+        function(){
 
-        const target =
-          Number(
-            button.dataset.back
-          );
+          const target =
+            Number(
+              button.dataset.back
+            );
 
-        if(
-          target >= 1 &&
-          target < step
-        ){
+          if(
+            target >= 1 &&
+            target < step
+          ){
 
-          setStep(target);
+            setStep(target);
+
+          }
 
         }
+      );
 
-      }
-    );
-
-  });
+    }
+  );
 
 /* =====================================================
    PHANTOM
@@ -2332,34 +2370,18 @@ async function connectPhantom(){
 
   try{
 
-    const provider =
-      await waitForProvider(
-        () =>
-          window.phantom?.solana ||
-          (
-            window.solana?.isPhantom
-              ? window.solana
-              : null
-          )
-      );
+    if(
+      window.phantom?.solana
+    ){
 
-    if(provider){
+      const provider =
+        window.phantom.solana;
 
-      let response = null;
-
-      if(
-        typeof provider.connect ===
-        "function"
-      ){
-
-        response =
-          await provider.connect();
-
-      }
+      const response =
+        await provider.connect();
 
       const publicKey =
-        response?.publicKey?.toString() ||
-        provider?.publicKey?.toString();
+        response?.publicKey?.toString();
 
       if(
         !validSolanaAddress(
@@ -2368,7 +2390,7 @@ async function connectPhantom(){
       ){
 
         throw new Error(
-          "Phantom connected, but no valid Solana address was returned."
+          "Phantom returned an invalid Solana address."
         );
 
       }
@@ -2387,6 +2409,7 @@ async function connectPhantom(){
       );
 
       return true;
+
     }
 
     if(
@@ -2406,10 +2429,11 @@ async function connectPhantom(){
         deeplink;
 
       return true;
+
     }
 
     throw new Error(
-      "Phantom wallet provider was not detected."
+      "Phantom extension was not detected in this browser."
     );
 
   }catch(error){
@@ -2429,7 +2453,9 @@ async function connectPhantom(){
     );
 
     return false;
+
   }
+
 }
 
 /* =====================================================
@@ -2446,33 +2472,24 @@ async function connectSolflare(){
 
   try{
 
-    const provider =
-      await waitForProvider(
-        () =>
-          window.solflare ||
-          window.Solflare ||
-          (
-            window.solana?.isSolflare
-              ? window.solana
-              : null
-          )
-      );
+    if(
+      window.solflare
+    ){
 
-    if(provider){
+      const provider =
+        window.solflare;
 
       if(
-        provider.isSolflare === false
+        !provider.isSolflare
       ){
 
         throw new Error(
-          "Invalid Solflare provider."
+          "Solflare provider was not detected."
         );
 
       }
 
       if(
-        typeof provider.connect ===
-        "function" &&
         !provider.isConnected
       ){
 
@@ -2490,7 +2507,7 @@ async function connectSolflare(){
       ){
 
         throw new Error(
-          "Solflare connected, but no valid Solana address was returned."
+          "Solflare returned an invalid Solana address."
         );
 
       }
@@ -2509,6 +2526,7 @@ async function connectSolflare(){
       );
 
       return true;
+
     }
 
     if(
@@ -2532,10 +2550,11 @@ async function connectSolflare(){
         deeplink;
 
       return true;
+
     }
 
     throw new Error(
-      "Solflare wallet provider was not detected."
+      "Solflare extension was not detected in this browser."
     );
 
   }catch(error){
@@ -2555,7 +2574,9 @@ async function connectSolflare(){
     );
 
     return false;
+
   }
+
 }
 
 /* =====================================================
@@ -2572,68 +2593,51 @@ async function connectMetaMask(){
 
   try{
 
+    /*
+     * MetaMask's Solana provider.
+     *
+     * We intentionally DO NOT use
+     * window.ethereum here because that
+     * returns an EVM 0x... account.
+     */
+
     const provider =
-      await waitForProvider(
-        () => {
+      window.solana;
 
-          const candidates = [
-            window.solana,
-            window.phantom?.solana,
-            window.ethereum
-          ];
+    if(
+      provider &&
+      (
+        provider.isMetaMask ||
+        provider.isMetaMaskSolana ||
+        provider._metamask
+      )
+    ){
 
-          for(
-            const candidate of candidates
-          ){
-
-            if(
-              candidate &&
-              (
-                candidate.isMetaMaskSolana ||
-                (
-                  candidate.isMetaMask &&
-                  typeof candidate.connect ===
-                    "function"
-                )
-              )
-            ){
-
-              return candidate;
-
-            }
-
-          }
-
-          return null;
-
-        }
-      );
-
-    if(provider){
+      let publicKey = null;
 
       /*
-       * MetaMask Solana provider.
-       * We deliberately do not use the
-       * Ethereum request() method because
-       * that returns a 0x... EVM address.
+       * Some MetaMask Solana integrations
+       * expose connect() directly.
        */
-
-      let response = null;
 
       if(
         typeof provider.connect ===
         "function"
       ){
 
-        response =
+        const response =
           await provider.connect();
 
-      }
+        publicKey =
+          response
+            ?.publicKey
+            ?.toString() ||
+          provider
+            ?.publicKey
+            ?.toString() ||
+          null;
 
-      let publicKey =
-        response?.publicKey?.toString() ||
-        provider?.publicKey?.toString() ||
-        null;
+      }
 
       if(
         !publicKey &&
@@ -2676,7 +2680,12 @@ async function connectMetaMask(){
       );
 
       return true;
+
     }
+
+    /*
+     * Mobile fallback.
+     */
 
     if(
       isMobile()
@@ -2696,6 +2705,7 @@ async function connectMetaMask(){
         deeplink;
 
       return true;
+
     }
 
     throw new Error(
@@ -2705,7 +2715,7 @@ async function connectMetaMask(){
   }catch(error){
 
     console.error(
-      "METAMASK:",
+      "METAMASK SOLANA:",
       error
     );
 
@@ -2719,7 +2729,9 @@ async function connectMetaMask(){
     );
 
     return false;
+
   }
+
 }
 
 /* =====================================================
@@ -2728,32 +2740,44 @@ async function connectMetaMask(){
 
 function enableManualWallet(){
 
+  connectedWallet =
+    "";
+
+  connectedProvider =
+    "Manual";
+
   clearWalletVisualState();
 
-  connectedWallet = "";
-
-  connectedProvider = "Manual";
-
-  $("walletBox").style.display =
+  $("walletBox")
+    .style.display =
     "block";
 
-  $("walletInput").readOnly =
+  $("walletInput")
+    .readOnly =
     false;
 
-  $("walletInput").value =
+  $("walletInput")
+    .value =
     "";
 
-  $("walletInput").style.borderColor =
+  $("walletInput")
+    .style.borderColor =
     "";
 
-  $("connectedWallet").style.display =
+  $("walletInput")
+    .focus();
+
+  $("walletHint")
+    .textContent =
+    "Paste your Solana wallet address below.";
+
+  $("connectedWallet")
+    .style.display =
     "none";
 
-  $("verifyBtn").disabled =
+  $("verifyBtn")
+    .disabled =
     true;
-
-  $("walletHint").textContent =
-    "Paste your Solana wallet address below.";
 
   setWalletError("");
 
@@ -2761,7 +2785,6 @@ function enableManualWallet(){
     "> manual wallet mode."
   );
 
-  $("walletInput").focus();
 }
 
 /* =====================================================
@@ -2769,74 +2792,102 @@ function enableManualWallet(){
 ===================================================== */
 
 document
-  .querySelectorAll(".wallet")
-  .forEach(button => {
+  .querySelectorAll(
+    ".wallet"
+  )
+  .forEach(
+    button => {
 
-    button.onclick =
-      async function(){
+      button.onclick =
+        async function(){
 
-        selectedWallet =
-          button.dataset.wallet;
+          selectedWallet =
+            button.dataset.wallet;
 
-        if(
-          selectedWallet ===
-          "Manual"
-        ){
+          if(
+            selectedWallet ===
+            "Manual"
+          ){
 
-          enableManualWallet();
+            enableManualWallet();
 
-          return;
+            return;
 
-        }
+          }
 
-        clearWalletVisualState();
+          clearWalletVisualState();
 
-        resetWalletDisplay();
+          button.classList.add(
+            "selected"
+          );
 
-        button.classList.add(
-          "selected"
-        );
+          $("walletBox")
+            .style.display =
+            "block";
 
-        $("walletBox")
-          .style.display =
-          "block";
+          connectedWallet =
+            "";
 
-        if(
-          selectedWallet ===
-          "Phantom"
-        ){
+          connectedProvider =
+            "";
 
-          await connectPhantom();
+          $("walletInput")
+            .value =
+            "";
 
-          return;
+          $("walletInput")
+            .readOnly =
+            false;
 
-        }
+          $("walletInput")
+            .style.borderColor =
+            "";
 
-        if(
-          selectedWallet ===
-          "Solflare"
-        ){
+          $("connectedWallet")
+            .style.display =
+            "none";
 
-          await connectSolflare();
+          $("verifyBtn")
+            .disabled =
+            true;
 
-          return;
+          if(
+            selectedWallet ===
+            "Phantom"
+          ){
 
-        }
+            await connectPhantom();
 
-        if(
-          selectedWallet ===
-          "MetaMask"
-        ){
+            return;
 
-          await connectMetaMask();
+          }
 
-          return;
+          if(
+            selectedWallet ===
+            "Solflare"
+          ){
 
-        }
+            await connectSolflare();
 
-      };
+            return;
 
-  });
+          }
+
+          if(
+            selectedWallet ===
+            "MetaMask"
+          ){
+
+            await connectMetaMask();
+
+            return;
+
+          }
+
+        };
+
+    }
+  );
 
 /* =====================================================
    WALLET INPUT
@@ -2846,6 +2897,11 @@ $("walletInput")
   .addEventListener(
     "input",
     function(){
+
+      /*
+       * Only Manual mode can edit
+       * the wallet address.
+       */
 
       if(
         connectedProvider !==
@@ -2986,7 +3042,9 @@ async function submitClaim(
       error.message;
 
     return null;
+
   }
+
 }
 
 /* =====================================================
@@ -2996,7 +3054,9 @@ async function submitClaim(
 function updateWatermark(){
 
   if(!claim){
+
     return;
+
   }
 
   const spot =
@@ -3035,10 +3095,11 @@ function updateWatermark(){
     spot +
     " · " +
     maskWallet(wallet);
+
 }
 
 /* =====================================================
-   VERIFY
+   VERIFY / CONTINUE
 ===================================================== */
 
 $("verifyBtn").onclick =
@@ -3065,6 +3126,7 @@ $("verifyBtn").onclick =
         "block";
 
       return;
+
     }
 
     if(!currentHandle){
@@ -3072,6 +3134,7 @@ $("verifyBtn").onclick =
       setStep(1);
 
       return;
+
     }
 
     $("verifyBtn")
@@ -3091,6 +3154,7 @@ $("verifyBtn").onclick =
         false;
 
       return;
+
     }
 
     claim =
@@ -3191,6 +3255,7 @@ function loadNFT(n){
         "grid";
 
       return;
+
     }
 
     const src =
@@ -3208,8 +3273,6 @@ function loadNFT(n){
         fallback.style.display =
           "none";
 
-        updateWatermark();
-
       };
 
     img.onerror =
@@ -3221,6 +3284,7 @@ function loadNFT(n){
   }
 
   tryNext();
+
 }
 
 /* =====================================================
@@ -3228,7 +3292,9 @@ function loadNFT(n){
 ===================================================== */
 
 const nftFrame =
-  $("nftFrame");
+  document.querySelector(
+    ".nft-frame"
+  );
 
 const nftImg =
   $("nftImg");
@@ -3240,7 +3306,6 @@ if(nftFrame){
     function(event){
 
       event.preventDefault();
-      event.stopPropagation();
 
     }
   );
@@ -3250,7 +3315,6 @@ if(nftFrame){
     function(event){
 
       event.preventDefault();
-      event.stopPropagation();
 
     }
   );
@@ -3260,7 +3324,6 @@ if(nftFrame){
     function(event){
 
       event.preventDefault();
-      event.stopPropagation();
 
     }
   );
@@ -3270,7 +3333,6 @@ if(nftFrame){
     function(event){
 
       event.preventDefault();
-      event.stopPropagation();
 
     }
   );
@@ -3280,8 +3342,27 @@ if(nftFrame){
     function(event){
 
       event.preventDefault();
-      event.stopPropagation();
 
+    }
+  );
+
+  nftFrame.addEventListener(
+    "touchstart",
+    function(event){
+
+      if(
+        event.touches &&
+        event.touches.length ===
+        1
+      ){
+
+        event.preventDefault();
+
+      }
+
+    },
+    {
+      passive:false
     }
   );
 
@@ -3310,15 +3391,23 @@ if(nftImg){
 }
 
 /* =====================================================
-   GLOBAL IMAGE PROTECTION
+   GLOBAL PROTECTION
 ===================================================== */
+
+document.addEventListener(
+  "contextmenu",
+  function(event){
+
+    event.preventDefault();
+
+  }
+);
 
 document.addEventListener(
   "dragstart",
   function(event){
 
     if(
-      event.target &&
       event.target.tagName ===
       "IMG"
     ){
@@ -3331,15 +3420,91 @@ document.addEventListener(
 );
 
 document.addEventListener(
+  "selectstart",
+  function(event){
+
+    if(
+      event.target.closest(
+        ".nft-frame"
+      )
+    ){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
+
+/*
+  Block common browser shortcuts.
+  Normal text entry remains available
+  inside inputs.
+*/
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    const tag =
+      event.target?.tagName;
+
+    const typing =
+      tag === "INPUT" ||
+      tag === "TEXTAREA";
+
+    if(
+      typing
+    ){
+
+      return;
+
+    }
+
+    const key =
+      String(
+        event.key || ""
+      ).toLowerCase();
+
+    const blocked =
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      (
+        key === "s" ||
+        key === "u" ||
+        key === "c" ||
+        key === "x" ||
+        key === "p"
+      );
+
+    if(blocked){
+
+      event.preventDefault();
+
+    }
+
+    if(
+      event.key === "PrintScreen"
+    ){
+
+      event.preventDefault();
+
+    }
+
+  },
+  true
+);
+
+document.addEventListener(
   "copy",
   function(event){
 
     if(
-      event.target &&
-      event.target.closest &&
-      event.target.closest(
-        ".nft-frame"
-      )
+      document
+        .activeElement
+        ?.closest(".nft-frame")
     ){
 
       event.preventDefault();
@@ -3355,11 +3520,9 @@ document.addEventListener(
   function(event){
 
     if(
-      event.target &&
-      event.target.closest &&
-      event.target.closest(
-        ".nft-frame"
-      )
+      document
+        .activeElement
+        ?.closest(".nft-frame")
     ){
 
       event.preventDefault();
@@ -3371,48 +3534,26 @@ document.addEventListener(
 );
 
 /* =====================================================
-   COMMON SHORTCUT PROTECTION
+   PRINT PROTECTION
 ===================================================== */
 
-document.addEventListener(
-  "keydown",
-  function(event){
+window.addEventListener(
+  "beforeprint",
+  function(){
 
-    const tag =
-      event.target?.tagName;
+    document.body.dataset.printing =
+      "true";
 
-    if(
-      tag === "INPUT" ||
-      tag === "TEXTAREA"
-    ){
+  }
+);
 
-      return;
+window.addEventListener(
+  "afterprint",
+  function(){
 
-    }
+    delete document.body.dataset.printing;
 
-    const key =
-      String(
-        event.key || ""
-      ).toLowerCase();
-
-    if(
-      (
-        event.ctrlKey ||
-        event.metaKey
-      ) &&
-      (
-        key === "s" ||
-        key === "u" ||
-        key === "p"
-      )
-    ){
-
-      event.preventDefault();
-
-    }
-
-  },
-  true
+  }
 );
 
 /* =====================================================
@@ -3434,7 +3575,9 @@ $("galleryBtn")
 ===================================================== */
 
 document
-  .querySelectorAll(".marker")
+  .querySelectorAll(
+    ".marker"
+  )
   .forEach(
     marker => {
 
