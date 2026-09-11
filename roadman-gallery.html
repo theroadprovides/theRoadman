@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -6,13 +7,13 @@
 <meta charset="UTF-8">
 
 <meta
-  name="viewport"
-  content="width=device-width,initial-scale=1"
+name="viewport"
+content="width=device-width,initial-scale=1"
+
 >
 
 <title>THE ROAD PROVIDES — The First 100</title>
 
-<!-- LOGO / FAVICON -->
 <link
   rel="icon"
   type="image/png"
@@ -71,9 +72,6 @@ body{
   overflow:hidden;
   overscroll-behavior:none;
 
-  /*
-   * Proteção contra seleção de conteúdo.
-   */
   user-select:none;
   -webkit-user-select:none;
 }
@@ -188,9 +186,6 @@ body{
 
   isolation:isolate;
 
-  /*
-   * Proteção contra seleção.
-   */
   user-select:none;
   -webkit-user-select:none;
 }
@@ -284,10 +279,6 @@ body{
 
   contain:paint;
 
-  /*
-   * Proteção contra seleção,
-   * arraste e menu de contexto.
-   */
   user-select:none;
   -webkit-user-select:none;
 
@@ -335,12 +326,6 @@ body{
   background:
     transparent;
 
-  /*
-   * Permite que o zoom visual
-   * continue funcionando no tile,
-   * mas impede interação direta
-   * com a superfície da imagem.
-   */
   user-select:none;
   -webkit-user-select:none;
 
@@ -623,15 +608,29 @@ body{
 
 }
 
+
+/* =====================================================
+   REDUCE MOTION
+===================================================== */
+
+@media(prefers-reduced-motion:reduce){
+
+  .content,
+  .tile::after,
+  .num,
+  .empty{
+    transition:none !important;
+  }
+
+}
+
 </style>
 
 </head>
 
-
 <body>
 
 <div class="wrap">
-
 
 <header class="hero">
 
@@ -652,7 +651,6 @@ body{
 
 </header>
 
-
 <main class="grid-area">
 
   <div
@@ -662,47 +660,48 @@ body{
 
 </main>
 
-
 <footer class="footer">
 
   <div class="brand">
 
-    THE ROAD PROVIDES.
+```
+THE ROAD PROVIDES.
 
-    <span>
-      A new chance, for all.
-    </span>
+<span>
+  A new chance, for all.
+</span>
+```
 
   </div>
 
-
   <div class="actions">
 
-    <a
-      class="x"
-      href="https://x.com/theroadprovides"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      X / PROJECT
-    </a>
+```
+<a
+  class="x"
+  href="https://x.com/theroadprovides"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  X / PROJECT
+</a>
 
 
-    <a
-      class="buy"
-      href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      BUY $ROAD
-    </a>
+<a
+  class="buy"
+  href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  BUY $ROAD
+</a>
+```
 
   </div>
 
 </footer>
 
 </div>
-
 
 <script>
 
@@ -718,7 +717,23 @@ const IMAGE_FOLDER =
 const API =
   "/api/spots";
 
-const LOAD_CONCURRENCY = 12;
+/*
+ * Quantidade de imagens carregadas
+ * imediatamente na abertura.
+ */
+const INITIAL_IMAGES = 20;
+
+/*
+ * Quantidade de imagens carregadas
+ * por lote depois da abertura.
+ */
+const BATCH_SIZE = 10;
+
+/*
+ * Quantidade máxima de downloads
+ * simultâneos.
+ */
+const LOAD_CONCURRENCY = 5;
 
 
 /* =====================================================
@@ -863,6 +878,18 @@ function loadImage(tile){
         "async";
 
 
+      /*
+       * Imagens iniciais têm prioridade.
+       * As demais entram como baixa prioridade.
+       */
+
+      image.fetchPriority =
+        tile.dataset.priority ===
+          "high"
+          ? "high"
+          : "low";
+
+
       image.onload =
         function(){
 
@@ -914,7 +941,6 @@ function loadImage(tile){
 
           tile.dataset.loading =
             "error";
-
 
           resolve(false);
 
@@ -1038,8 +1064,25 @@ for(
   i++
 ){
 
+  const tile =
+    createTile(i);
+
+  /*
+   * As primeiras imagens recebem
+   * prioridade alta.
+   */
+
+  if(
+    i <= INITIAL_IMAGES
+  ){
+
+    tile.dataset.priority =
+      "high";
+
+  }
+
   tiles.push(
-    createTile(i)
+    tile
   );
 
 }
@@ -1050,9 +1093,9 @@ for(
 ===================================================== */
 
 /*
- * Impede menu de contexto,
- * arraste e seleção dentro
- * da galeria.
+ * Uma única proteção global é suficiente.
+ * Não precisamos adicionar vários listeners
+ * individuais aos 100 tiles.
  */
 
 document.addEventListener(
@@ -1080,6 +1123,22 @@ document.addEventListener(
   function(event){
 
     event.preventDefault();
+
+  }
+);
+
+
+document.addEventListener(
+  "mousedown",
+  function(event){
+
+    if(
+      event.button === 2
+    ){
+
+      event.preventDefault();
+
+    }
 
   }
 );
@@ -1126,74 +1185,54 @@ document.addEventListener(
 );
 
 
-/*
- * Protege também os tiles
- * individualmente.
- */
-
-document
-  .querySelectorAll(
-    ".tile"
-  )
-  .forEach(
-    tile => {
-
-      tile.addEventListener(
-        "contextmenu",
-        function(event){
-
-          event.preventDefault();
-
-        }
-      );
-
-
-      tile.addEventListener(
-        "dragstart",
-        function(event){
-
-          event.preventDefault();
-
-        }
-      );
-
-
-      tile.addEventListener(
-        "mousedown",
-        function(event){
-
-          /*
-           * Bloqueia botão direito.
-           */
-          if(
-            event.button === 2
-          ){
-
-            event.preventDefault();
-
-          }
-
-        }
-      );
-
-    }
-  );
-
-
 /* =====================================================
-   FAST IMAGE PRELOAD
+   IMAGE QUEUE
 ===================================================== */
 
-async function preloadAllImages(){
+let imageQueueIndex = 0;
+
+
+/*
+ * Carrega um grupo de imagens com
+ * concorrência controlada.
+ */
+
+async function loadBatch(){
+
+  const batch = [];
+
+
+  for(
+    let i = 0;
+    i < BATCH_SIZE &&
+    imageQueueIndex < tiles.length;
+    i++
+  ){
+
+    batch.push(
+      tiles[
+        imageQueueIndex++
+      ]
+    );
+
+  }
+
+
+  if(
+    batch.length === 0
+  ){
+
+    return;
+
+  }
+
 
   let index = 0;
 
 
   async function worker(){
 
-    while(
-      true
-    ){
+    while(true){
 
       const current =
         index++;
@@ -1201,7 +1240,7 @@ async function preloadAllImages(){
 
       if(
         current >=
-        tiles.length
+        batch.length
       ){
 
         return;
@@ -1210,7 +1249,7 @@ async function preloadAllImages(){
 
 
       await loadImage(
-        tiles[current]
+        batch[current]
       );
 
     }
@@ -1224,7 +1263,7 @@ async function preloadAllImages(){
   const workerCount =
     Math.min(
       LOAD_CONCURRENCY,
-      tiles.length
+      batch.length
     );
 
 
@@ -1249,12 +1288,165 @@ async function preloadAllImages(){
 
 
 /* =====================================================
+   BACKGROUND IMAGE LOADING
+===================================================== */
+
+function scheduleRemainingImages(){
+
+  /*
+   * requestIdleCallback permite que o navegador
+   * termine primeiro o trabalho visual da página.
+   */
+
+  const schedule =
+    window.requestIdleCallback ||
+    function(callback){
+
+      setTimeout(
+        callback,
+        120
+      );
+
+    };
+
+
+  function next(){
+
+    if(
+      imageQueueIndex >=
+      tiles.length
+    ){
+
+      return;
+
+    }
+
+
+    schedule(
+      async function(){
+
+        await loadBatch();
+
+        /*
+         * Pequeno intervalo entre lotes.
+         * Isso evita disparar 80 downloads
+         * de uma vez após a primeira pintura.
+         */
+
+        setTimeout(
+          next,
+          80
+        );
+
+      },
+      {
+        timeout:1000
+      }
+    );
+
+  }
+
+
+  next();
+
+}
+
+
+/* =====================================================
    INITIAL LOAD
 ===================================================== */
 
-loadClaims();
+async function initializeGallery(){
 
-preloadAllImages();
+  loadClaims();
+
+
+  /*
+   * Primeiro carregamos somente as primeiras
+   * imagens prioritárias.
+   */
+
+  const initialTiles =
+    tiles.slice(
+      0,
+      INITIAL_IMAGES
+    );
+
+
+  let index = 0;
+
+
+  async function worker(){
+
+    while(true){
+
+      const current =
+        index++;
+
+
+      if(
+        current >=
+        initialTiles.length
+      ){
+
+        return;
+
+      }
+
+
+      await loadImage(
+        initialTiles[current]
+      );
+
+    }
+
+  }
+
+
+  const workers = [];
+
+
+  const workerCount =
+    Math.min(
+      LOAD_CONCURRENCY,
+      initialTiles.length
+    );
+
+
+  for(
+    let i = 0;
+    i < workerCount;
+    i++
+  ){
+
+    workers.push(
+      worker()
+    );
+
+  }
+
+
+  await Promise.all(
+    workers
+  );
+
+
+  /*
+   * O restante começa depois que
+   * a primeira parte da galeria
+   * já está visível.
+   */
+
+  scheduleRemainingImages();
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+initializeGallery();
 
 
 /* =====================================================
