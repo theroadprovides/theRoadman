@@ -1,100 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover"
->
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>THE ROAD PROVIDES — Early Access</title>
 
-<!-- LOGO / FAVICON -->
-<link
-  rel="icon"
-  type="image/png"
-  href="desert_roadman_badge.png"
->
+<link rel="icon" type="image/png" href="desert_roadman_badge.png">
 
-<link
-  rel="preconnect"
-  href="https://fonts.googleapis.com"
->
-
-<link
-  rel="preconnect"
-  href="https://fonts.gstatic.com"
-  crossorigin
->
-
-<link
-  href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-  rel="stylesheet"
->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
 :root{
-
   --bg:#000;
-  --raise:#16181c;
+  --raise:#090909;
   --border:#2f3336;
-
   --ink:#e7e9ea;
   --dim:#71767b;
-
-  --blue:#1d9bf0;
+  --orange:#ff5a1f;
+  --orange2:#ff6a2a;
   --green:#00ba7c;
   --red:#f4212e;
-
   --display:'Anton',sans-serif;
   --body:'Inter',sans-serif;
   --mono:'IBM Plex Mono',monospace;
-
 }
 
 *{
-
   box-sizing:border-box;
-
   margin:0;
   padding:0;
-
 }
 
-html,
-body{
-
+html{
   width:100%;
   min-height:100%;
-
   background:var(--bg);
-
-  color:var(--ink);
-
-  font-family:var(--body);
-
+  overflow-x:hidden;
 }
 
 body{
-
+  width:100%;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
   overflow-x:hidden;
-
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
 }
 
 .wrap{
-
   width:min(700px,100%);
-
   min-height:100svh;
-
   margin:auto;
+  padding-bottom:24px;
+}
 
-  padding-bottom:12px;
 
+/* =====================================================
+   PAGE STAGE
+===================================================== */
+
+.page-stage{
+  position:relative;
+  width:100%;
+  transform:translate3d(0,0,0);
+  opacity:1;
+  will-change:transform,opacity;
+}
+
+.page-stage.road-transition{
+  animation:roadStageMove .42s cubic-bezier(.22,.61,.36,1);
+}
+
+@keyframes roadStageMove{
+  0%{
+    transform:translate3d(0,0,0);
+    opacity:1;
+  }
+
+  35%{
+    transform:translate3d(-22px,0,0);
+    opacity:.72;
+  }
+
+  65%{
+    transform:translate3d(22px,0,0);
+    opacity:.72;
+  }
+
+  100%{
+    transform:translate3d(0,0,0);
+    opacity:1;
+  }
 }
 
 
@@ -103,63 +104,137 @@ body{
 ===================================================== */
 
 .banner{
-
-  height:clamp(
-    135px,
-    22svh,
-    180px
-  );
-
+  height:clamp(130px,20svh,190px);
   position:relative;
-
   display:grid;
-
   place-items:center;
-
   overflow:hidden;
-
-  border-bottom:
-    1px solid var(--border);
-
+  background:
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 1px),
+      rgba(255,90,31,.92) calc(50% - 1px),
+      rgba(255,90,31,.92) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
 }
 
 .banner:before{
-
   content:"";
-
   position:absolute;
-
   inset:0;
-
   background:
-
     radial-gradient(
       ellipse 65% 110% at 30% 20%,
-      rgba(255,255,255,.055),
+      rgba(255,90,31,.075),
       transparent 62%
     ),
-
     repeating-linear-gradient(
       115deg,
       rgba(255,255,255,.018) 0,
       transparent 2px,
       transparent 40px
     );
-
+  pointer-events:none;
 }
 
 .banner h1{
-
   position:relative;
-
-  font:
-    clamp(36px,8vw,58px)/.92
-    var(--display);
-
+  z-index:2;
+  background:#000;
+  padding:0 16px;
+  font:clamp(36px,8vw,58px)/.92 var(--display);
   text-align:center;
-
   letter-spacing:.01em;
+  box-shadow:0 0 22px rgba(0,0,0,.95);
+}
 
+
+/* =====================================================
+   ROADMAN JOURNEY
+===================================================== */
+
+.roadman-journey{
+  position:relative;
+  width:100%;
+  height:clamp(62px,8svh,76px);
+  margin-top:0;
+  overflow:hidden;
+  background:#000;
+}
+
+.roadman-journey:before{
+  content:"";
+  position:absolute;
+  left:6%;
+  right:6%;
+  top:50%;
+  height:3px;
+  transform:translateY(-50%);
+  background:var(--border);
+  z-index:1;
+  pointer-events:none;
+}
+
+.roadman-journey:after{
+  content:"";
+  position:absolute;
+  left:6%;
+  top:50%;
+  width:0;
+  height:3px;
+  transform:translateY(-50%);
+  background:var(--orange);
+  box-shadow:0 0 7px rgba(255,90,31,.38);
+  transition:width .62s cubic-bezier(.22,.61,.36,1);
+  z-index:2;
+  pointer-events:none;
+}
+
+.roadman-journey.step-1:after{
+  width:0%;
+}
+
+.roadman-journey.step-2:after{
+  width:29%;
+}
+
+.roadman-journey.step-3:after{
+  width:59%;
+}
+
+.roadman-journey.step-4:after{
+  width:88%;
+}
+
+.roadman-scene{
+  position:absolute;
+  left:6%;
+  top:50%;
+  width:clamp(60px,8vw,72px);
+  height:clamp(60px,8vw,72px);
+  object-fit:contain;
+  object-position:center center;
+  transform:translate(-50%,-50%);
+  display:block;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-user-drag:none;
+  -webkit-touch-callout:none;
+  pointer-events:none;
+  filter:drop-shadow(0 5px 7px rgba(0,0,0,.9));
+  opacity:1;
+  transition:
+    left .62s cubic-bezier(.22,.61,.36,1),
+    opacity .18s ease,
+    filter .25s ease;
+  z-index:10;
+}
+
+.roadman-scene.moving{
+  filter:
+    drop-shadow(0 5px 8px rgba(0,0,0,.95))
+    drop-shadow(0 0 10px rgba(255,90,31,.14));
 }
 
 
@@ -168,121 +243,69 @@ body{
 ===================================================== */
 
 .profile{
-
-  display:flex;
-
-  align-items:flex-end;
-
-  padding:0 22px;
-
-  margin-top:-27px;
-
-  position:relative;
-
+  display:none;
 }
 
 .avatar{
-
   width:62px;
   height:62px;
-
   border-radius:50%;
-
   background:var(--raise);
-
-  border:
-    3px solid var(--border);
-
+  border:3px solid var(--border);
   display:grid;
-
   place-items:center;
-
   overflow:hidden;
-
 }
 
 .avatar img{
-
   width:100%;
   height:100%;
-
   object-fit:cover;
-
   display:block;
-
   border-radius:50%;
-
 }
 
 .identity{
-
-  padding:10px 22px 0;
-
+  padding:clamp(9px,1.5svh,13px) 22px 0;
 }
 
 .status{
-
   display:flex;
-
   align-items:center;
-
   gap:7px;
-
-  font:
-    10.5px
-    var(--mono);
-
+  font:10.5px var(--mono);
   letter-spacing:.06em;
-
-  color:var(--green);
-
+  color:var(--orange);
   margin-bottom:5px;
-
 }
 
 .status:before{
-
   content:"";
-
   width:6px;
   height:6px;
-
   border-radius:50%;
-
-  background:var(--green);
-
+  background:var(--orange);
+  box-shadow:0 0 8px rgba(255,90,31,.45);
 }
 
 .name{
-
   font-size:19px;
-
   font-weight:800;
-
 }
 
 .handle{
-
   font-size:12.5px;
-
   color:var(--dim);
-
-  margin:2px 0 7px;
-
+  margin:2px 0 8px;
 }
 
 .bio{
-
   font-size:13px;
-
   line-height:1.45;
-
 }
 
 .bio b{
-
-  color:var(--blue);
-
+  color:var(--orange);
 }
 
 
@@ -291,48 +314,47 @@ body{
 ===================================================== */
 
 .links{
-
   display:flex;
-
   gap:8px;
-
-  margin:10px 22px 0;
-
+  margin:clamp(9px,1.6svh,13px) 22px 0;
 }
 
 .links a{
-
   flex:1;
-
   text-align:center;
-
   text-decoration:none;
-
   border-radius:999px;
-
-  padding:8px 12px;
-
+  padding:9px 12px;
   font-size:11.5px;
-
   font-weight:700;
-
 }
 
 .x{
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   color:var(--ink);
+  transition:
+    border-color .2s,
+    color .2s,
+    box-shadow .2s;
+}
 
+.x:hover{
+  border-color:var(--orange);
+  color:var(--orange);
+  box-shadow:0 0 14px rgba(255,90,31,.12);
 }
 
 .roadbtn{
-
-  background:var(--blue);
-
+  background:var(--orange);
   color:#fff;
+  transition:
+    background .2s,
+    box-shadow .2s;
+}
 
+.roadbtn:hover{
+  background:var(--orange2);
+  box-shadow:0 0 18px rgba(255,90,31,.16);
 }
 
 
@@ -341,132 +363,81 @@ body{
 ===================================================== */
 
 .road{
-
-  padding:18px 22px 0;
-
+  padding:clamp(14px,2.2svh,21px) 22px 0;
 }
 
 .line{
-
   height:2px;
-
   background:var(--border);
-
   margin:0 12px;
-
   position:relative;
-
 }
 
 .fill{
-
   position:absolute;
-
   left:0;
   top:0;
-
   height:100%;
-
   width:8.33%;
-
-  background:var(--blue);
-
+  background:var(--orange);
+  box-shadow:0 0 10px rgba(255,90,31,.25);
   transition:.25s;
-
 }
 
 .markers{
-
   display:flex;
-
   justify-content:space-between;
-
   margin-top:-8px;
-
 }
 
 .marker{
-
   border:0;
-
   background:none;
-
   color:inherit;
-
   display:flex;
-
   flex-direction:column;
-
   align-items:center;
-
   gap:6px;
-
-  font:
-    8.5px
-    var(--mono);
-
+  font:8.5px var(--mono);
   text-transform:uppercase;
-
   cursor:pointer;
-
 }
 
 .dot{
-
   width:15px;
   height:15px;
-
   border-radius:50%;
-
-  border:
-    2px solid var(--border);
-
+  border:2px solid var(--border);
   background:#000;
-
 }
 
 .marker.active .dot{
-
-  background:var(--blue);
-
-  border-color:var(--blue);
-
+  background:var(--orange);
+  border-color:var(--orange);
+  box-shadow:0 0 10px rgba(255,90,31,.3);
 }
 
 .marker.done .dot{
-
-  border-color:var(--blue);
-
+  border-color:var(--orange);
 }
 
 .marker.done .dot:after{
-
   content:"";
-
   display:block;
-
   width:5px;
   height:5px;
-
   border-radius:50%;
-
-  background:var(--blue);
-
+  background:var(--orange);
   margin:3px;
-
 }
 
 .marker-label{
-
   color:var(--dim);
-
 }
 
 .marker.active .marker-label,
 .marker.done .marker-label{
-
   color:var(--ink);
-
 }
 
 
@@ -475,118 +446,67 @@ body{
 ===================================================== */
 
 .panel{
-
-  margin:20px 22px 0;
-
-  border:
-    1px solid var(--border);
-
+  margin:clamp(16px,2.8svh,23px) 22px 0;
+  border:1px solid var(--border);
   border-radius:16px;
-
   background:var(--raise);
-
-  padding:22px;
-
-  min-height:310px;
-
+  padding:clamp(18px,2.8svh,25px);
+  min-height:0;
 }
 
 .step{
-
   display:none;
-
 }
 
 .step.active{
-
   display:block;
-
-  animation:
-    in .22s ease;
-
+  animation:in .22s ease;
 }
 
 @keyframes in{
-
   from{
-
     opacity:0;
-
-    transform:
-      translateY(4px);
-
+    transform:translateY(4px);
   }
 
   to{
-
     opacity:1;
-
     transform:none;
-
   }
-
 }
 
 .eyebrow{
-
-  font:
-    10.5px
-    var(--mono);
-
-  color:var(--blue);
-
+  font:10.5px var(--mono);
+  color:var(--orange);
   letter-spacing:.08em;
-
-  margin-bottom:7px;
-
+  margin-bottom:8px;
 }
 
 .step h2{
-
-  font:
-    23px/1
-    var(--display);
-
+  font:24px/1 var(--display);
   text-transform:uppercase;
-
-  margin-bottom:9px;
-
+  margin-bottom:10px;
 }
 
 .step p{
-
   font-size:13px;
-
   line-height:1.5;
-
   color:var(--dim);
-
-  margin-bottom:16px;
-
+  margin-bottom:17px;
 }
 
 .terminal{
-
-  font:
-    11px/1.8
-    var(--mono);
-
+  font:11px/1.8 var(--mono);
   color:var(--dim);
-
-  margin-bottom:16px;
-
+  margin-bottom:17px;
 }
 
 .ok{
-
   color:var(--green);
-
 }
 
 .ready{
-
-  color:var(--blue);
-
+  color:var(--orange);
 }
 
 
@@ -595,136 +515,96 @@ body{
 ===================================================== */
 
 .field{
-
   display:flex;
-
   gap:8px;
-
 }
 
 .field input{
-
   flex:1;
-
   min-width:0;
-
 }
 
 input{
-
   background:#000;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:10px;
-
   color:var(--ink);
-
-  font:
-    13px
-    var(--mono);
-
-  padding:11px 13px;
-
+  font:13px var(--mono);
+  padding:12px 13px;
   outline:0;
-
   width:100%;
-
   transition:.2s;
-
 }
 
 input:focus{
-
-  border-color:var(--blue);
-
+  border-color:var(--orange);
+  box-shadow:0 0 0 1px rgba(255,90,31,.12);
 }
 
 input.invalid{
-
   border-color:var(--red);
-
-  animation:
-    shake .25s;
-
+  animation:shake .25s;
 }
 
 @keyframes shake{
-
   25%{
-
-    transform:
-      translateX(-4px);
-
+    transform:translateX(-4px);
   }
 
   75%{
-
-    transform:
-      translateX(4px);
-
+    transform:translateX(4px);
   }
-
 }
 
 button.cta{
-
   border:0;
-
   border-radius:999px;
-
-  padding:11px 19px;
-
-  font:
-    700 12px
-    var(--body);
-
+  padding:12px 20px;
+  font:700 12px var(--body);
   cursor:pointer;
-
 }
 
 .accent{
-
-  background:var(--blue);
-
+  background:var(--orange);
   color:#fff;
+  transition:
+    background .2s,
+    box-shadow .2s;
+}
 
+.accent:hover{
+  background:var(--orange2);
+  box-shadow:0 0 18px rgba(255,90,31,.15);
 }
 
 .accent:disabled{
-
   opacity:.45;
-
   cursor:not-allowed;
-
+  box-shadow:none;
 }
 
 .ghost{
-
   background:transparent;
-
   color:var(--ink);
+  border:1px solid var(--border)!important;
+  transition:
+    border-color .2s,
+    color .2s;
+}
 
-  border:
-    1px solid var(--border)!important;
-
+.ghost:hover{
+  border-color:var(--orange)!important;
+  color:var(--orange);
 }
 
 .nav{
-
   display:flex;
-
   gap:8px;
-
-  margin-top:8px;
-
+  margin-top:9px;
 }
 
 .nav>*{
-
   flex:1;
-
 }
 
 
@@ -733,166 +613,96 @@ button.cta{
 ===================================================== */
 
 .wallets{
-
   display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
+  grid-template-columns:1fr 1fr;
   gap:8px;
-
-  margin-bottom:13px;
-
+  margin-bottom:14px;
 }
 
 .wallet{
-
   background:#000;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:10px;
-
   color:var(--ink);
-
-  padding:12px;
-
+  padding:13px;
   text-align:left;
-
   font-size:12px;
-
   cursor:pointer;
-
   display:flex;
-
   align-items:center;
-
   gap:10px;
-
   transition:
     border-color .2s,
     background .2s,
     transform .15s;
-
 }
 
 .wallet:hover{
-
-  border-color:#555;
-
+  border-color:var(--orange);
 }
 
 .wallet:active{
-
   transform:scale(.98);
-
 }
 
 .wallet.selected{
-
-  border-color:var(--blue);
-
-  background:
-    rgba(29,155,240,.07);
-
+  border-color:var(--orange);
+  background:rgba(255,90,31,.07);
+  box-shadow:0 0 14px rgba(255,90,31,.08);
 }
 
 .wallet-logo{
-
   width:26px;
   height:26px;
-
   flex:0 0 26px;
-
   object-fit:contain;
-
   display:block;
-
 }
 
 .wallet-name{
-
   display:flex;
-
   flex-direction:column;
-
   justify-content:center;
-
   gap:2px;
-
 }
 
 .wallet-name strong{
-
   font-size:12px;
-
   font-weight:700;
-
 }
 
 .wallet-name span{
-
-  font:
-    8.5px
-    var(--mono);
-
+  font:8.5px var(--mono);
   color:var(--dim);
-
 }
 
 .wallet.manual{
-
   justify-content:flex-start;
-
 }
 
 .manual-icon{
-
   width:26px;
   height:26px;
-
   flex:0 0 26px;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:7px;
-
   display:grid;
-
   place-items:center;
-
   font-size:13px;
-
   color:var(--dim);
-
 }
 
 .hint{
-
-  font:
-    10.5px
-    var(--mono);
-
+  font:10.5px var(--mono);
   color:var(--dim);
-
   margin-bottom:7px;
-
 }
 
 .error{
-
   color:var(--red);
-
-  font:
-    10.5px
-    var(--mono);
-
+  font:10.5px var(--mono);
   margin-top:7px;
-
   display:none;
-
 }
 
 
@@ -901,91 +711,50 @@ button.cta{
 ===================================================== */
 
 .confirm{
-
   text-align:center;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:13px;
-
-  padding:17px;
-
-  margin-bottom:12px;
-
+  padding:18px;
+  margin-bottom:13px;
 }
 
 .small{
-
-  font:
-    10px
-    var(--mono);
-
+  font:10px var(--mono);
   color:var(--dim);
-
   text-transform:uppercase;
-
   letter-spacing:.08em;
-
 }
 
 .spot{
-
-  font:
-    36px
-    var(--display);
-
-  margin:5px 0 10px;
-
+  font:36px var(--display);
+  margin:5px 0 11px;
 }
 
 .rows{
-
-  border-top:
-    1px solid var(--border);
-
-  padding-top:8px;
-
-  font:
-    10.5px
-    var(--mono);
-
+  border-top:1px solid var(--border);
+  padding-top:9px;
+  font:10.5px var(--mono);
   text-align:left;
-
 }
 
 .rows div{
-
   display:flex;
-
   justify-content:space-between;
-
   gap:10px;
-
   padding:4px 0;
-
   color:var(--dim);
-
 }
 
 .rows span:last-child{
-
   color:var(--ink);
-
   text-align:right;
-
   max-width:70%;
-
   overflow:hidden;
-
   text-overflow:ellipsis;
-
 }
 
 .green{
-
   color:var(--green)!important;
-
 }
 
 
@@ -994,177 +763,92 @@ button.cta{
 ===================================================== */
 
 .nft{
-
   text-align:center;
-
 }
 
 .nft-frame{
-
-  width:min(
-    220px,
-    55vw
-  );
-
+  width:min(220px,55vw);
   aspect-ratio:1;
-
-  margin:
-    0 auto 9px;
-
+  margin:0 auto 10px;
   padding:5px;
-
-  border:
-    1px solid var(--blue);
-
+  position:relative;
+  border:1px solid var(--orange);
   border-radius:12px;
-
   background:#050505;
-
-  box-shadow:
-    0 0 25px
-    rgba(29,155,240,.14);
-
+  box-shadow:0 0 25px rgba(255,90,31,.14);
   overflow:hidden;
-
-  /*
-   * Proteção visual/interativa.
-   */
   user-select:none;
   -webkit-user-select:none;
-
   -webkit-touch-callout:none;
-
   -webkit-user-drag:none;
-
 }
 
 .nft-img{
-
   width:100%;
-
   height:100%;
-
   display:block;
-
   border-radius:8px;
-
   object-fit:cover;
-
   object-position:center;
-
   background:#050505;
-
   image-rendering:auto;
-
-  /*
-   * Proteção contra seleção,
-   * arraste e toque prolongado.
-   */
   user-select:none;
   -webkit-user-select:none;
-
   -webkit-user-drag:none;
-
   -webkit-touch-callout:none;
-
   pointer-events:none;
-
   -webkit-tap-highlight-color:transparent;
-
 }
 
 .nft-frame::after{
-
   content:"";
-
   position:absolute;
-
   inset:5px;
-
   z-index:5;
-
   border-radius:8px;
-
   background:transparent;
-
   pointer-events:auto;
-
   user-select:none;
-
   -webkit-user-select:none;
-
   -webkit-touch-callout:none;
-
   -webkit-user-drag:none;
-
 }
 
 .nft-fallback{
-
   width:100%;
   height:100%;
-
   display:none;
-
   place-items:center;
-
-  font:
-    10px
-    var(--mono);
-
+  font:10px var(--mono);
   color:var(--dim);
-
 }
 
 .nft-title{
-
-  font:
-    18px
-    var(--display);
-
+  font:18px var(--display);
   text-transform:uppercase;
-
 }
 
 .nft-sub{
-
   font-size:11px;
-
   color:var(--dim);
-
   margin-top:3px;
-
 }
 
 .bottom-action{
-
-  margin-top:10px;
-
+  margin-top:11px;
   width:100%;
-
 }
 
 .rule{
-
-  font:
-    10px/1.5
-    var(--mono);
-
+  font:10px/1.5 var(--mono);
   color:var(--dim);
-
-  margin-top:12px;
-
-  border-top:
-    1px solid var(--border);
-
-  padding-top:10px;
-
+  margin-top:13px;
+  border-top:1px solid var(--border);
+  padding-top:11px;
 }
 
 .rule strong{
-
   color:var(--ink);
-
 }
 
 
@@ -1173,27 +857,14 @@ button.cta{
 ===================================================== */
 
 .test-mode{
-
   display:none;
-
   margin-top:10px;
-
   padding:7px 10px;
-
-  border:
-    1px solid
-    rgba(29,155,240,.35);
-
+  border:1px solid rgba(255,90,31,.35);
   border-radius:8px;
-
-  font:
-    9px
-    var(--mono);
-
-  color:var(--blue);
-
+  font:9px var(--mono);
+  color:var(--orange);
   text-align:center;
-
 }
 
 
@@ -1202,17 +873,122 @@ button.cta{
 ===================================================== */
 
 footer{
-
+  position:relative;
   text-align:center;
-
-  font:
-    9.5px
-    var(--mono);
-
+  font:9.5px var(--mono);
   color:var(--dim);
+  padding:14px 20px 5px;
+  margin-top:clamp(9px,1.8svh,13px);
+}
 
-  padding:
-    10px 20px 0;
+footer:before{
+  content:"";
+  display:block;
+  width:72px;
+  height:2px;
+  background:var(--orange);
+  margin:0 auto 10px;
+  box-shadow:0 0 10px rgba(255,90,31,.22);
+}
+
+
+/* =====================================================
+   RESPONSIVE HEIGHT
+===================================================== */
+
+@media(max-height:900px) and (min-width:481px){
+
+  .banner{
+    height:160px;
+  }
+
+  .roadman-journey{
+    height:68px;
+  }
+
+  .identity{
+    padding-top:9px;
+  }
+
+  .bio{
+    line-height:1.4;
+  }
+
+  .links{
+    margin-top:9px;
+  }
+
+  .road{
+    padding-top:15px;
+  }
+
+  .panel{
+    margin-top:17px;
+    padding:21px;
+  }
+
+  .step p{
+    margin-bottom:14px;
+  }
+
+  .terminal{
+    margin-bottom:14px;
+  }
+
+  footer{
+    padding-top:11px;
+  }
+
+}
+
+
+/* =====================================================
+   VERY SHORT SCREENS
+===================================================== */
+
+@media(max-height:760px) and (min-width:481px){
+
+  .banner{
+    height:118px;
+  }
+
+  .roadman-journey{
+    height:56px;
+  }
+
+  .roadman-scene{
+    width:58px;
+    height:58px;
+  }
+
+  .identity{
+    padding-top:5px;
+  }
+
+  .bio{
+    display:none;
+  }
+
+  .links{
+    margin-top:6px;
+  }
+
+  .road{
+    padding-top:9px;
+  }
+
+  .panel{
+    margin-top:11px;
+    padding:15px;
+  }
+
+  .step p{
+    margin-bottom:8px;
+  }
+
+  .terminal{
+    margin-bottom:8px;
+  }
 
 }
 
@@ -1223,188 +999,157 @@ footer{
 
 @media(max-width:480px){
 
+  .wrap{
+    padding-bottom:16px;
+  }
+
   .banner{
-
     height:150px;
+  }
 
+  .roadman-journey{
+    height:64px;
+  }
+
+  .roadman-scene{
+    width:64px;
+    height:64px;
   }
 
   .panel{
-
     margin-top:17px;
-
     padding:18px;
-
     min-height:0;
-
   }
 
   .road{
-
     padding-top:15px;
-
   }
 
   .links{
-
     margin-top:8px;
-
   }
 
   .step h2{
-
     font-size:21px;
-
   }
 
   .nft-frame{
-
-    width:min(
-      190px,
-      48vw
-    );
-
+    width:min(190px,48vw);
   }
 
   .wallet{
-
     padding:10px;
-
   }
 
   .wallet-logo,
   .manual-icon{
-
     width:23px;
     height:23px;
-
     flex-basis:23px;
-
   }
 
   .wallet-name strong{
-
     font-size:11px;
-
   }
 
   .wallet-name span{
-
     font-size:8px;
-
   }
 
 }
 
 
 /* =====================================================
-   SHORT SCREENS
+   MOBILE SHORT SCREENS
 ===================================================== */
 
-@media(max-height:720px){
+@media(max-width:480px) and (max-height:720px){
 
   .banner{
-
     height:120px;
-
   }
 
-  .profile{
-
-    margin-top:-22px;
-
+  .roadman-journey{
+    height:58px;
   }
 
-  .avatar{
-
-    width:52px;
-    height:52px;
-
+  .roadman-scene{
+    width:58px;
+    height:58px;
   }
 
   .identity{
-
-    padding-top:7px;
-
+    padding-top:6px;
   }
 
   .bio{
-
     display:none;
-
   }
 
   .links{
-
     margin-top:7px;
-
   }
 
   .road{
-
-    padding-top:11px;
-
+    padding-top:10px;
   }
 
   .panel{
-
-    margin-top:13px;
-
-    padding:16px;
-
-    min-height:0;
-
+    margin-top:12px;
+    padding:15px;
   }
 
   .step p{
-
-    margin-bottom:10px;
-
+    margin-bottom:9px;
   }
 
   .terminal{
-
-    margin-bottom:10px;
-
+    margin-bottom:9px;
   }
 
   .nft-frame{
-
     width:150px;
+  }
 
+  footer{
+    padding-top:8px;
   }
 
 }
 
 </style>
-
 </head>
-
 
 <body>
 
 <div class="wrap">
 
-
-<!-- =================================================
-     HEADER
-===================================================== -->
+<div class="page-stage" id="pageStage">
 
 <section class="banner">
 
   <h1>
-
     THE ROAD<br>
     PROVIDES
-
   </h1>
 
 </section>
 
 
-<!-- =================================================
-     PROFILE
-===================================================== -->
+<div class="roadman-journey" id="roadmanJourney">
+
+  <img
+    class="roadman-scene"
+    id="roadmanScene"
+    src="roadman-scenes/scene1.png"
+    alt="The Roadman — Scene 1"
+    draggable="false"
+    oncontextmenu="return false"
+  >
+
+</div>
+
 
 <div class="profile">
 
@@ -1425,46 +1170,32 @@ footer{
 <section class="identity">
 
   <div class="status">
-
     EARLY ACCESS OPEN
-
   </div>
-
 
   <div class="name">
-
-    theRoadman
-
+    theRoadMan
   </div>
 
-
   <div class="handle">
-
     @theroadprovides ·
 
     <span id="spotsHeader">
-
-      100 free spots
-
+      100 first spots
     </span>
 
   </div>
 
-
   <div class="bio">
 
-    The first 100 NFTs go to those who
-    walked with <b>$ROAD</b>
+    The first 100 NFTs go to those who walked with
+    <b>$ROAD</b>
     before the road was paved.
 
   </div>
 
 </section>
 
-
-<!-- =================================================
-     LINKS
-===================================================== -->
 
 <div class="links">
 
@@ -1474,11 +1205,8 @@ footer{
     target="_blank"
     rel="noopener noreferrer"
   >
-
     Follow on X
-
   </a>
-
 
   <a
     class="roadbtn"
@@ -1486,17 +1214,11 @@ footer{
     target="_blank"
     rel="noopener noreferrer"
   >
-
     Buy $ROAD
-
   </a>
 
 </div>
 
-
-<!-- =================================================
-     PROGRESS
-===================================================== -->
 
 <div class="road">
 
@@ -1509,85 +1231,51 @@ footer{
 
   </div>
 
-
   <div class="markers">
-
 
     <button
       class="marker active"
       data-step="1"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Enter
-      </span>
-
+      <span class="marker-label">Enter</span>
     </button>
-
 
     <button
       class="marker"
       data-step="2"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Seal
-      </span>
-
+      <span class="marker-label">Seal</span>
     </button>
-
 
     <button
       class="marker"
       data-step="3"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Wallet
-      </span>
-
+      <span class="marker-label">Wallet</span>
     </button>
-
 
     <button
       class="marker"
       data-step="4"
       type="button"
     >
-
       <span class="dot"></span>
-
-      <span class="marker-label">
-        Sealed
-      </span>
-
+      <span class="marker-label">Sealed</span>
     </button>
-
 
   </div>
 
 </div>
 
 
-<!-- =================================================
-     MAIN PANEL
-===================================================== -->
-
 <main class="panel">
 
-
-<!-- =================================================
-     STEP 1
-===================================================== -->
 
 <section
   class="step active"
@@ -1595,26 +1283,17 @@ footer{
 >
 
   <div class="eyebrow">
-
     01 · ENTER THE ROAD
-
   </div>
 
-
   <h2>
-
     Confirm your handle
-
   </h2>
 
-
   <p>
-
     Your spot is tied to your X profile.
     Enter your handle to continue.
-
   </p>
-
 
   <div class="terminal">
 
@@ -1624,9 +1303,7 @@ footer{
       class="ready"
       id="spots"
     >
-
       100 / 100
-
     </span>
 
     <br>
@@ -1634,7 +1311,6 @@ footer{
     &gt; one person · one NFT · one wallet
 
   </div>
-
 
   <div class="field">
 
@@ -1646,29 +1322,22 @@ footer{
       maxlength="50"
     >
 
-
     <button
       class="cta accent"
       id="enterBtn"
       type="button"
     >
-
       Enter
-
     </button>
 
   </div>
-
 
   <div
     class="error"
     id="handleError"
   >
-
     Enter your X handle to continue.
-
   </div>
-
 
   <div class="rule">
 
@@ -1685,36 +1354,22 @@ footer{
 </section>
 
 
-<!-- =================================================
-     STEP 2
-===================================================== -->
-
 <section
   class="step"
   data-step="2"
 >
 
   <div class="eyebrow">
-
     02 · SEAL THE SPOT
-
   </div>
 
-
   <h2>
-
     Reserve your number
-
   </h2>
 
-
   <p>
-
-    Your spot will be assigned by the
-    Roadman database.
-
+    Your spot will be assigned by the Roadman database.
   </p>
-
 
   <div class="terminal">
 
@@ -1731,7 +1386,6 @@ footer{
 
   </div>
 
-
   <div class="nav">
 
     <button
@@ -1739,20 +1393,15 @@ footer{
       data-back="1"
       type="button"
     >
-
       Back
-
     </button>
-
 
     <button
       class="cta accent"
       id="sealBtn"
       type="button"
     >
-
       Continue
-
     </button>
 
   </div>
@@ -1760,46 +1409,26 @@ footer{
 </section>
 
 
-<!-- =================================================
-     STEP 3
-===================================================== -->
-
 <section
   class="step"
   data-step="3"
 >
 
   <div class="eyebrow">
-
     03 · VERIFY WALLET
-
   </div>
 
-
   <h2>
-
     Connect the eligible wallet
-
   </h2>
 
-
   <p>
-
-    Select your wallet and paste the
-    Solana address that will participate
-    in the Roadman qualification.
-
+    Select your wallet and paste the Solana address
+    that will participate in the Roadman qualification.
   </p>
-
-
-  <!-- =================================================
-       WALLET BUTTONS
-  ================================================== -->
 
   <div class="wallets">
 
-
-    <!-- PHANTOM -->
 
     <button
       class="wallet"
@@ -1813,7 +1442,6 @@ footer{
         alt="Phantom"
         draggable="false"
       >
-
 
       <span class="wallet-name">
 
@@ -1830,8 +1458,6 @@ footer{
     </button>
 
 
-    <!-- SOLFLARE -->
-
     <button
       class="wallet"
       data-wallet="Solflare"
@@ -1844,7 +1470,6 @@ footer{
         alt="Solflare"
         draggable="false"
       >
-
 
       <span class="wallet-name">
 
@@ -1861,8 +1486,6 @@ footer{
     </button>
 
 
-    <!-- METAMASK -->
-
     <button
       class="wallet"
       data-wallet="MetaMask"
@@ -1875,7 +1498,6 @@ footer{
         alt="MetaMask"
         draggable="false"
       >
-
 
       <span class="wallet-name">
 
@@ -1892,8 +1514,6 @@ footer{
     </button>
 
 
-    <!-- MANUAL -->
-
     <button
       class="wallet manual"
       data-wallet="Manual"
@@ -1903,7 +1523,6 @@ footer{
       <span class="manual-icon">
         +
       </span>
-
 
       <span class="wallet-name">
 
@@ -1919,7 +1538,6 @@ footer{
 
     </button>
 
-
   </div>
 
 
@@ -1928,16 +1546,12 @@ footer{
     style="display:none"
   >
 
-
     <div
       class="hint"
       id="walletHint"
     >
-
       Paste your Solana wallet address below.
-
     </div>
-
 
     <input
       id="walletInput"
@@ -1946,12 +1560,10 @@ footer{
       spellcheck="false"
     >
 
-
     <div
       class="error"
       id="walletError"
     ></div>
-
 
   </div>
 
@@ -1959,10 +1571,7 @@ footer{
   <div
     class="terminal"
     id="verifyStatus"
-    style="
-      display:none;
-      margin-top:8px;
-    "
+    style="display:none;margin-top:8px;"
   ></div>
 
 
@@ -1970,25 +1579,19 @@ footer{
     class="test-mode"
     id="testMode"
   >
-
     TEST MODE · $ROAD verification simulated
-
   </div>
 
 
   <div class="nav">
-
 
     <button
       class="cta ghost"
       data-back="2"
       type="button"
     >
-
       Back
-
     </button>
-
 
     <button
       class="cta accent"
@@ -1996,56 +1599,37 @@ footer{
       disabled
       type="button"
     >
-
       Verify & continue
-
     </button>
-
 
   </div>
 
 </section>
 
 
-<!-- =================================================
-     STEP 4
-===================================================== -->
-
 <section
   class="step"
   data-step="4"
 >
 
-
   <div class="eyebrow">
-
     04 · YOUR ROAD
-
   </div>
-
 
   <div class="confirm">
 
-
     <div class="small">
-
       early access secured
-
     </div>
-
 
     <div
       class="spot"
       id="finalSpot"
     >
-
       SPOT #001
-
     </div>
 
-
     <div class="rows">
-
 
       <div>
 
@@ -2059,7 +1643,6 @@ footer{
 
       </div>
 
-
       <div>
 
         <span>
@@ -2071,7 +1654,6 @@ footer{
         </span>
 
       </div>
-
 
       <div>
 
@@ -2085,25 +1667,18 @@ footer{
 
       </div>
 
-
     </div>
 
   </div>
 
 
-  <!-- =================================================
-       HIGH QUALITY NFT IMAGE
-  ================================================== -->
-
   <div class="nft">
-
 
     <div
       class="nft-frame"
       id="nftFrame"
       oncontextmenu="return false"
     >
-
 
       <img
         id="nftImg"
@@ -2114,33 +1689,22 @@ footer{
         oncontextmenu="return false"
       >
 
-
       <div
         class="nft-fallback"
         id="nftFallback"
       >
-
         ROAD IMAGE UNAVAILABLE
-
       </div>
 
-
     </div>
-
 
     <div class="nft-title">
-
       Your Road is Sealed
-
     </div>
-
 
     <div class="nft-sub">
-
       Your reserved artwork is shown above.
-
     </div>
-
 
   </div>
 
@@ -2150,35 +1714,23 @@ footer{
     id="galleryBtn"
     type="button"
   >
-
     View The First 100
-
   </button>
 
-
 </section>
-
 
 </main>
 
 
 <footer>
-
-  THE ROAD PROVIDES ·
-  100 early access spots ·
-  1 NFT per person
-
+  THE ROAD PROVIDES · 100 early access spots · 1 NFT per person
 </footer>
 
-
+</div>
 </div>
 
 
 <script>
-
-/* =====================================================
-   CONFIG
-===================================================== */
 
 const TOTAL = 100;
 
@@ -2192,10 +1744,6 @@ const TEST_KEY =
   "ROADMAN_TEST_2026";
 
 
-/* =====================================================
-   STATE
-===================================================== */
-
 let step = 1;
 
 let currentHandle = "";
@@ -2205,20 +1753,202 @@ let selectedWallet = "";
 let claim = null;
 
 
-/* =====================================================
-   HELPERS
-===================================================== */
-
 const $ =
   id =>
     document.getElementById(id);
 
 
-function normalizeHandle(value){
+const ROADMAN_SCENES = [
+
+  "roadman-scenes/scene1.png",
+
+  "roadman-scenes/scene2.png",
+
+  "roadman-scenes/scene3.png",
+
+  "roadman-scenes/scene4.png"
+
+];
+
+
+const ROADMAN_POSITIONS = [
+
+  6,
+
+  35,
+
+  65,
+
+  94
+
+];
+
+
+function updateRoadmanJourney(
+  n,
+  animate = true
+){
+
+  const scene =
+    $("roadmanScene");
+
+  const journey =
+    $("roadmanJourney");
+
+
+  if(!scene){
+
+    return;
+
+  }
+
+
+  const index =
+    Math.max(
+      0,
+      Math.min(
+        3,
+        n - 1
+      )
+    );
+
+
+  const position =
+    ROADMAN_POSITIONS[index];
+
+
+  if(journey){
+
+    journey.classList.remove(
+
+      "step-1",
+      "step-2",
+      "step-3",
+      "step-4"
+
+    );
+
+    journey.classList.add(
+
+      "step-" +
+      (index + 1)
+
+    );
+
+  }
+
+
+  scene.style.left =
+    position + "%";
+
+
+  if(!animate){
+
+    scene.src =
+      ROADMAN_SCENES[index];
+
+    scene.alt =
+      "The Roadman — Scene " +
+      (index + 1);
+
+    scene.style.opacity =
+      "1";
+
+    return;
+
+  }
+
+
+  scene.classList.add(
+    "moving"
+  );
+
+
+  scene.style.opacity =
+    ".35";
+
+
+  window.setTimeout(
+    function(){
+
+      scene.src =
+        ROADMAN_SCENES[index];
+
+      scene.alt =
+        "The Roadman — Scene " +
+        (index + 1);
+
+      scene.style.opacity =
+        "1";
+
+    },
+    180
+  );
+
+
+  window.setTimeout(
+    function(){
+
+      scene.classList.remove(
+        "moving"
+      );
+
+    },
+    700
+  );
+
+}
+
+
+function animateRoadStage(){
+
+  const stage =
+    $("pageStage");
+
+
+  if(!stage){
+
+    return;
+
+  }
+
+
+  stage.classList.remove(
+    "road-transition"
+  );
+
+
+  void stage.offsetWidth;
+
+
+  stage.classList.add(
+    "road-transition"
+  );
+
+
+  setTimeout(
+    function(){
+
+      stage.classList.remove(
+        "road-transition"
+      );
+
+    },
+    450
+  );
+
+}
+
+
+function normalizeHandle(
+  value
+){
 
   let v =
-    String(value || "")
-      .trim();
+    String(
+      value || ""
+    ).trim();
+
 
   if(!v){
 
@@ -2227,7 +1957,9 @@ function normalizeHandle(value){
   }
 
 
-  if(!v.startsWith("@")){
+  if(
+    !v.startsWith("@")
+  ){
 
     v =
       "@" + v;
@@ -2240,7 +1972,9 @@ function normalizeHandle(value){
 }
 
 
-function maskWallet(wallet){
+function maskWallet(
+  wallet
+){
 
   if(
     !wallet ||
@@ -2253,33 +1987,45 @@ function maskWallet(wallet){
 
 
   return (
+
     wallet.slice(0,5) +
+
     "..." +
+
     wallet.slice(-5)
+
   );
 
 }
 
 
-/* =====================================================
-   STEP CONTROL
-===================================================== */
+function setStep(
+  n
+){
 
-function setStep(n){
+  const previousStep =
+    step;
 
-  step = n;
+
+  step =
+    n;
 
 
   document
-    .querySelectorAll(".step")
+    .querySelectorAll(
+      ".step"
+    )
     .forEach(
       el => {
 
         el.classList.toggle(
+
           "active",
+
           Number(
             el.dataset.step
           ) === n
+
         );
 
       }
@@ -2287,7 +2033,9 @@ function setStep(n){
 
 
   document
-    .querySelectorAll(".marker")
+    .querySelectorAll(
+      ".marker"
+    )
     .forEach(
       el => {
 
@@ -2298,14 +2046,20 @@ function setStep(n){
 
 
         el.classList.toggle(
+
           "active",
+
           s === n
+
         );
 
 
         el.classList.toggle(
+
           "done",
+
           s < n
+
         );
 
       }
@@ -2313,20 +2067,45 @@ function setStep(n){
 
 
   $("fill").style.width =
+
     (
+
       (
-        ((n - 1) / 3) * 91
+
+        (
+          (n - 1) /
+          3
+        ) *
+        91
+
       ) +
+
       8.33
+
     ) +
+
     "%";
+
+
+  updateRoadmanJourney(
+
+    n,
+
+    previousStep !== n
+
+  );
+
+
+  if(
+    previousStep !== n
+  ){
+
+    animateRoadStage();
+
+  }
 
 }
 
-
-/* =====================================================
-   SPOTS
-===================================================== */
 
 async function updateSpots(){
 
@@ -2334,11 +2113,14 @@ async function updateSpots(){
 
     const response =
       await fetch(
+
         API_SPOTS,
+
         {
           method:"GET",
           cache:"no-store"
         }
+
       );
 
 
@@ -2365,14 +2147,16 @@ async function updateSpots(){
 
 
     $("spots").textContent =
+
       remaining +
       " / " +
       TOTAL;
 
 
     $("spotsHeader").textContent =
+
       remaining +
-      " free spots";
+      " first spots";
 
 
     if(
@@ -2407,10 +2191,6 @@ async function updateSpots(){
 
 }
 
-
-/* =====================================================
-   HANDLE
-===================================================== */
 
 function validHandle(){
 
@@ -2480,10 +2260,6 @@ function validHandle(){
 }
 
 
-/* =====================================================
-   STEP 1
-===================================================== */
-
 $("enterBtn").onclick =
   function(){
 
@@ -2518,10 +2294,6 @@ $("handle")
   );
 
 
-/* =====================================================
-   STEP 2
-===================================================== */
-
 $("sealBtn").onclick =
   function(){
 
@@ -2539,10 +2311,6 @@ $("sealBtn").onclick =
   };
 
 
-/* =====================================================
-   BACK BUTTONS
-===================================================== */
-
 document
   .querySelectorAll(
     "[data-back]"
@@ -2554,9 +2322,11 @@ document
         function(){
 
           setStep(
+
             Number(
               button.dataset.back
             )
+
           );
 
         };
@@ -2564,10 +2334,6 @@ document
     }
   );
 
-
-/* =====================================================
-   WALLET SELECTION
-===================================================== */
 
 document
   .querySelectorAll(
@@ -2618,6 +2384,7 @@ document
 
             $("walletHint")
               .textContent =
+
               selectedWallet +
               " selected — paste the wallet address below.";
 
@@ -2632,10 +2399,6 @@ document
     }
   );
 
-
-/* =====================================================
-   WALLET INPUT
-===================================================== */
 
 $("walletInput")
   .addEventListener(
@@ -2663,10 +2426,6 @@ $("walletInput")
     }
   );
 
-
-/* =====================================================
-   CLAIM
-===================================================== */
 
 async function submitClaim(
   handle,
@@ -2714,7 +2473,9 @@ async function submitClaim(
 
     const response =
       await fetch(
+
         API_CLAIM,
+
         {
 
           method:"POST",
@@ -2739,6 +2500,7 @@ async function submitClaim(
             })
 
         }
+
       );
 
 
@@ -2765,8 +2527,10 @@ async function submitClaim(
     ){
 
       throw new Error(
+
         data.error ||
         "Unable to create claim."
+
       );
 
     }
@@ -2802,10 +2566,6 @@ async function submitClaim(
 
 }
 
-
-/* =====================================================
-   VERIFY / CONTINUE
-===================================================== */
 
 $("verifyBtn").onclick =
   async function(){
@@ -2851,8 +2611,11 @@ $("verifyBtn").onclick =
 
     const result =
       await submitClaim(
+
         currentHandle,
+
         wallet
+
       );
 
 
@@ -2866,10 +2629,6 @@ $("verifyBtn").onclick =
 
     }
 
-
-    /* ---------------------------------------------
-       CLAIM SUCCESS
-    --------------------------------------------- */
 
     claim =
       result.claim;
@@ -2888,7 +2647,9 @@ $("verifyBtn").onclick =
 
     $("finalSpot")
       .textContent =
+
       "SPOT #" +
+
       String(
         claim.spot
       ).padStart(
@@ -2922,10 +2683,6 @@ $("verifyBtn").onclick =
   };
 
 
-/* =====================================================
-   NFT IMAGE
-===================================================== */
-
 function loadNFT(n){
 
   const img =
@@ -2957,16 +2714,18 @@ function loadNFT(n){
   );
 
 
-  const formats =
-    [
-      "png",
-      "webp",
-      "jpg",
-      "jpeg"
-    ];
+  const formats = [
+
+    "png",
+    "webp",
+    "jpg",
+    "jpeg"
+
+  ];
 
 
-  let index = 0;
+  let index =
+    0;
 
 
   function tryNext(){
@@ -2990,6 +2749,7 @@ function loadNFT(n){
 
 
     const src =
+
       "images/" +
       number +
       "." +
@@ -3023,10 +2783,6 @@ function loadNFT(n){
 
 }
 
-
-/* =====================================================
-   NFT PROTECTION
-===================================================== */
 
 const nftFrame =
   $("nftFrame");
@@ -3092,11 +2848,6 @@ if(nftFrame){
     "touchstart",
     function(event){
 
-      /*
-       * Impede o gesto padrão de
-       * pressionar e segurar a imagem
-       * em navegadores móveis.
-       */
       if(
         event.touches &&
         event.touches.length === 1
@@ -3139,20 +2890,19 @@ if(nftImg){
 }
 
 
-/* =====================================================
-   GLOBAL PROTECTION
-===================================================== */
-
 document.addEventListener(
   "dragstart",
   function(event){
 
     if(
+
       event.target ===
         nftImg ||
+
       event.target.closest?.(
         "#nftFrame"
       )
+
     ){
 
       event.preventDefault();
@@ -3168,11 +2918,14 @@ document.addEventListener(
   function(event){
 
     if(
+
       event.target ===
         nftImg ||
+
       event.target.closest?.(
         "#nftFrame"
       )
+
     ){
 
       event.preventDefault();
@@ -3182,10 +2935,6 @@ document.addEventListener(
   }
 );
 
-
-/* =====================================================
-   GALLERY
-===================================================== */
 
 $("galleryBtn")
   .onclick =
@@ -3197,10 +2946,6 @@ $("galleryBtn")
 
   };
 
-
-/* =====================================================
-   MARKERS
-===================================================== */
 
 document
   .querySelectorAll(
@@ -3232,16 +2977,18 @@ document
   );
 
 
-/* =====================================================
-   INITIAL LOAD
-===================================================== */
+updateRoadmanJourney(
+  1,
+  false
+);
+
 
 setStep(1);
+
 
 updateSpots();
 
 </script>
 
 </body>
-
 </html>
