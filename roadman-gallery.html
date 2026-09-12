@@ -1,40 +1,14 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width,initial-scale=1"
-
->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
 <title>THE ROAD PROVIDES — The First 100</title>
 
-<link
-  rel="icon"
-  type="image/png"
-  href="desert_roadman_badge.png"
->
-
-<link
-  rel="preconnect"
-  href="https://fonts.googleapis.com"
->
-
-<link
-  rel="preconnect"
-  href="https://fonts.gstatic.com"
-  crossorigin
->
-
-<link
-  href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-  rel="stylesheet"
->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
@@ -42,590 +16,459 @@ content="width=device-width,initial-scale=1"
   --bg:#000;
   --cell:#090909;
   --border:#2f3336;
-  --cell-border:#1a1a1a;
+  --cellborder:#1a1a1a;
   --ink:#e7e9ea;
   --dim:#71767b;
-  --blue:#1d9bf0;
-  --blue2:#1a8cd8;
+
+  /* ROADMAN ORANGE */
+  --orange:#ff5a1f;
+  --orange2:#ff6a2a;
 
   --display:'Anton',sans-serif;
   --body:'Inter',sans-serif;
-  --mono:'IBM Plex Mono',monospace;
+  --mono:'IBM Plex Mono',monospace
 }
 
 *{
   box-sizing:border-box;
   margin:0;
-  padding:0;
+  padding:0
 }
 
 html,
 body{
   width:100%;
   height:100%;
+  overflow:hidden;
   background:#000;
   color:var(--ink);
-  font-family:var(--body);
-}
-
-body{
-  overflow:hidden;
-  overscroll-behavior:none;
-
-  user-select:none;
-  -webkit-user-select:none;
+  font-family:var(--body)
 }
 
 .wrap{
-  width:min(1100px,100%);
   height:100svh;
+  width:min(1100px,100%);
   margin:auto;
   padding:0 16px;
-
   display:flex;
-  flex-direction:column;
+  flex-direction:column
 }
 
-
-/* =====================================================
-   HERO
-===================================================== */
+/* =========================
+   HEADER
+========================= */
 
 .hero{
   flex:0 0 auto;
 
-  display:flex;
-  align-items:flex-end;
-
-  gap:18px;
+  border-bottom:1px solid var(--border);
 
   padding:13px 4px 11px;
 
-  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:flex-end;
+
+  gap:18px
 }
 
 .hero h1{
-  white-space:nowrap;
-
-  font:
-    clamp(24px,4vw,36px)/1
-    var(--display);
+  font:clamp(24px,4vw,36px)/1 var(--display);
+  white-space:nowrap
 }
 
 .desc{
-  max-width:460px;
-
-  color:var(--dim);
-
   font-size:11.5px;
+  color:var(--dim);
   line-height:1.35;
+  max-width:460px
 }
 
 .progress{
   margin-left:auto;
-
   white-space:nowrap;
-
-  color:var(--dim);
-
-  font:
-    10.5px
-    var(--mono);
+  font:10.5px var(--mono);
+  color:var(--dim)
 }
 
 .progress span{
-  color:var(--blue);
+  color:var(--orange)
 }
 
-
-/* =====================================================
-   GRID AREA
-===================================================== */
+/* =========================
+   GRID
+========================= */
 
 .grid-area{
   flex:1;
   min-height:0;
-
-  padding:7px 0;
+  padding:7px 0
 }
 
 .grid{
-  width:100%;
   height:100%;
 
   display:grid;
 
-  grid-template-columns:
-    repeat(10,1fr);
+  grid-template-columns:repeat(10,1fr);
+  grid-template-rows:repeat(10,1fr);
 
-  grid-template-rows:
-    repeat(10,1fr);
-
-  gap:3px;
+  gap:3px
 }
-
-
-/* =====================================================
-   TILE
-===================================================== */
 
 .tile{
   position:relative;
+
+  background:var(--cell);
+
+  border:1px solid var(--cellborder);
+
+  border-radius:4px;
 
   overflow:visible;
 
   z-index:1;
 
-  border:
-    1px solid
-    var(--cell-border);
-
-  border-radius:4px;
-
-  background:var(--cell);
-
-  isolation:isolate;
-
-  user-select:none;
-  -webkit-user-select:none;
+  transform:translateZ(0)
 }
 
 .tile:hover{
-  z-index:100;
+  z-index:100
 }
 
-
-/* =====================================================
-   NEON GLOW
-===================================================== */
-
-.tile::after{
-  content:"";
-
-  position:absolute;
-
-  left:50%;
-  top:50%;
-
-  width:70%;
-  height:70%;
-
-  transform:
-    translate(-50%,-50%)
-    scale(.7);
-
-  border-radius:10px;
-
-  background:
-    rgba(29,155,240,.32);
-
-  filter:
-    blur(18px);
-
-  opacity:0;
-
-  pointer-events:none;
-
-  z-index:-1;
-
-  transition:
-    opacity .25s ease,
-    transform .25s cubic-bezier(.22,1,.36,1);
-}
-
-.tile:hover::after{
-  opacity:1;
-
-  transform:
-    translate(-50%,-50%)
-    scale(2.15);
-}
-
-
-/* =====================================================
-   IMAGE CONTENT
-===================================================== */
+/* =========================
+   IMAGE / ZOOM
+========================= */
 
 .content{
   position:absolute;
-
   inset:0;
 
   border-radius:4px;
 
-  background:
-    #090909
-    center/cover
-    no-repeat;
+  background:#090909 center/cover no-repeat;
 
-  border:
-    1px solid
-    transparent;
+  border:1px solid transparent;
+
+  transform-origin:center center;
+
+  transform:scale(1) translateZ(0);
 
   transition:
-    transform .25s cubic-bezier(.22,1,.36,1),
-    border-color .2s,
-    box-shadow .25s,
-    filter .2s;
+    transform .18s cubic-bezier(.16,1,.3,1),
+    border-color .16s ease,
+    box-shadow .20s ease,
+    filter .16s ease;
 
   filter:brightness(.9);
 
   will-change:transform;
 
-  transform:
-    translateZ(0);
-
   backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
 
-  contain:paint;
-
-  user-select:none;
-  -webkit-user-select:none;
-
-  -webkit-user-drag:none;
-
-  pointer-events:auto;
+  pointer-events:none;
 }
 
 .tile:hover .content{
+  transform:scale(2.35) translateZ(0);
 
-  transform:
-    scale(2.15)
-    translateZ(0);
-
-  border-color:
-    var(--blue);
+  border-color:rgba(255,90,31,.88);
 
   box-shadow:
-    0 16px 36px
-      rgba(0,0,0,.65),
+    0 13px 30px rgba(0,0,0,.58),
+    0 0 0 1px rgba(255,90,31,.35),
+    0 0 20px rgba(255,90,31,.22);
 
-    0 0 0 1px
-      rgba(29,155,240,.45),
-
-    0 0 22px
-      rgba(29,155,240,.25);
-
-  filter:
-    brightness(1.08);
+  filter:brightness(1.07);
 }
 
-
-/* =====================================================
-   PROTECTION LAYER
-===================================================== */
-
-.protection-layer{
-
-  position:absolute;
-
-  inset:0;
-
-  z-index:4;
-
-  background:
-    transparent;
-
-  user-select:none;
-  -webkit-user-select:none;
-
-  -webkit-user-drag:none;
-
-  pointer-events:auto;
+.tile:not(:hover) .content{
+  transition:
+    transform .27s cubic-bezier(.22,1,.36,1),
+    border-color .20s ease,
+    box-shadow .25s ease,
+    filter .20s ease;
 }
 
-
-/* =====================================================
+/* =========================
    NUMBER
-===================================================== */
+========================= */
 
 .num{
   position:absolute;
+  z-index:3;
 
-  z-index:5;
-
-  left:3px;
   bottom:2px;
+  left:3px;
 
-  padding:
-    1px 3px;
+  font:6px var(--mono);
+
+  color:rgba(255,255,255,.72);
+
+  background:rgba(0,0,0,.55);
+
+  padding:1px 3px;
 
   border-radius:3px;
 
-  background:
-    rgba(0,0,0,.55);
-
-  color:
-    rgba(255,255,255,.72);
-
   pointer-events:none;
 
-  font:
-    6px
-    var(--mono);
-
-  transition:
-    opacity .15s;
-
-  user-select:none;
-  -webkit-user-select:none;
+  transition:opacity .16s ease
 }
 
 .tile:hover .num{
-  opacity:0;
+  opacity:0
 }
 
-
-/* =====================================================
+/* =========================
    EMPTY
-===================================================== */
+========================= */
 
 .empty{
   position:absolute;
-
   inset:0;
 
   display:grid;
-
   place-items:center;
 
   color:#333;
 
-  font:
-    7px
-    var(--mono);
+  font:7px var(--mono);
 
-  pointer-events:none;
-
-  transition:
-    opacity .15s;
-
-  user-select:none;
-  -webkit-user-select:none;
+  pointer-events:none
 }
 
-
-/* =====================================================
+/* =========================
    FOOTER
-===================================================== */
+========================= */
 
 .footer{
   flex:0 0 auto;
 
-  display:flex;
+  border-top:1px solid var(--border);
 
+  padding:10px 4px 12px;
+
+  display:flex;
   align-items:center;
 
-  justify-content:space-between;
+  gap:15px;
 
-  gap:20px;
+  position:relative;
+}
 
-  padding:
-    9px 4px 11px;
+/*
+   Linha de identidade do Roadman.
+   Mantém o footer integrado ao visual
+   do restante da experiência.
+*/
+.footer::before{
+  content:"";
 
-  border-top:
-    1px solid
-    var(--border);
+  position:absolute;
+
+  top:-1px;
+  left:0;
+
+  width:72px;
+  height:1px;
+
+  background:var(--orange);
+
+  box-shadow:
+    0 0 8px rgba(255,90,31,.28);
 }
 
 .brand{
-  display:flex;
-
-  flex-direction:column;
-
-  justify-content:center;
-
-  line-height:1;
+  font:14px var(--display);
 
   white-space:nowrap;
 
-  font:
-    14px
-    var(--display);
+  letter-spacing:.1px
 }
 
 .brand span{
   display:block;
 
-  margin-top:3px;
+  font:10px var(--body);
 
   color:var(--dim);
 
-  font:
-    10px/1.1
-    var(--body);
+  margin-top:1px
 }
 
 .actions{
   display:flex;
 
-  align-items:center;
-
-  justify-content:flex-end;
-
   gap:8px;
 
-  margin-left:auto;
+  margin-left:auto
 }
 
 .actions a{
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  height:34px;
-
-  min-width:110px;
-
-  padding:
-    0 15px;
+  text-decoration:none;
 
   border-radius:999px;
 
-  white-space:nowrap;
-
-  text-decoration:none;
+  padding:8px 15px;
 
   font-size:11px;
+
   font-weight:700;
 
-  line-height:1;
+  white-space:nowrap;
+
+  transition:
+    background .16s ease,
+    border-color .16s ease,
+    color .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
+}
+
+.actions a:hover{
+  transform:translateY(-1px)
 }
 
 .x{
-  border:
-    1px solid
-    var(--border);
+  border:1px solid var(--border);
 
   color:var(--ink);
+
+  background:rgba(255,255,255,.015);
+}
+
+.x:hover{
+  border-color:rgba(255,90,31,.55);
+
+  color:var(--orange);
+
+  background:rgba(255,90,31,.05);
+
+  box-shadow:
+    0 0 12px rgba(255,90,31,.08);
 }
 
 .buy{
-  background:var(--blue);
+  background:var(--orange);
 
   color:#fff;
+
+  border:1px solid var(--orange);
+
+  box-shadow:
+    0 0 12px rgba(255,90,31,.10);
 }
 
 .buy:hover{
-  background:var(--blue2);
+  background:var(--orange2);
+
+  border-color:var(--orange2);
+
+  box-shadow:
+    0 0 18px rgba(255,90,31,.22);
 }
 
-
-/* =====================================================
+/* =========================
    MOBILE
-===================================================== */
+========================= */
 
 @media(max-width:640px){
 
   .wrap{
-    padding:
-      0 8px;
+    padding:0 8px
   }
 
   .hero{
-    padding:
-      9px 2px;
-
-    gap:8px;
-  }
-
-  .hero h1{
-    font-size:25px;
+    padding:9px 2px;
+    gap:8px
   }
 
   .desc{
-    display:none;
+    display:none
+  }
+
+  .hero h1{
+    font-size:25px
   }
 
   .progress{
-    font-size:9px;
+    font-size:9px
   }
 
   .grid{
-    gap:2px;
+    gap:2px
   }
 
   .num{
-    font-size:5px;
+    font-size:5px
   }
 
   .footer{
-    padding:
-      7px 2px 9px;
-
-    gap:10px;
+    padding:8px 2px 9px
   }
 
   .brand{
-    font-size:12px;
+    font-size:12px
   }
 
   .brand span{
-    font-size:8px;
-    margin-top:2px;
+    font-size:8px
   }
 
   .actions{
-    gap:5px;
+    gap:5px
   }
 
   .actions a{
-    height:30px;
-
-    min-width:auto;
-
-    padding:
-      0 10px;
-
-    font-size:9px;
+    padding:7px 11px;
+    font-size:9px
   }
 
+  .tile:hover .content{
+    transform:scale(2.15) translateZ(0)
+  }
 }
 
-
-/* =====================================================
+/* =========================
    SHORT SCREENS
-===================================================== */
+========================= */
 
 @media(max-height:650px){
 
   .hero{
-    padding:
-      7px 2px;
-  }
-
-  .grid-area{
-    padding:
-      5px 0;
+    padding:7px 2px
   }
 
   .footer{
-    padding:
-      6px 2px;
+    padding:6px 2px
   }
 
+  .grid-area{
+    padding:5px 0
+  }
 }
 
-
-/* =====================================================
+/* =========================
    REDUCE MOTION
-===================================================== */
+========================= */
 
 @media(prefers-reduced-motion:reduce){
 
-  .content,
-  .tile::after,
-  .num,
-  .empty{
-    transition:none !important;
+  .content{
+    transition:none
   }
 
+  .num{
+    transition:none
+  }
+
+  .actions a{
+    transition:none
+  }
 }
 
 </style>
-
 </head>
 
 <body>
@@ -634,22 +477,18 @@ body{
 
 <header class="hero">
 
-  <h1>
-    THE FIRST 100
-  </h1>
+  <h1>THE FIRST 100</h1>
 
   <div class="desc">
-    Every road revealed here belongs to someone who walked early.
+    For the first deserving reales of ROAD.
   </div>
 
   <div class="progress">
-    REVEALED
-    <span id="progress">
-      0 / 100
-    </span>
+    REVEALED <span id="progress">0 / 100</span>
   </div>
 
 </header>
+
 
 <main class="grid-area">
 
@@ -660,42 +499,38 @@ body{
 
 </main>
 
+
 <footer class="footer">
 
   <div class="brand">
 
-```
-THE ROAD PROVIDES.
+    THE ROAD PROVIDES.
 
-<span>
-  A new chance, for all.
-</span>
-```
+    <span>
+      A new chance, for all.
+    </span>
 
   </div>
 
   <div class="actions">
 
-```
-<a
-  class="x"
-  href="https://x.com/theroadprovides"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  X / PROJECT
-</a>
+    <a
+      class="x"
+      href="https://x.com/theroadprovides"
+      target="_blank"
+      rel="noopener"
+    >
+      X / PROJECT
+    </a>
 
-
-<a
-  class="buy"
-  href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  BUY $ROAD
-</a>
-```
+    <a
+      class="buy"
+      href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
+      target="_blank"
+      rel="noopener"
+    >
+      BUY $ROAD
+    </a>
 
   </div>
 
@@ -703,760 +538,121 @@ THE ROAD PROVIDES.
 
 </div>
 
-<script>
 
-/* =====================================================
-   CONFIG
-===================================================== */
+<script>
 
 const TOTAL = 100;
 
-const IMAGE_FOLDER =
-  "images/";
+const FORMATS = [
+  'webp',
+  'png',
+  'jpg',
+  'jpeg'
+];
 
-const API =
-  "/api/spots";
+const grid = document.getElementById('grid');
 
-/*
- * Quantidade de imagens carregadas
- * imediatamente na abertura.
- */
-const INITIAL_IMAGES = 20;
-
-/*
- * Quantidade de imagens carregadas
- * por lote depois da abertura.
- */
-const BATCH_SIZE = 10;
-
-/*
- * Quantidade máxima de downloads
- * simultâneos.
- */
-const LOAD_CONCURRENCY = 5;
+let revealed = 0;
 
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const grid =
-  document.getElementById(
-    "grid"
-  );
-
-const progress =
-  document.getElementById(
-    "progress"
-  );
+function pad(n){
+  return String(n).padStart(3,'0')
+}
 
 
-/* =====================================================
-   LOAD CLAIM COUNT
-===================================================== */
+function progress(){
 
-async function loadClaims(){
-
-  try{
-
-    const response =
-      await fetch(
-        API,
-        {
-          method:"GET",
-          cache:"no-store"
-        }
-      );
-
-    if(!response.ok){
-
-      throw new Error(
-        "API request failed"
-      );
-
-    }
-
-    const data =
-      await response.json();
-
-    if(
-      data &&
-      typeof data.claimed ===
-        "number"
-    ){
-
-      const claimed =
-        Math.max(
-          0,
-          Math.min(
-            TOTAL,
-            data.claimed
-          )
-        );
-
-      progress.textContent =
-        claimed +
-        " / " +
-        TOTAL;
-
-    }
-
-  }catch(error){
-
-    console.warn(
-      "Unable to load claims:",
-      error
-    );
-
-  }
+  document.getElementById('progress').textContent =
+    revealed + ' / ' + TOTAL;
 
 }
 
 
-/* =====================================================
-   IMAGE LOADER
-===================================================== */
+for(let i = 1; i <= TOTAL; i++){
 
-function loadImage(tile){
+  const n = pad(i);
 
-  return new Promise(
-    function(resolve){
+  const tile = document.createElement('div');
 
-      if(
-        tile.dataset.loaded ===
-          "true"
-      ){
+  tile.className = 'tile';
 
-        resolve(true);
 
-        return;
+  const content = document.createElement('div');
 
-      }
+  content.className = 'content';
 
-      if(
-        tile.dataset.loading ===
-          "true"
-      ){
 
-        resolve(false);
+  const num = document.createElement('div');
 
-        return;
+  num.className = 'num';
 
-      }
+  num.textContent = '#' + n;
 
-      tile.dataset.loading =
-        "true";
 
+  const empty = document.createElement('div');
 
-      const id =
-        tile.dataset.id;
+  empty.className = 'empty';
 
-
-      const content =
-        tile.querySelector(
-          ".content"
-        );
-
-
-      const empty =
-        tile.querySelector(
-          ".empty"
-        );
-
-
-      const src =
-        IMAGE_FOLDER +
-        id +
-        ".png";
-
-
-      const image =
-        new Image();
-
-
-      image.decoding =
-        "async";
-
-
-      /*
-       * Imagens iniciais têm prioridade.
-       * As demais entram como baixa prioridade.
-       */
-
-      image.fetchPriority =
-        tile.dataset.priority ===
-          "high"
-          ? "high"
-          : "low";
-
-
-      image.onload =
-        function(){
-
-          content.style.backgroundImage =
-            'url("' +
-            src +
-            '")';
-
-
-          tile.dataset.loaded =
-            "true";
-
-
-          tile.dataset.loading =
-            "false";
-
-
-          if(empty){
-
-            empty.style.opacity =
-              "0";
-
-
-            setTimeout(
-              function(){
-
-                if(
-                  empty.parentNode
-                ){
-
-                  empty.remove();
-
-                }
-
-              },
-              150
-            );
-
-          }
-
-
-          resolve(true);
-
-        };
-
-
-      image.onerror =
-        function(){
-
-          tile.dataset.loading =
-            "error";
-
-          resolve(false);
-
-        };
-
-
-      image.src =
-        src;
-
-    }
-  );
-
-}
-
-
-/* =====================================================
-   CREATE TILE
-===================================================== */
-
-function createTile(number){
-
-  const id =
-    String(number)
-      .padStart(
-        3,
-        "0"
-      );
-
-
-  const tile =
-    document.createElement(
-      "div"
-    );
-
-
-  tile.className =
-    "tile";
-
-
-  tile.dataset.id =
-    id;
-
-
-  const content =
-    document.createElement(
-      "div"
-    );
-
-
-  content.className =
-    "content";
-
-
-  const protection =
-    document.createElement(
-      "div"
-    );
-
-
-  protection.className =
-    "protection-layer";
-
-
-  const num =
-    document.createElement(
-      "div"
-    );
-
-
-  num.className =
-    "num";
-
-
-  num.textContent =
-    "#" +
-    id;
-
-
-  const empty =
-    document.createElement(
-      "div"
-    );
-
-
-  empty.className =
-    "empty";
-
-
-  empty.textContent =
-    "—";
+  empty.textContent = '—';
 
 
   tile.append(
     content,
-    protection,
     num,
     empty
   );
 
 
-  grid.appendChild(
-    tile
-  );
+  grid.appendChild(tile);
 
 
-  return tile;
+  let idx = 0;
 
-}
 
+  const probe = () => {
 
-/* =====================================================
-   BUILD GRID
-===================================================== */
-
-const tiles = [];
-
-
-for(
-  let i = 1;
-  i <= TOTAL;
-  i++
-){
-
-  const tile =
-    createTile(i);
-
-  /*
-   * As primeiras imagens recebem
-   * prioridade alta.
-   */
-
-  if(
-    i <= INITIAL_IMAGES
-  ){
-
-    tile.dataset.priority =
-      "high";
-
-  }
-
-  tiles.push(
-    tile
-  );
-
-}
-
-
-/* =====================================================
-   PROTECTION
-===================================================== */
-
-/*
- * Uma única proteção global é suficiente.
- * Não precisamos adicionar vários listeners
- * individuais aos 100 tiles.
- */
-
-document.addEventListener(
-  "contextmenu",
-  function(event){
-
-    event.preventDefault();
-
-  }
-);
-
-
-document.addEventListener(
-  "dragstart",
-  function(event){
-
-    event.preventDefault();
-
-  }
-);
-
-
-document.addEventListener(
-  "selectstart",
-  function(event){
-
-    event.preventDefault();
-
-  }
-);
-
-
-document.addEventListener(
-  "mousedown",
-  function(event){
-
-    if(
-      event.button === 2
-    ){
-
-      event.preventDefault();
-
-    }
-
-  }
-);
-
-
-/*
- * Impede alguns atalhos comuns
- * usados para salvar/copiar
- * o conteúdo da página.
- */
-
-document.addEventListener(
-  "keydown",
-  function(event){
-
-    const key =
-      String(
-        event.key || ""
-      ).toLowerCase();
-
-
-    const blocked =
-      (
-        event.ctrlKey ||
-        event.metaKey
-      ) &&
-      [
-        "s",
-        "u",
-        "c",
-        "p"
-      ].includes(
-        key
-      );
-
-
-    if(blocked){
-
-      event.preventDefault();
-
-    }
-
-  }
-);
-
-
-/* =====================================================
-   IMAGE QUEUE
-===================================================== */
-
-let imageQueueIndex = 0;
-
-
-/*
- * Carrega um grupo de imagens com
- * concorrência controlada.
- */
-
-async function loadBatch(){
-
-  const batch = [];
-
-
-  for(
-    let i = 0;
-    i < BATCH_SIZE &&
-    imageQueueIndex < tiles.length;
-    i++
-  ){
-
-    batch.push(
-      tiles[
-        imageQueueIndex++
-      ]
-    );
-
-  }
-
-
-  if(
-    batch.length === 0
-  ){
-
-    return;
-
-  }
-
-
-  let index = 0;
-
-
-  async function worker(){
-
-    while(true){
-
-      const current =
-        index++;
-
-
-      if(
-        current >=
-        batch.length
-      ){
-
-        return;
-
-      }
-
-
-      await loadImage(
-        batch[current]
-      );
-
-    }
-
-  }
-
-
-  const workers = [];
-
-
-  const workerCount =
-    Math.min(
-      LOAD_CONCURRENCY,
-      batch.length
-    );
-
-
-  for(
-    let i = 0;
-    i < workerCount;
-    i++
-  ){
-
-    workers.push(
-      worker()
-    );
-
-  }
-
-
-  await Promise.all(
-    workers
-  );
-
-}
-
-
-/* =====================================================
-   BACKGROUND IMAGE LOADING
-===================================================== */
-
-function scheduleRemainingImages(){
-
-  /*
-   * requestIdleCallback permite que o navegador
-   * termine primeiro o trabalho visual da página.
-   */
-
-  const schedule =
-    window.requestIdleCallback ||
-    function(callback){
-
-      setTimeout(
-        callback,
-        120
-      );
-
-    };
-
-
-  function next(){
-
-    if(
-      imageQueueIndex >=
-      tiles.length
-    ){
+    if(idx >= FORMATS.length){
 
       return;
 
     }
 
 
-    schedule(
-      async function(){
-
-        await loadBatch();
-
-        /*
-         * Pequeno intervalo entre lotes.
-         * Isso evita disparar 80 downloads
-         * de uma vez após a primeira pintura.
-         */
-
-        setTimeout(
-          next,
-          80
-        );
-
-      },
-      {
-        timeout:1000
-      }
-    );
-
-  }
+    const src =
+      `images/${n}.${FORMATS[idx++]}`;
 
 
-  next();
-
-}
+    const img = new Image();
 
 
-/* =====================================================
-   INITIAL LOAD
-===================================================== */
+    img.onload = () => {
 
-async function initializeGallery(){
+      content.style.backgroundImage =
+        `url("${src}")`;
 
-  loadClaims();
+      empty.remove();
 
+      revealed++;
 
-  /*
-   * Primeiro carregamos somente as primeiras
-   * imagens prioritárias.
-   */
+      progress();
 
-  const initialTiles =
-    tiles.slice(
-      0,
-      INITIAL_IMAGES
-    );
+    };
 
 
-  let index = 0;
+    img.onerror = probe;
 
 
-  async function worker(){
+    img.src = src;
 
-    while(true){
-
-      const current =
-        index++;
+  };
 
 
-      if(
-        current >=
-        initialTiles.length
-      ){
-
-        return;
-
-      }
-
-
-      await loadImage(
-        initialTiles[current]
-      );
-
-    }
-
-  }
-
-
-  const workers = [];
-
-
-  const workerCount =
-    Math.min(
-      LOAD_CONCURRENCY,
-      initialTiles.length
-    );
-
-
-  for(
-    let i = 0;
-    i < workerCount;
-    i++
-  ){
-
-    workers.push(
-      worker()
-    );
-
-  }
-
-
-  await Promise.all(
-    workers
-  );
-
-
-  /*
-   * O restante começa depois que
-   * a primeira parte da galeria
-   * já está visível.
-   */
-
-  scheduleRemainingImages();
+  probe();
 
 }
 
 
-/* =====================================================
-   START
-===================================================== */
-
-initializeGallery();
-
-
-/* =====================================================
-   REFRESH COUNTER
-===================================================== */
-
-setInterval(
-  loadClaims,
-  30000
-);
+progress();
 
 </script>
 
