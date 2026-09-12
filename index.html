@@ -1210,7 +1210,7 @@ footer:before{
 
   <a
     class="roadbtn"
-    href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
+    href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUuem8rpuvEuRApump"
     target="_blank"
     rel="noopener noreferrer"
   >
@@ -1423,8 +1423,8 @@ footer:before{
   </h2>
 
   <p>
-    Select your wallet and paste the Solana address
-    that will participate in the Roadman qualification.
+    Connect your Solana wallet to verify your $ROAD balance.
+    You can also paste the address manually.
   </p>
 
   <div class="wallets">
@@ -1999,6 +1999,441 @@ function maskWallet(
 }
 
 
+function looksLikeSolanaAddress(
+  value
+){
+
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(
+    String(value || "").trim()
+  );
+
+}
+
+
+function getPhantomProvider(){
+
+  if(
+    window.phantom &&
+    window.phantom.solana &&
+    window.phantom.solana.isPhantom
+  ){
+
+    return window.phantom.solana;
+
+  }
+
+
+  if(
+    window.solana &&
+    window.solana.isPhantom
+  ){
+
+    return window.solana;
+
+  }
+
+
+  return null;
+
+}
+
+
+function getSolflareProvider(){
+
+  if(
+    window.solflare &&
+    typeof window.solflare.connect ===
+      "function"
+  ){
+
+    return window.solflare;
+
+  }
+
+
+  return null;
+
+}
+
+
+function getMetaMaskSolanaProvider(){
+
+  const candidates = [];
+
+
+  if(
+    window.metamask &&
+    window.metamask.solana
+  ){
+
+    candidates.push(
+      window.metamask.solana
+    );
+
+  }
+
+
+  if(
+    window.MetaMask &&
+    window.MetaMask.solana
+  ){
+
+    candidates.push(
+      window.MetaMask.solana
+    );
+
+  }
+
+
+  if(
+    window.ethereum &&
+    window.ethereum.solana
+  ){
+
+    candidates.push(
+      window.ethereum.solana
+    );
+
+  }
+
+
+  if(
+    window.ethereum &&
+    Array.isArray(
+      window.ethereum.providers
+    )
+  ){
+
+    window.ethereum.providers.forEach(
+      provider => {
+
+        if(
+          provider &&
+          provider.isMetaMask &&
+          provider.solana
+        ){
+
+          candidates.push(
+            provider.solana
+          );
+
+        }
+
+      }
+    );
+
+  }
+
+
+  return candidates.find(
+    provider =>
+      provider &&
+      typeof provider.connect ===
+        "function"
+  ) || null;
+
+}
+
+
+function showWalletError(
+  message
+){
+
+  $("walletError")
+    .textContent =
+    message;
+
+  $("walletError")
+    .style.display =
+    "block";
+
+  $("verifyStatus")
+    .style.display =
+    "none";
+
+}
+
+
+function clearWalletError(){
+
+  $("walletError")
+    .textContent =
+    "";
+
+  $("walletError")
+    .style.display =
+    "none";
+
+}
+
+
+function setSelectedWallet(
+  walletName
+){
+
+  selectedWallet =
+    walletName;
+
+
+  document
+    .querySelectorAll(
+      ".wallet"
+    )
+    .forEach(
+      button => {
+
+        button.classList.toggle(
+          "selected",
+          button.dataset.wallet ===
+            walletName
+        );
+
+      }
+    );
+
+}
+
+
+function updateVerifyButton(){
+
+  const wallet =
+    $("walletInput")
+      .value
+      .trim();
+
+
+  $("verifyBtn")
+    .disabled =
+    !looksLikeSolanaAddress(
+      wallet
+    );
+
+}
+
+
+function showConnectedWallet(
+  walletName,
+  address
+){
+
+  setSelectedWallet(
+    walletName
+  );
+
+
+  $("walletBox")
+    .style.display =
+    "block";
+
+
+  $("walletHint")
+    .textContent =
+
+    walletName +
+    " connected — wallet detected.";
+
+
+  $("walletInput")
+    .value =
+    address;
+
+
+  clearWalletError();
+
+
+  $("verifyStatus")
+    .style.display =
+    "block";
+
+
+  $("verifyStatus")
+    .className =
+    "terminal";
+
+
+  $("verifyStatus")
+    .textContent =
+    "> wallet connected — ready to verify $ROAD balance.";
+
+
+  updateVerifyButton();
+
+}
+
+
+async function connectSolanaWallet(
+  walletName
+){
+
+  $("walletBox")
+    .style.display =
+    "block";
+
+
+  clearWalletError();
+
+
+  $("verifyStatus")
+    .style.display =
+    "block";
+
+
+  $("verifyStatus")
+    .className =
+    "terminal";
+
+
+  $("verifyStatus")
+    .textContent =
+    "> opening " +
+    walletName +
+    "...";
+
+
+  let provider = null;
+
+
+  try{
+
+    if(
+      walletName ===
+      "Phantom"
+    ){
+
+      provider =
+        getPhantomProvider();
+
+    }else if(
+      walletName ===
+      "Solflare"
+    ){
+
+      provider =
+        getSolflareProvider();
+
+    }else if(
+      walletName ===
+      "MetaMask"
+    ){
+
+      provider =
+        getMetaMaskSolanaProvider();
+
+    }
+
+
+    if(!provider){
+
+      if(
+        walletName ===
+        "MetaMask"
+      ){
+
+        throw new Error(
+          "MetaMask Solana provider not detected. Use Phantom, Solflare, or paste the Solana address manually."
+        );
+
+      }
+
+
+      throw new Error(
+        walletName +
+        " extension not detected. Install or unlock the wallet, then try again. You can also paste the Solana address manually."
+      );
+
+    }
+
+
+    let response = null;
+
+
+    if(
+      walletName ===
+      "Phantom"
+    ){
+
+      response =
+        await provider.connect();
+
+    }else{
+
+      response =
+        await provider.connect();
+
+    }
+
+
+    const publicKey =
+
+      response?.publicKey ||
+
+      provider.publicKey;
+
+
+    const address =
+
+      publicKey?.toString?.() ||
+
+      String(
+        publicKey || ""
+      );
+
+
+    if(
+      !looksLikeSolanaAddress(
+        address
+      )
+    ){
+
+      throw new Error(
+        "The connected wallet did not return a valid Solana address."
+      );
+
+    }
+
+
+    showConnectedWallet(
+      walletName,
+      address
+    );
+
+
+  }catch(error){
+
+    console.error(
+      walletName +
+      " WALLET:",
+      error
+    );
+
+
+    let message =
+      error?.message ||
+      "Unable to connect wallet.";
+
+
+    if(
+      error?.code === 4001 ||
+      /reject|denied|cancel/i.test(
+        message
+      )
+    ){
+
+      message =
+        "Wallet connection was cancelled. You can try again or paste the Solana address manually.";
+
+    }
+
+
+    showWalletError(
+      message
+    );
+
+  }
+
+}
+
+
 function setStep(
   n
 ){
@@ -2343,56 +2778,55 @@ document
     button => {
 
       button.onclick =
-        function(){
+        async function(){
 
-          selectedWallet =
+          const walletName =
             button.dataset.wallet;
 
 
-          document
-            .querySelectorAll(
-              ".wallet"
-            )
-            .forEach(
-              b =>
-                b.classList.remove(
-                  "selected"
-                )
+          if(
+            walletName ===
+            "Manual"
+          ){
+
+            setSelectedWallet(
+              "Manual"
             );
 
 
-          button.classList.add(
-            "selected"
-          );
+            $("walletBox")
+              .style.display =
+              "block";
 
-
-          $("walletBox")
-            .style.display =
-            "block";
-
-
-          if(
-            selectedWallet ===
-            "Manual"
-          ){
 
             $("walletHint")
               .textContent =
               "Paste your Solana wallet address below.";
 
-          }else{
 
-            $("walletHint")
-              .textContent =
+            clearWalletError();
 
-              selectedWallet +
-              " selected — paste the wallet address below.";
+
+            $("verifyStatus")
+              .style.display =
+              "none";
+
+
+            $("walletInput")
+              .focus();
+
+
+            updateVerifyButton();
+
+
+            return;
 
           }
 
 
-          $("walletInput")
-            .focus();
+          await connectSolanaWallet(
+            walletName
+          );
 
         };
 
@@ -2411,7 +2845,9 @@ $("walletInput")
 
       $("verifyBtn")
         .disabled =
-        wallet.length < 32;
+        !looksLikeSolanaAddress(
+          wallet
+        );
 
 
       $("walletError")
@@ -2468,7 +2904,7 @@ async function submitClaim(
 
 
     status.textContent =
-      "> verifying wallet...";
+      "> verifying wallet and $ROAD eligibility...";
 
 
     const response =
@@ -2577,7 +3013,9 @@ $("verifyBtn").onclick =
 
 
     if(
-      wallet.length < 32
+      !looksLikeSolanaAddress(
+        wallet
+      )
     ){
 
       $("walletError")
