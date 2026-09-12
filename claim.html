@@ -1,45 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>THE ROAD PROVIDES — Early Access</title>
 
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1,viewport-fit=cover"
->
-
-<title>THE ROAD PROVIDES — Claim</title>
-
-<link
-  rel="icon"
-  type="image/png"
-  href="desert_roadman_badge.png"
->
+<link rel="icon" type="image/png" href="desert_roadman_badge.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link
-  href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-  rel="stylesheet"
->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
 :root{
   --bg:#000;
-  --raise:#16181c;
+  --raise:#090909;
   --border:#2f3336;
-
   --ink:#e7e9ea;
   --dim:#71767b;
-
-  --blue:#1d9bf0;
+  --orange:#ff5a1f;
+  --orange2:#ff6a2a;
   --green:#00ba7c;
   --red:#f4212e;
-
   --display:'Anton',sans-serif;
   --body:'Inter',sans-serif;
   --mono:'IBM Plex Mono',monospace;
@@ -51,1304 +34,976 @@
   padding:0;
 }
 
-html,
+html{
+  width:100%;
+  min-height:100%;
+  background:var(--bg);
+  overflow-x:hidden;
+}
+
 body{
   width:100%;
   min-height:100%;
-
   background:var(--bg);
   color:var(--ink);
-
   font-family:var(--body);
-}
-
-body{
   overflow-x:hidden;
-
-  -webkit-user-select:none;
-  user-select:none;
-
-  -webkit-touch-callout:none;
-}
-
-@media print{
-
-  html,
-  body{
-    display:none !important;
-  }
-
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
 }
 
 .wrap{
   width:min(700px,100%);
   min-height:100svh;
-
   margin:auto;
-
-  padding-bottom:12px;
+  padding-bottom:24px;
 }
 
 /* =====================================================
-   BANNER
+PAGE STAGE
+===================================================== */
+
+.page-stage{
+  position:relative;
+  width:100%;
+  transform:translate3d(0,0,0);
+  opacity:1;
+  will-change:transform,opacity;
+}
+
+.page-stage.road-transition{
+  animation:roadStageMove .42s cubic-bezier(.22,.61,.36,1);
+}
+
+@keyframes roadStageMove{
+  0%{
+    transform:translate3d(0,0,0);
+    opacity:1;
+  }
+
+  35%{
+    transform:translate3d(-22px,0,0);
+    opacity:.72;
+  }
+
+  65%{
+    transform:translate3d(22px,0,0);
+    opacity:.72;
+  }
+
+  100%{
+    transform:translate3d(0,0,0);
+    opacity:1;
+  }
+}
+
+/* =====================================================
+BANNER
 ===================================================== */
 
 .banner{
-
-  height:clamp(
-    135px,
-    22svh,
-    180px
-  );
-
+  height:clamp(130px,20svh,190px);
   position:relative;
-
   display:grid;
-
   place-items:center;
-
   overflow:hidden;
-
-  border-bottom:
-    1px solid var(--border);
-
+  background:
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 1px),
+      rgba(255,90,31,.92) calc(50% - 1px),
+      rgba(255,90,31,.92) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
 }
 
 .banner:before{
-
   content:"";
-
   position:absolute;
-
   inset:0;
-
   background:
-
     radial-gradient(
       ellipse 65% 110% at 30% 20%,
-      rgba(255,255,255,.055),
+      rgba(255,90,31,.075),
       transparent 62%
     ),
-
     repeating-linear-gradient(
       115deg,
       rgba(255,255,255,.018) 0,
       transparent 2px,
       transparent 40px
     );
-
+  pointer-events:none;
 }
 
 .banner h1{
-
   position:relative;
-
-  font:
-    clamp(36px,8vw,58px)/.92
-    var(--display);
-
+  z-index:2;
+  background:#000;
+  padding:0 16px;
+  font:clamp(36px,8vw,58px)/.92 var(--display);
   text-align:center;
-
   letter-spacing:.01em;
-
+  box-shadow:0 0 22px rgba(0,0,0,.95);
 }
 
 /* =====================================================
-   PROFILE
+ROADMAN JOURNEY
+===================================================== */
+
+.roadman-journey{
+  position:relative;
+  width:100%;
+  height:clamp(62px,8svh,76px);
+  margin-top:0;
+  overflow:hidden;
+  background:#000;
+}
+
+.roadman-journey:before{
+  content:"";
+  position:absolute;
+  left:6%;
+  right:6%;
+  top:50%;
+  height:3px;
+  transform:translateY(-50%);
+  background:var(--border);
+  z-index:1;
+  pointer-events:none;
+}
+
+.roadman-journey:after{
+  content:"";
+  position:absolute;
+  left:6%;
+  top:50%;
+  width:0;
+  height:3px;
+  transform:translateY(-50%);
+  background:var(--orange);
+  box-shadow:0 0 7px rgba(255,90,31,.38);
+  transition:width .62s cubic-bezier(.22,.61,.36,1);
+  z-index:2;
+  pointer-events:none;
+}
+
+.roadman-journey.step-1:after{
+  width:0%;
+}
+
+.roadman-journey.step-2:after{
+  width:29%;
+}
+
+.roadman-journey.step-3:after{
+  width:59%;
+}
+
+.roadman-journey.step-4:after{
+  width:88%;
+}
+
+.roadman-scene{
+  position:absolute;
+  left:6%;
+  top:50%;
+  width:clamp(60px,8vw,72px);
+  height:clamp(60px,8vw,72px);
+  object-fit:contain;
+  object-position:center center;
+  transform:translate(-50%,-50%);
+  display:block;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-user-drag:none;
+  -webkit-touch-callout:none;
+  pointer-events:none;
+  filter:drop-shadow(0 5px 7px rgba(0,0,0,.9));
+  opacity:1;
+  transition:
+    left .62s cubic-bezier(.22,.61,.36,1),
+    opacity .18s ease,
+    filter .25s ease;
+  z-index:10;
+}
+
+.roadman-scene.moving{
+  filter:
+    drop-shadow(0 5px 8px rgba(0,0,0,.95))
+    drop-shadow(0 0 10px rgba(255,90,31,.14));
+}
+
+/* =====================================================
+PROFILE
 ===================================================== */
 
 .profile{
-
-  display:flex;
-
-  align-items:flex-end;
-
-  padding:0 22px;
-
-  margin-top:-27px;
-
-  position:relative;
-
+  display:none;
 }
 
 .avatar{
-
   width:62px;
   height:62px;
-
   border-radius:50%;
-
   background:var(--raise);
-
-  border:
-    3px solid var(--border);
-
+  border:3px solid var(--border);
   display:grid;
-
   place-items:center;
-
   overflow:hidden;
-
 }
 
 .avatar img{
-
   width:100%;
   height:100%;
-
   object-fit:cover;
-
   display:block;
-
   border-radius:50%;
-
-  user-select:none;
-
-  -webkit-user-drag:none;
-
 }
 
 .identity{
-
-  padding:10px 22px 0;
-
+  padding:clamp(9px,1.5svh,13px) 22px 0;
 }
 
 .status{
-
   display:flex;
-
   align-items:center;
-
   gap:7px;
-
-  font:
-    10.5px
-    var(--mono);
-
+  font:10.5px var(--mono);
   letter-spacing:.06em;
-
-  color:var(--green);
-
+  color:var(--orange);
   margin-bottom:5px;
-
 }
 
 .status:before{
-
   content:"";
-
   width:6px;
   height:6px;
-
   border-radius:50%;
-
-  background:var(--green);
-
+  background:var(--orange);
+  box-shadow:0 0 8px rgba(255,90,31,.45);
 }
 
 .name{
-
   font-size:19px;
-
   font-weight:800;
-
 }
 
 .handle{
-
   font-size:12.5px;
-
   color:var(--dim);
-
-  margin:2px 0 7px;
-
+  margin:2px 0 8px;
 }
 
 .bio{
-
   font-size:13px;
-
   line-height:1.45;
-
 }
 
 .bio b{
-
-  color:var(--blue);
-
+  color:var(--orange);
 }
 
 /* =====================================================
-   LINKS
+LINKS
 ===================================================== */
 
 .links{
-
   display:flex;
-
   gap:8px;
-
-  margin:10px 22px 0;
-
+  margin:clamp(9px,1.6svh,13px) 22px 0;
 }
 
 .links a{
-
   flex:1;
-
   text-align:center;
-
   text-decoration:none;
-
   border-radius:999px;
-
-  padding:8px 12px;
-
+  padding:9px 12px;
   font-size:11.5px;
-
   font-weight:700;
-
-  -webkit-user-select:none;
-
-  user-select:none;
-
 }
 
 .x{
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   color:var(--ink);
+  transition:
+    border-color .2s,
+    color .2s,
+    box-shadow .2s;
+}
 
+.x:hover{
+  border-color:var(--orange);
+  color:var(--orange);
+  box-shadow:0 0 14px rgba(255,90,31,.12);
 }
 
 .roadbtn{
-
-  background:var(--blue);
-
+  background:var(--orange);
   color:#fff;
+  transition:
+    background .2s,
+    box-shadow .2s;
+}
 
+.roadbtn:hover{
+  background:var(--orange2);
+  box-shadow:0 0 18px rgba(255,90,31,.16);
 }
 
 /* =====================================================
-   ROAD PROGRESS
+ROAD PROGRESS
 ===================================================== */
 
 .road{
-
-  padding:18px 22px 0;
-
+  padding:clamp(14px,2.2svh,21px) 22px 0;
 }
 
 .line{
-
   height:2px;
-
   background:var(--border);
-
   margin:0 12px;
-
   position:relative;
-
 }
 
 .fill{
-
   position:absolute;
-
   left:0;
   top:0;
-
   height:100%;
-
   width:8.33%;
-
-  background:var(--blue);
-
+  background:var(--orange);
+  box-shadow:0 0 10px rgba(255,90,31,.25);
   transition:.25s;
-
 }
 
 .markers{
-
   display:flex;
-
   justify-content:space-between;
-
   margin-top:-8px;
-
 }
 
 .marker{
-
   border:0;
-
   background:none;
-
   color:inherit;
-
   display:flex;
-
   flex-direction:column;
-
   align-items:center;
-
   gap:6px;
-
-  font:
-    8.5px
-    var(--mono);
-
+  font:8.5px var(--mono);
   text-transform:uppercase;
-
   cursor:pointer;
-
 }
 
 .dot{
-
   width:15px;
   height:15px;
-
   border-radius:50%;
-
-  border:
-    2px solid var(--border);
-
+  border:2px solid var(--border);
   background:#000;
-
 }
 
 .marker.active .dot{
-
-  background:var(--blue);
-
-  border-color:var(--blue);
-
+  background:var(--orange);
+  border-color:var(--orange);
+  box-shadow:0 0 10px rgba(255,90,31,.3);
 }
 
 .marker.done .dot{
-
-  border-color:var(--blue);
-
+  border-color:var(--orange);
 }
 
 .marker.done .dot:after{
-
   content:"";
-
   display:block;
-
   width:5px;
   height:5px;
-
   border-radius:50%;
-
-  background:var(--blue);
-
+  background:var(--orange);
   margin:3px;
-
 }
 
 .marker-label{
-
   color:var(--dim);
-
 }
 
 .marker.active .marker-label,
 .marker.done .marker-label{
-
   color:var(--ink);
-
 }
 
 /* =====================================================
-   PANEL
+PANEL
 ===================================================== */
 
 .panel{
-
-  margin:20px 22px 0;
-
-  border:
-    1px solid var(--border);
-
+  margin:clamp(16px,2.8svh,23px) 22px 0;
+  border:1px solid var(--border);
   border-radius:16px;
-
   background:var(--raise);
-
-  padding:22px;
-
-  min-height:310px;
-
+  padding:clamp(18px,2.8svh,25px);
+  min-height:0;
 }
 
 .step{
-
   display:none;
-
 }
 
 .step.active{
-
   display:block;
-
-  animation:
-    in .22s ease;
-
+  animation:in .22s ease;
 }
 
 @keyframes in{
-
   from{
-
     opacity:0;
-
-    transform:
-      translateY(4px);
-
+    transform:translateY(4px);
   }
 
   to{
-
     opacity:1;
-
     transform:none;
-
   }
-
 }
 
 .eyebrow{
-
-  font:
-    10.5px
-    var(--mono);
-
-  color:var(--blue);
-
+  font:10.5px var(--mono);
+  color:var(--orange);
   letter-spacing:.08em;
-
-  margin-bottom:7px;
-
+  margin-bottom:8px;
 }
 
 .step h2{
-
-  font:
-    23px/1
-    var(--display);
-
+  font:24px/1 var(--display);
   text-transform:uppercase;
-
-  margin-bottom:9px;
-
+  margin-bottom:10px;
 }
 
 .step p{
-
   font-size:13px;
-
   line-height:1.5;
-
   color:var(--dim);
-
-  margin-bottom:16px;
-
+  margin-bottom:17px;
 }
 
 .terminal{
-
-  font:
-    11px/1.8
-    var(--mono);
-
+  font:11px/1.8 var(--mono);
   color:var(--dim);
-
-  margin-bottom:16px;
-
+  margin-bottom:17px;
 }
 
 .ok{
-
   color:var(--green);
-
 }
 
 .ready{
-
-  color:var(--blue);
-
+  color:var(--orange);
 }
 
 /* =====================================================
-   FORM
+FORM
 ===================================================== */
 
 .field{
-
   display:flex;
-
   gap:8px;
-
 }
 
 .field input{
-
   flex:1;
-
   min-width:0;
-
 }
 
 input{
-
   background:#000;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:10px;
-
   color:var(--ink);
-
-  font:
-    13px
-    var(--mono);
-
-  padding:11px 13px;
-
+  font:13px var(--mono);
+  padding:12px 13px;
   outline:0;
-
   width:100%;
-
   transition:.2s;
-
 }
 
 input:focus{
-
-  border-color:var(--blue);
-
+  border-color:var(--orange);
+  box-shadow:0 0 0 1px rgba(255,90,31,.12);
 }
 
 input.invalid{
-
   border-color:var(--red);
-
-  animation:
-    shake .25s;
-
+  animation:shake .25s;
 }
 
 @keyframes shake{
-
   25%{
-
-    transform:
-      translateX(-4px);
-
+    transform:translateX(-4px);
   }
 
   75%{
-
-    transform:
-      translateX(4px);
-
+    transform:translateX(4px);
   }
-
 }
 
 button.cta{
-
   border:0;
-
   border-radius:999px;
-
-  padding:11px 19px;
-
-  font:
-    700 12px
-    var(--body);
-
+  padding:12px 20px;
+  font:700 12px var(--body);
   cursor:pointer;
-
-  -webkit-user-select:none;
-
-  user-select:none;
-
 }
 
 .accent{
-
-  background:var(--blue);
-
+  background:var(--orange);
   color:#fff;
+  transition:
+    background .2s,
+    box-shadow .2s;
+}
 
+.accent:hover{
+  background:var(--orange2);
+  box-shadow:0 0 18px rgba(255,90,31,.15);
 }
 
 .accent:disabled{
-
   opacity:.45;
-
   cursor:not-allowed;
-
+  box-shadow:none;
 }
 
 .ghost{
-
   background:transparent;
-
   color:var(--ink);
+  border:1px solid var(--border)!important;
+  transition:
+    border-color .2s,
+    color .2s;
+}
 
-  border:
-    1px solid var(--border)!important;
-
+.ghost:hover{
+  border-color:var(--orange)!important;
+  color:var(--orange);
 }
 
 .nav{
-
   display:flex;
-
   gap:8px;
-
-  margin-top:8px;
-
+  margin-top:9px;
 }
 
 .nav>*{
-
   flex:1;
-
 }
 
 /* =====================================================
-   WALLET
+WALLET
 ===================================================== */
 
 .wallets{
-
   display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
+  grid-template-columns:1fr 1fr;
   gap:8px;
-
-  margin-bottom:13px;
-
+  margin-bottom:14px;
 }
 
 .wallet{
-
   background:#000;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:10px;
-
   color:var(--ink);
-
-  padding:12px;
-
+  padding:13px;
   text-align:left;
-
   font-size:12px;
-
   cursor:pointer;
-
   display:flex;
-
   align-items:center;
-
   gap:10px;
-
   transition:
     border-color .2s,
     background .2s,
     transform .15s;
-
-  -webkit-user-select:none;
-
-  user-select:none;
-
 }
 
 .wallet:hover{
-
-  border-color:#555;
-
+  border-color:var(--orange);
 }
 
 .wallet:active{
-
   transform:scale(.98);
-
 }
 
 .wallet.selected{
-
-  border-color:var(--blue);
-
-  background:
-    rgba(29,155,240,.07);
-
-}
-
-.wallet.connected{
-
-  border-color:var(--green);
-
-  background:
-    rgba(0,186,124,.06);
-
+  border-color:var(--orange);
+  background:rgba(255,90,31,.07);
+  box-shadow:0 0 14px rgba(255,90,31,.08);
 }
 
 .wallet-logo{
-
   width:26px;
   height:26px;
-
   flex:0 0 26px;
-
   object-fit:contain;
-
   display:block;
-
-  user-select:none;
-
-  -webkit-user-drag:none;
-
 }
 
 .wallet-name{
-
   display:flex;
-
   flex-direction:column;
-
   justify-content:center;
-
   gap:2px;
-
-  min-width:0;
-
 }
 
 .wallet-name strong{
-
   font-size:12px;
-
   font-weight:700;
-
 }
 
 .wallet-name span{
-
-  font:
-    8.5px
-    var(--mono);
-
+  font:8.5px var(--mono);
   color:var(--dim);
-
-}
-
-.wallet-status{
-
-  margin-left:auto;
-
-  font:
-    8px
-    var(--mono);
-
-  color:var(--dim);
-
-  white-space:nowrap;
-
-}
-
-.wallet.connected .wallet-status{
-
-  color:var(--green);
-
 }
 
 .wallet.manual{
-
   justify-content:flex-start;
-
 }
 
 .manual-icon{
-
   width:26px;
   height:26px;
-
   flex:0 0 26px;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:7px;
-
   display:grid;
-
   place-items:center;
-
   font-size:13px;
-
   color:var(--dim);
-
 }
 
 .hint{
-
-  font:
-    10.5px
-    var(--mono);
-
+  font:10.5px var(--mono);
   color:var(--dim);
-
   margin-bottom:7px;
-
 }
 
 .error{
-
   color:var(--red);
-
-  font:
-    10.5px
-    var(--mono);
-
+  font:10.5px var(--mono);
   margin-top:7px;
-
   display:none;
-
-}
-
-.connected-wallet{
-
-  margin-top:8px;
-
-  padding:8px 10px;
-
-  border:
-    1px solid rgba(0,186,124,.35);
-
-  border-radius:8px;
-
-  font:
-    9.5px
-    var(--mono);
-
-  color:var(--green);
-
-  display:none;
-
-  word-break:break-all;
-
 }
 
 /* =====================================================
-   CONFIRM
+CONFIRM
 ===================================================== */
 
 .confirm{
-
   text-align:center;
-
-  border:
-    1px solid var(--border);
-
+  border:1px solid var(--border);
   border-radius:13px;
-
-  padding:17px;
-
-  margin-bottom:12px;
-
+  padding:18px;
+  margin-bottom:13px;
 }
 
 .small{
-
-  font:
-    10px
-    var(--mono);
-
+  font:10px var(--mono);
   color:var(--dim);
-
   text-transform:uppercase;
-
   letter-spacing:.08em;
-
 }
 
 .spot{
-
-  font:
-    36px
-    var(--display);
-
-  margin:5px 0 10px;
-
+  font:36px var(--display);
+  margin:5px 0 11px;
 }
 
 .rows{
-
-  border-top:
-    1px solid var(--border);
-
-  padding-top:8px;
-
-  font:
-    10.5px
-    var(--mono);
-
+  border-top:1px solid var(--border);
+  padding-top:9px;
+  font:10.5px var(--mono);
   text-align:left;
-
 }
 
 .rows div{
-
   display:flex;
-
   justify-content:space-between;
-
   gap:10px;
-
   padding:4px 0;
-
   color:var(--dim);
-
 }
 
 .rows span:last-child{
-
   color:var(--ink);
-
   text-align:right;
-
   max-width:70%;
-
   overflow:hidden;
-
   text-overflow:ellipsis;
-
 }
 
 .green{
-
   color:var(--green)!important;
-
 }
 
 /* =====================================================
-   NFT
+NFT
 ===================================================== */
 
 .nft{
-
   text-align:center;
-
 }
 
 .nft-frame{
-
-  width:min(
-    220px,
-    55vw
-  );
-
+  width:min(220px,55vw);
   aspect-ratio:1;
-
-  margin:
-    0 auto 9px;
-
+  margin:0 auto 10px;
   padding:5px;
-
-  border:
-    1px solid var(--blue);
-
-  border-radius:12px;
-
-  background:#050505;
-
-  box-shadow:
-    0 0 25px
-    rgba(29,155,240,.14);
-
-  overflow:hidden;
-
   position:relative;
-
-  -webkit-user-select:none;
-
+  border:1px solid var(--orange);
+  border-radius:12px;
+  background:#050505;
+  box-shadow:0 0 25px rgba(255,90,31,.14);
+  overflow:hidden;
   user-select:none;
-
+  -webkit-user-select:none;
   -webkit-touch-callout:none;
-
+  -webkit-user-drag:none;
 }
 
 .nft-img{
-
   width:100%;
   height:100%;
-
   display:block;
-
   border-radius:8px;
-
   object-fit:cover;
-
   object-position:center;
-
   background:#050505;
-
   image-rendering:auto;
-
   user-select:none;
-
   -webkit-user-select:none;
-
   -webkit-user-drag:none;
-
   -webkit-touch-callout:none;
-
   pointer-events:none;
-
+  -webkit-tap-highlight-color:transparent;
 }
 
-.nft-watermark{
-
+.nft-frame::after{
+  content:"";
   position:absolute;
-
-  inset:-30%;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  transform:rotate(-28deg);
-
-  pointer-events:none;
-
-  overflow:hidden;
-
+  inset:5px;
   z-index:5;
-
-}
-
-.nft-watermark-inner{
-
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-
-  justify-content:center;
-
-  gap:7px;
-
-  width:160%;
-
-  padding:12px 0;
-
-  color:rgba(255,255,255,.34);
-
-  font-family:var(--mono);
-
-  text-align:center;
-
-  text-transform:uppercase;
-
-  letter-spacing:.12em;
-
-  text-shadow:
-    0 1px 2px rgba(0,0,0,.7);
-
-  white-space:nowrap;
-
-}
-
-.nft-watermark-main{
-
-  font-size:15px;
-
-  font-weight:700;
-
-}
-
-.nft-watermark-sub{
-
-  font-size:8px;
-
-  font-weight:500;
-
-}
-
-.nft-watermark-corner{
-
-  position:absolute;
-
-  left:10px;
-
-  bottom:10px;
-
-  z-index:6;
-
-  pointer-events:none;
-
-  padding:5px 7px;
-
-  border:
-    1px solid rgba(255,255,255,.20);
-
-  border-radius:5px;
-
-  background:
-    rgba(0,0,0,.42);
-
-  color:
-    rgba(255,255,255,.55);
-
-  font:
-    7px/1.4
-    var(--mono);
-
-  text-align:left;
-
-  text-transform:uppercase;
-
-  max-width:85%;
-
-}
-
-.nft-protection-layer{
-
-  position:absolute;
-
-  inset:0;
-
-  z-index:10;
-
+  border-radius:8px;
   background:transparent;
-
   pointer-events:auto;
-
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-user-drag:none;
 }
 
 .nft-fallback{
-
   width:100%;
   height:100%;
-
   display:none;
-
   place-items:center;
-
-  font:
-    10px
-    var(--mono);
-
+  font:10px var(--mono);
   color:var(--dim);
-
 }
 
 .nft-title{
-
-  font:
-    18px
-    var(--display);
-
+  font:18px var(--display);
   text-transform:uppercase;
-
 }
 
 .nft-sub{
-
   font-size:11px;
-
   color:var(--dim);
-
   margin-top:3px;
-
 }
 
 .bottom-action{
-
-  margin-top:10px;
-
+  margin-top:11px;
   width:100%;
-
 }
 
 .rule{
-
-  font:
-    10px/1.5
-    var(--mono);
-
+  font:10px/1.5 var(--mono);
   color:var(--dim);
-
-  margin-top:12px;
-
-  border-top:
-    1px solid var(--border);
-
-  padding-top:10px;
-
+  margin-top:13px;
+  border-top:1px solid var(--border);
+  padding-top:11px;
 }
 
 .rule strong{
-
   color:var(--ink);
-
 }
 
 /* =====================================================
-   FOOTER
+TEST MODE
+===================================================== */
+
+.test-mode{
+  display:none;
+  margin-top:10px;
+  padding:7px 10px;
+  border:1px solid rgba(255,90,31,.35);
+  border-radius:8px;
+  font:9px var(--mono);
+  color:var(--orange);
+  text-align:center;
+}
+
+/* =====================================================
+FOOTER
 ===================================================== */
 
 footer{
-
+  position:relative;
   text-align:center;
-
-  font:
-    9.5px
-    var(--mono);
-
+  font:9.5px var(--mono);
   color:var(--dim);
+  padding:14px 20px 5px;
+  margin-top:clamp(9px,1.8svh,13px);
+}
 
-  padding:
-    10px 20px 0;
+footer:before{
+  content:"";
+  display:block;
+  width:72px;
+  height:2px;
+  background:var(--orange);
+  margin:0 auto 10px;
+  box-shadow:0 0 10px rgba(255,90,31,.22);
+}
+
+/* =====================================================
+RESPONSIVE HEIGHT
+===================================================== */
+
+@media(max-height:900px) and (min-width:481px){
+
+  .banner{
+    height:160px;
+  }
+
+  .roadman-journey{
+    height:68px;
+  }
+
+  .identity{
+    padding-top:9px;
+  }
+
+  .bio{
+    line-height:1.4;
+  }
+
+  .links{
+    margin-top:9px;
+  }
+
+  .road{
+    padding-top:15px;
+  }
+
+  .panel{
+    margin-top:17px;
+    padding:21px;
+  }
+
+  .step p{
+    margin-bottom:14px;
+  }
+
+  .terminal{
+    margin-bottom:14px;
+  }
+
+  footer{
+    padding-top:11px;
+  }
 
 }
 
 /* =====================================================
-   MOBILE
+VERY SHORT SCREENS
+===================================================== */
+
+@media(max-height:760px) and (min-width:481px){
+
+  .banner{
+    height:118px;
+  }
+
+  .roadman-journey{
+    height:56px;
+  }
+
+  .roadman-scene{
+    width:58px;
+    height:58px;
+  }
+
+  .identity{
+    padding-top:5px;
+  }
+
+  .bio{
+    display:none;
+  }
+
+  .links{
+    margin-top:6px;
+  }
+
+  .road{
+    padding-top:9px;
+  }
+
+  .panel{
+    margin-top:11px;
+    padding:15px;
+  }
+
+  .step p{
+    margin-bottom:8px;
+  }
+
+  .terminal{
+    margin-bottom:8px;
+  }
+
+}
+
+/* =====================================================
+MOBILE
 ===================================================== */
 
 @media(max-width:480px){
+
+  .wrap{
+    padding-bottom:16px;
+  }
 
   .banner{
     height:150px;
   }
 
+  .roadman-journey{
+    height:64px;
+  }
+
+  .roadman-scene{
+    width:64px;
+    height:64px;
+  }
+
   .panel{
-
     margin-top:17px;
-
     padding:18px;
-
     min-height:0;
-
   }
 
   .road{
@@ -1364,12 +1019,7 @@ footer{
   }
 
   .nft-frame{
-
-    width:min(
-      190px,
-      48vw
-    );
-
+    width:min(190px,48vw);
   }
 
   .wallet{
@@ -1378,12 +1028,9 @@ footer{
 
   .wallet-logo,
   .manual-icon{
-
     width:23px;
     height:23px;
-
     flex-basis:23px;
-
   }
 
   .wallet-name strong{
@@ -1394,41 +1041,29 @@ footer{
     font-size:8px;
   }
 
-  .wallet-status{
-    display:none;
-  }
-
-  .nft-watermark-main{
-    font-size:12px;
-  }
-
-  .nft-watermark-sub{
-    font-size:7px;
-  }
-
 }
 
 /* =====================================================
-   SHORT SCREENS
+MOBILE SHORT SCREENS
 ===================================================== */
 
-@media(max-height:720px){
+@media(max-width:480px) and (max-height:720px){
 
   .banner{
     height:120px;
   }
 
-  .profile{
-    margin-top:-22px;
+  .roadman-journey{
+    height:58px;
   }
 
-  .avatar{
-    width:52px;
-    height:52px;
+  .roadman-scene{
+    width:58px;
+    height:58px;
   }
 
   .identity{
-    padding-top:7px;
+    padding-top:6px;
   }
 
   .bio{
@@ -1440,47 +1075,60 @@ footer{
   }
 
   .road{
-    padding-top:11px;
+    padding-top:10px;
   }
 
   .panel{
-    margin-top:13px;
-
-    padding:16px;
-
-    min-height:0;
+    margin-top:12px;
+    padding:15px;
   }
 
   .step p{
-    margin-bottom:10px;
+    margin-bottom:9px;
   }
 
   .terminal{
-    margin-bottom:10px;
+    margin-bottom:9px;
   }
 
   .nft-frame{
     width:150px;
   }
 
+  footer{
+    padding-top:8px;
+  }
+
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="wrap">
 
-<section class="banner">
+<div class="page-stage" id="pageStage">
 
+<section class="banner">
   <h1>
     THE ROAD<br>
     PROVIDES
   </h1>
-
 </section>
+
+<div class="roadman-journey" id="roadmanJourney">
+
+  <img
+    class="roadman-scene"
+    id="roadmanScene"
+    src="roadman-scenes/scene1.png"
+    alt="The Roadman — Scene 1"
+    draggable="false"
+    oncontextmenu="return false"
+  >
+
+</div>
 
 <div class="profile">
 
@@ -1490,6 +1138,7 @@ footer{
       src="desert_roadman_badge.png"
       alt="The Roadman"
       draggable="false"
+      oncontextmenu="return false"
     >
 
   </div>
@@ -1499,7 +1148,7 @@ footer{
 <section class="identity">
 
   <div class="status">
-    CLAIM OPEN
+    EARLY ACCESS OPEN
   </div>
 
   <div class="name">
@@ -1507,21 +1156,16 @@ footer{
   </div>
 
   <div class="handle">
-
     @theroadprovides ·
-
     <span id="spotsHeader">
       100 first spots
     </span>
-
   </div>
 
   <div class="bio">
-
-    The first 100 NFTs go to those who
-    walked with <b>$ROAD</b>
+    The first 100 NFTs go to those who walked with
+    <b>$ROAD</b>
     before the road was paved.
-
   </div>
 
 </section>
@@ -1539,7 +1183,7 @@ footer{
 
   <a
     class="roadbtn"
-    href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
+    href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUuem8rpuvEuRApump"
     target="_blank"
     rel="noopener noreferrer"
   >
@@ -1576,7 +1220,7 @@ footer{
       type="button"
     >
       <span class="dot"></span>
-      <span class="marker-label">Continue</span>
+      <span class="marker-label">Seal</span>
     </button>
 
     <button
@@ -1623,8 +1267,7 @@ footer{
 
   <div class="terminal">
 
-    &gt; spots remaining:
-
+    > spots remaining:
     <span
       class="ready"
       id="spots"
@@ -1634,7 +1277,7 @@ footer{
 
     <br>
 
-    &gt; one person · one NFT · one wallet
+    > one person · one NFT · one wallet
 
   </div>
 
@@ -1668,11 +1311,8 @@ footer{
   <div class="rule">
 
     <strong>Eligibility:</strong>
-
-    The first 100 eligible $ROAD holders
-    who remain holding through the qualification
-    period will receive the corresponding NFT.
-
+    The first 100 eligible $ROAD holders who remain holding
+    through the qualification period will receive the corresponding NFT.
     One person · one wallet · one NFT.
 
   </div>
@@ -1685,23 +1325,20 @@ footer{
 >
 
   <div class="eyebrow">
-    02 · CONTINUE THE ROAD
+    02 · SEAL THE SPOT
   </div>
 
   <h2>
-    Connect your wallet
+    Reserve your number
   </h2>
 
   <p>
-    Your X handle is ready.
-    Connect the wallet that holds your $ROAD
-    to check eligibility and continue.
+    Your spot will be assigned by the Roadman database.
   </p>
 
   <div class="terminal">
 
-    &gt; handle detected:
-
+    > handle detected:
     <span
       class="ok"
       id="echo"
@@ -1709,7 +1346,7 @@ footer{
 
     <br>
 
-    &gt; next step: wallet verification
+    > waiting for wallet verification...
 
   </div>
 
@@ -1741,7 +1378,7 @@ footer{
 >
 
   <div class="eyebrow">
-    03 · CONNECT WALLET
+    03 · VERIFY WALLET
   </div>
 
   <h2>
@@ -1749,8 +1386,8 @@ footer{
   </h2>
 
   <p>
-    Choose your wallet to connect directly
-    through your browser extension or mobile app.
+    Select your wallet and paste the Solana address
+    that will participate in the Roadman qualification.
   </p>
 
   <div class="wallets">
@@ -1775,16 +1412,9 @@ footer{
         </strong>
 
         <span>
-          Connect wallet
+          Solana wallet
         </span>
 
-      </span>
-
-      <span
-        class="wallet-status"
-        id="phantomStatus"
-      >
-        CONNECT
       </span>
 
     </button>
@@ -1809,16 +1439,9 @@ footer{
         </strong>
 
         <span>
-          Connect wallet
+          Solana wallet
         </span>
 
-      </span>
-
-      <span
-        class="wallet-status"
-        id="solflareStatus"
-      >
-        CONNECT
       </span>
 
     </button>
@@ -1843,16 +1466,9 @@ footer{
         </strong>
 
         <span>
-          Solana wallet
+          Wallet
         </span>
 
-      </span>
-
-      <span
-        class="wallet-status"
-        id="metamaskStatus"
-      >
-        CONNECT
       </span>
 
     </button>
@@ -1892,7 +1508,7 @@ footer{
       class="hint"
       id="walletHint"
     >
-      Connect your wallet to continue.
+      Paste your Solana wallet address below.
     </div>
 
     <input
@@ -1901,11 +1517,6 @@ footer{
       autocomplete="off"
       spellcheck="false"
     >
-
-    <div
-      class="connected-wallet"
-      id="connectedWallet"
-    ></div>
 
     <div
       class="error"
@@ -1917,11 +1528,15 @@ footer{
   <div
     class="terminal"
     id="verifyStatus"
-    style="
-      display:none;
-      margin-top:8px;
-    "
+    style="display:none;margin-top:8px;"
   ></div>
+
+  <div
+    class="test-mode"
+    id="testMode"
+  >
+    TEST MODE · $ROAD verification simulated
+  </div>
 
   <div class="nav">
 
@@ -1971,7 +1586,6 @@ footer{
     <div class="rows">
 
       <div>
-
         <span>
           handle
         </span>
@@ -1979,11 +1593,9 @@ footer{
         <span id="finalHandle">
           —
         </span>
-
       </div>
 
       <div>
-
         <span>
           wallet
         </span>
@@ -1991,11 +1603,9 @@ footer{
         <span id="finalWallet">
           —
         </span>
-
       </div>
 
       <div>
-
         <span>
           status
         </span>
@@ -2003,7 +1613,6 @@ footer{
         <span class="green">
           ON THE ROAD · SEALED
         </span>
-
       </div>
 
     </div>
@@ -2034,44 +1643,6 @@ footer{
         ROAD IMAGE UNAVAILABLE
       </div>
 
-      <div
-        class="nft-watermark"
-        aria-hidden="true"
-      >
-
-        <div class="nft-watermark-inner">
-
-          <div
-            class="nft-watermark-main"
-            id="watermarkMain"
-          >
-            THE ROAD PROVIDES · SEALED
-          </div>
-
-          <div
-            class="nft-watermark-sub"
-            id="watermarkSub"
-          >
-            SPOT #001 · @theroad
-          </div>
-
-        </div>
-
-      </div>
-
-      <div
-        class="nft-watermark-corner"
-        id="watermarkCorner"
-        aria-hidden="true"
-      >
-        SEALED · SPOT #001
-      </div>
-
-      <div
-        class="nft-protection-layer"
-        aria-hidden="true"
-      ></div>
-
     </div>
 
     <div class="nft-title">
@@ -2097,73 +1668,136 @@ footer{
 </main>
 
 <footer>
-
-  THE ROAD PROVIDES ·
-  100 first spots ·
-  1 NFT per person
-
+  THE ROAD PROVIDES · 100 early access spots · 1 NFT per person
 </footer>
 
 </div>
+</div>
 
-<script type="module">
-
-/* =====================================================
-   METAMASK CONNECT SOLANA
-===================================================== */
-
-import {
-  createSolanaClient
-} from "https://esm.sh/@metamask/connect-solana?bundle";
-
-/* =====================================================
-   CONFIG
-===================================================== */
+<script>
 
 const TOTAL = 100;
-
-const API_SPOTS =
-  "/api/spots";
-
-const API_CLAIM =
-  "/api/claim";
-
-const TEST_KEY =
-  "ROADMAN_TEST_2026";
-
-/* =====================================================
-   STATE
-===================================================== */
+const API_SPOTS = "/api/spots";
+const API_CLAIM = "/api/claim";
+const TEST_KEY = "ROADMAN_TEST_2026";
 
 let step = 1;
-
 let currentHandle = "";
-
 let selectedWallet = "";
-
 let claim = null;
 
-let connectedWallet = "";
+const $ = id => document.getElementById(id);
 
-let connectedProvider = "";
+const ROADMAN_SCENES = [
+  "roadman-scenes/scene1.png",
+  "roadman-scenes/scene2.png",
+  "roadman-scenes/scene3.png",
+  "roadman-scenes/scene4.png"
+];
 
-let metaMaskSolanaClient = null;
+const ROADMAN_POSITIONS = [
+  6,
+  35,
+  65,
+  94
+];
 
-let metaMaskSolanaWallet = null;
+function updateRoadmanJourney(n, animate = true){
 
-/* =====================================================
-   HELPERS
-===================================================== */
+  const scene = $("roadmanScene");
+  const journey = $("roadmanJourney");
 
-const $ =
-  id =>
-    document.getElementById(id);
+  if(!scene){
+    return;
+  }
+
+  const index = Math.max(
+    0,
+    Math.min(3,n - 1)
+  );
+
+  const position = ROADMAN_POSITIONS[index];
+
+  if(journey){
+
+    journey.classList.remove(
+      "step-1",
+      "step-2",
+      "step-3",
+      "step-4"
+    );
+
+    journey.classList.add(
+      "step-" + (index + 1)
+    );
+
+  }
+
+  scene.style.left = position + "%";
+
+  if(!animate){
+
+    scene.src = ROADMAN_SCENES[index];
+
+    scene.alt =
+      "The Roadman — Scene " +
+      (index + 1);
+
+    scene.style.opacity = "1";
+
+    return;
+
+  }
+
+  scene.classList.add("moving");
+
+  scene.style.opacity = ".35";
+
+  window.setTimeout(function(){
+
+    scene.src = ROADMAN_SCENES[index];
+
+    scene.alt =
+      "The Roadman — Scene " +
+      (index + 1);
+
+    scene.style.opacity = "1";
+
+  },180);
+
+  window.setTimeout(function(){
+
+    scene.classList.remove("moving");
+
+  },700);
+
+}
+
+function animateRoadStage(){
+
+  const stage = $("pageStage");
+
+  if(!stage){
+    return;
+  }
+
+  stage.classList.remove("road-transition");
+
+  void stage.offsetWidth;
+
+  stage.classList.add("road-transition");
+
+  setTimeout(function(){
+
+    stage.classList.remove("road-transition");
+
+  },450);
+
+}
 
 function normalizeHandle(value){
 
-  let v =
-    String(value || "")
-      .trim();
+  let v = String(value || "").trim();
 
   if(!v){
     return "";
@@ -2174,17 +1808,13 @@ function normalizeHandle(value){
   }
 
   return v;
+
 }
 
 function maskWallet(wallet){
 
-  if(
-    !wallet ||
-    wallet.length <= 10
-  ){
-
+  if(!wallet || wallet.length <= 10){
     return wallet;
-
   }
 
   return (
@@ -2192,444 +1822,101 @@ function maskWallet(wallet){
     "..." +
     wallet.slice(-5)
   );
-}
-
-function isMobile(){
-
-  return (
-    /Android|iPhone|iPad|iPod/i
-      .test(
-        navigator.userAgent
-      )
-  );
-}
-
-function validSolanaAddress(address){
-
-  return (
-    typeof address === "string" &&
-    address.length >= 32 &&
-    address.length <= 44 &&
-    /^[1-9A-HJ-NP-Za-km-z]+$/.test(
-      address
-    )
-  );
-}
-
-function setWalletError(message){
-
-  $("walletError")
-    .textContent =
-    message || "";
-
-  $("walletError")
-    .style.display =
-    message
-      ? "block"
-      : "none";
-}
-
-function clearWalletVisualState(){
-
-  document
-    .querySelectorAll(".wallet")
-    .forEach(
-      button => {
-
-        button.classList.remove(
-          "selected",
-          "connected"
-        );
-
-      }
-    );
-
-  $("phantomStatus")
-    .textContent =
-    "CONNECT";
-
-  $("solflareStatus")
-    .textContent =
-    "CONNECT";
-
-  $("metamaskStatus")
-    .textContent =
-    "CONNECT";
-}
-
-function resetWalletState(){
-
-  connectedWallet = "";
-
-  connectedProvider = "";
-
-  $("walletInput")
-    .value =
-    "";
-
-  $("walletInput")
-    .readOnly =
-    false;
-
-  $("walletInput")
-    .style.borderColor =
-    "";
-
-  $("connectedWallet")
-    .textContent =
-    "";
-
-  $("connectedWallet")
-    .style.display =
-    "none";
-
-  $("verifyBtn")
-    .disabled =
-    true;
 
 }
-
-function setConnectedWallet(
-  wallet,
-  provider
-){
-
-  connectedWallet =
-    wallet;
-
-  connectedProvider =
-    provider;
-
-  $("walletInput")
-    .value =
-    wallet;
-
-  $("walletInput")
-    .readOnly =
-    true;
-
-  $("walletInput")
-    .style.borderColor =
-    "var(--green)";
-
-  $("connectedWallet")
-    .textContent =
-    "CONNECTED · " +
-    provider +
-    " · " +
-    maskWallet(wallet);
-
-  $("connectedWallet")
-    .style.display =
-    "block";
-
-  $("verifyBtn")
-    .disabled =
-    false;
-
-  $("walletHint")
-    .textContent =
-    "Wallet connected successfully.";
-
-}
-
-function setWalletButtonConnected(
-  walletName
-){
-
-  clearWalletVisualState();
-
-  const button =
-    document.querySelector(
-      `.wallet[data-wallet="${walletName}"]`
-    );
-
-  if(button){
-
-    button.classList.add(
-      "selected",
-      "connected"
-    );
-
-  }
-
-  const statusIds = {
-
-    Phantom:
-      "phantomStatus",
-
-    Solflare:
-      "solflareStatus",
-
-    MetaMask:
-      "metamaskStatus"
-
-  };
-
-  const status =
-    $(statusIds[walletName]);
-
-  if(status){
-
-    status.textContent =
-      "CONNECTED";
-
-  }
-
-}
-
-function setConnectionStatus(message){
-
-  $("verifyStatus")
-    .style.display =
-    "block";
-
-  $("verifyStatus")
-    .textContent =
-    message;
-
-}
-
-/* =====================================================
-   PROVIDER HELPERS
-===================================================== */
-
-function getPhantomProvider(){
-
-  if(
-    window.phantom?.solana
-  ){
-
-    return window.phantom.solana;
-
-  }
-
-  if(
-    window.solana?.isPhantom
-  ){
-
-    return window.solana;
-
-  }
-
-  return null;
-
-}
-
-function getSolflareProvider(){
-
-  if(
-    window.solflare
-  ){
-
-    return window.solflare;
-
-  }
-
-  if(
-    window.Solflare
-  ){
-
-    return window.Solflare;
-
-  }
-
-  if(
-    window.solana?.isSolflare
-  ){
-
-    return window.solana;
-
-  }
-
-  return null;
-
-}
-
-/* =====================================================
-   METAMASK SOLANA CLIENT
-===================================================== */
-
-async function initializeMetaMaskSolana(){
-
-  if(
-    metaMaskSolanaWallet
-  ){
-
-    return metaMaskSolanaWallet;
-
-  }
-
-  setConnectionStatus(
-    "> initializing MetaMask Solana..."
-  );
-
-  metaMaskSolanaClient =
-    await createSolanaClient({
-
-      dapp:{
-
-        name:
-          "THE ROAD PROVIDES",
-
-        url:
-          window.location.href,
-
-        iconUrl:
-          new URL(
-            "desert_roadman_badge.png",
-            window.location.href
-          ).href
-
-      },
-
-      api:{
-
-        supportedNetworks:{
-
-          mainnet:
-            "https://api.mainnet-beta.solana.com"
-
-        }
-
-      }
-
-    });
-
-  metaMaskSolanaWallet =
-    metaMaskSolanaClient
-      .getWallet();
-
-  if(
-    !metaMaskSolanaWallet
-  ){
-
-    throw new Error(
-      "MetaMask Solana wallet could not be initialized."
-    );
-
-  }
-
-  return metaMaskSolanaWallet;
-
-}
-
-/* =====================================================
-   STEP CONTROL
-===================================================== */
 
 function setStep(n){
+
+  const previousStep = step;
 
   step = n;
 
   document
     .querySelectorAll(".step")
-    .forEach(
-      el => {
+    .forEach(el => {
 
-        el.classList.toggle(
-          "active",
-          Number(
-            el.dataset.step
-          ) === n
-        );
+      el.classList.toggle(
+        "active",
+        Number(el.dataset.step) === n
+      );
 
-      }
-    );
+    });
 
   document
     .querySelectorAll(".marker")
-    .forEach(
-      el => {
+    .forEach(el => {
 
-        const s =
-          Number(
-            el.dataset.step
-          );
+      const s = Number(el.dataset.step);
 
-        el.classList.toggle(
-          "active",
-          s === n
-        );
+      el.classList.toggle(
+        "active",
+        s === n
+      );
 
-        el.classList.toggle(
-          "done",
-          s < n
-        );
+      el.classList.toggle(
+        "done",
+        s < n
+      );
 
-      }
-    );
+    });
 
   $("fill").style.width =
     (
-      (
-        ((n - 1) / 3) * 91
-      ) +
+      (((n - 1) / 3) * 91) +
       8.33
-    ) +
-    "%";
+    ) + "%";
+
+  updateRoadmanJourney(
+    n,
+    previousStep !== n
+  );
+
+  if(previousStep !== n){
+    animateRoadStage();
+  }
 
 }
-
-/* =====================================================
-   SPOTS
-===================================================== */
 
 async function updateSpots(){
 
   try{
 
-    const response =
-      await fetch(
-        API_SPOTS,
-        {
-          method:"GET",
-          cache:"no-store"
-        }
-      );
+    const response = await fetch(
+      API_SPOTS,
+      {
+        method:"GET",
+        cache:"no-store"
+      }
+    );
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
     if(
       !response.ok ||
       !data.success
     ){
-
       throw new Error(
         "Unable to read spots."
       );
-
     }
 
-    const remaining =
-      Number(
-        data.remaining
-      );
+    const remaining = Number(
+      data.remaining
+    );
 
     $("spots").textContent =
-      remaining +
-      " / " +
-      TOTAL;
+      remaining + " / " + TOTAL;
 
     $("spotsHeader").textContent =
-      remaining +
-      " first spots";
+      remaining + " first spots";
 
-    if(
-      remaining <= 0
-    ){
+    if(remaining <= 0){
 
-      $("enterBtn")
-        .disabled =
-        true;
+      $("enterBtn").disabled = true;
 
-      $("handle")
-        .disabled =
-        true;
+      $("handle").disabled = true;
 
-      $("handle")
-        .placeholder =
+      $("handle").placeholder =
         "No spots remaining";
 
     }
@@ -2645,41 +1932,27 @@ async function updateSpots(){
 
 }
 
-/* =====================================================
-   HANDLE
-===================================================== */
-
 function validHandle(){
 
-  const input =
-    $("handle");
+  const input = $("handle");
 
   const value =
-    normalizeHandle(
-      input.value
-    );
+    normalizeHandle(input.value);
 
   if(!value){
 
-    input.classList.add(
-      "invalid"
-    );
+    input.classList.add("invalid");
 
-    $("handleError")
-      .textContent =
+    $("handleError").textContent =
       "Enter your X handle to continue.";
 
-    $("handleError")
-      .style.display =
+    $("handleError").style.display =
       "block";
 
     input.focus();
 
     setTimeout(
-      () =>
-        input.classList.remove(
-          "invalid"
-        ),
+      () => input.classList.remove("invalid"),
       350
     );
 
@@ -2687,675 +1960,127 @@ function validHandle(){
 
   }
 
-  input.value =
-    value;
+  input.value = value;
 
-  currentHandle =
-    value;
+  currentHandle = value;
 
-  $("echo")
-    .textContent =
-    value;
+  $("echo").textContent = value;
 
-  $("handleError")
-    .style.display =
+  $("handleError").style.display =
     "none";
 
   return true;
 
 }
 
-/* =====================================================
-   STEP 1
-===================================================== */
+$("enterBtn").onclick = function(){
 
-$("enterBtn").onclick =
-  function(){
+  if(validHandle()){
+    setStep(2);
+  }
 
-    if(
-      validHandle()
-    ){
+};
 
-      setStep(2);
+$("handle").addEventListener(
+  "keydown",
+  function(event){
 
-    }
+    if(event.key === "Enter"){
 
-  };
+      event.preventDefault();
 
-$("handle")
-  .addEventListener(
-    "keydown",
-    function(event){
-
-      if(
-        event.key ===
-        "Enter"
-      ){
-
-        event.preventDefault();
-
-        $("enterBtn").click();
-
-      }
-
-    }
-  );
-
-/* =====================================================
-   STEP 2
-===================================================== */
-
-$("sealBtn").onclick =
-  function(){
-
-    if(!currentHandle){
-
-      setStep(1);
-
-      return;
+      $("enterBtn").click();
 
     }
 
-    setStep(3);
+  }
+);
 
-  };
+$("sealBtn").onclick = function(){
 
-/* =====================================================
-   BACK BUTTONS
-===================================================== */
+  if(!currentHandle){
+
+    setStep(1);
+
+    return;
+
+  }
+
+  setStep(3);
+
+};
 
 document
   .querySelectorAll("[data-back]")
-  .forEach(
-    button => {
+  .forEach(button => {
 
-      button.addEventListener(
-        "click",
-        function(){
+    button.onclick = function(){
 
-          const target =
-            Number(
-              button.dataset.back
-            );
-
-          if(
-            target >= 1 &&
-            target < step
-          ){
-
-            setStep(target);
-
-          }
-
-        }
+      setStep(
+        Number(button.dataset.back)
       );
 
-    }
-  );
+    };
 
-/* =====================================================
-   PHANTOM
-===================================================== */
-
-async function connectPhantom(){
-
-  setWalletError("");
-
-  setConnectionStatus(
-    "> connecting to Phantom..."
-  );
-
-  try{
-
-    let provider =
-      getPhantomProvider();
-
-    if(!provider){
-
-      await new Promise(
-        resolve =>
-          setTimeout(
-            resolve,
-            300
-          )
-      );
-
-      provider =
-        getPhantomProvider();
-
-    }
-
-    if(provider){
-
-      const response =
-        await provider.connect();
-
-      const publicKey =
-        response?.publicKey?.toString() ||
-        provider?.publicKey?.toString();
-
-      if(
-        !validSolanaAddress(
-          publicKey
-        )
-      ){
-
-        throw new Error(
-          "Phantom returned an invalid Solana address."
-        );
-
-      }
-
-      setConnectedWallet(
-        publicKey,
-        "Phantom"
-      );
-
-      setWalletButtonConnected(
-        "Phantom"
-      );
-
-      setConnectionStatus(
-        "> Phantom connected."
-      );
-
-      return true;
-
-    }
-
-    if(
-      isMobile()
-    ){
-
-      const currentUrl =
-        window.location.href;
-
-      const deeplink =
-        "https://phantom.app/ul/browse/" +
-        encodeURIComponent(
-          currentUrl
-        );
-
-      window.location.href =
-        deeplink;
-
-      return true;
-
-    }
-
-    throw new Error(
-      "Phantom wallet provider was not detected."
-    );
-
-  }catch(error){
-
-    console.error(
-      "PHANTOM:",
-      error
-    );
-
-    setConnectionStatus(
-      "> " +
-      error.message
-    );
-
-    setWalletError(
-      error.message
-    );
-
-    return false;
-
-  }
-
-}
-
-/* =====================================================
-   SOLFLARE
-===================================================== */
-
-async function connectSolflare(){
-
-  setWalletError("");
-
-  setConnectionStatus(
-    "> connecting to Solflare..."
-  );
-
-  try{
-
-    let provider =
-      getSolflareProvider();
-
-    if(!provider){
-
-      await new Promise(
-        resolve =>
-          setTimeout(
-            resolve,
-            300
-          )
-      );
-
-      provider =
-        getSolflareProvider();
-
-    }
-
-    if(provider){
-
-      if(
-        typeof provider.connect ===
-        "function" &&
-        !provider.isConnected
-      ){
-
-        await provider.connect();
-
-      }
-
-      const publicKey =
-        provider.publicKey?.toString();
-
-      if(
-        !validSolanaAddress(
-          publicKey
-        )
-      ){
-
-        throw new Error(
-          "Solflare returned an invalid Solana address."
-        );
-
-      }
-
-      setConnectedWallet(
-        publicKey,
-        "Solflare"
-      );
-
-      setWalletButtonConnected(
-        "Solflare"
-      );
-
-      setConnectionStatus(
-        "> Solflare connected."
-      );
-
-      return true;
-
-    }
-
-    if(
-      isMobile()
-    ){
-
-      const currentUrl =
-        window.location.href;
-
-      const deeplink =
-        "https://solflare.com/ul/v1/browse/" +
-        encodeURIComponent(
-          currentUrl
-        ) +
-        "?ref=" +
-        encodeURIComponent(
-          currentUrl
-        );
-
-      window.location.href =
-        deeplink;
-
-      return true;
-
-    }
-
-    throw new Error(
-      "Solflare wallet provider was not detected."
-    );
-
-  }catch(error){
-
-    console.error(
-      "SOLFLARE:",
-      error
-    );
-
-    setConnectionStatus(
-      "> " +
-      error.message
-    );
-
-    setWalletError(
-      error.message
-    );
-
-    return false;
-
-  }
-
-}
-
-/* =====================================================
-   METAMASK SOLANA
-===================================================== */
-
-async function connectMetaMask(){
-
-  setWalletError("");
-
-  setConnectionStatus(
-    "> connecting to MetaMask Solana..."
-  );
-
-  try{
-
-    const wallet =
-      await initializeMetaMaskSolana();
-
-    const connectFeature =
-      wallet?.features?.[
-        "standard:connect"
-      ];
-
-    if(
-      !connectFeature ||
-      typeof connectFeature.connect !==
-      "function"
-    ){
-
-      throw new Error(
-        "MetaMask Solana connection interface was not available."
-      );
-
-    }
-
-    const result =
-      await connectFeature.connect();
-
-    const accounts =
-      result?.accounts || [];
-
-    const account =
-      accounts[0];
-
-    const publicKey =
-      account?.address ||
-      account?.publicKey?.toString() ||
-      "";
-
-    if(
-      !validSolanaAddress(
-        publicKey
-      )
-    ){
-
-      throw new Error(
-        "MetaMask did not return a valid Solana wallet address."
-      );
-
-    }
-
-    setConnectedWallet(
-      publicKey,
-      "MetaMask"
-    );
-
-    setWalletButtonConnected(
-      "MetaMask"
-    );
-
-    setConnectionStatus(
-      "> MetaMask Solana connected."
-    );
-
-    return true;
-
-  }catch(error){
-
-    console.error(
-      "METAMASK:",
-      error
-    );
-
-    let message =
-      error?.message ||
-      "Unable to connect to MetaMask Solana.";
-
-    if(
-      error?.code === 4001
-    ){
-
-      message =
-        "MetaMask connection was rejected.";
-
-    }else if(
-      error?.code === -32002
-    ){
-
-      message =
-        "A MetaMask request is already pending. Check the MetaMask extension.";
-
-    }
-
-    setConnectionStatus(
-      "> " +
-      message
-    );
-
-    setWalletError(
-      message
-    );
-
-    return false;
-
-  }
-
-}
-
-/* =====================================================
-   MANUAL
-===================================================== */
-
-function enableManualWallet(){
-
-  clearWalletVisualState();
-
-  connectedWallet =
-    "";
-
-  connectedProvider =
-    "Manual";
-
-  $("walletBox")
-    .style.display =
-    "block";
-
-  $("walletInput")
-    .readOnly =
-    false;
-
-  $("walletInput")
-    .value =
-    "";
-
-  $("walletInput")
-    .style.borderColor =
-    "";
-
-  $("walletHint")
-    .textContent =
-    "Paste your Solana wallet address below.";
-
-  $("connectedWallet")
-    .textContent =
-    "";
-
-  $("connectedWallet")
-    .style.display =
-    "none";
-
-  $("walletError")
-    .style.display =
-    "none";
-
-  $("verifyBtn")
-    .disabled =
-    true;
-
-  setConnectionStatus(
-    "> manual wallet mode."
-  );
-
-  $("walletInput")
-    .focus();
-
-}
-
-/* =====================================================
-   WALLET SELECTION
-===================================================== */
+  });
 
 document
   .querySelectorAll(".wallet")
-  .forEach(
-    button => {
+  .forEach(button => {
 
-      button.onclick =
-        async function(){
+    button.onclick = function(){
 
-          selectedWallet =
-            button.dataset.wallet;
+      selectedWallet =
+        button.dataset.wallet;
 
-          if(
-            selectedWallet ===
-            "Manual"
-          ){
+      document
+        .querySelectorAll(".wallet")
+        .forEach(b =>
+          b.classList.remove("selected")
+        );
 
-            enableManualWallet();
+      button.classList.add("selected");
 
-            return;
+      $("walletBox").style.display =
+        "block";
 
-          }
+      if(selectedWallet === "Manual"){
 
-          clearWalletVisualState();
-
-          resetWalletState();
-
-          button.classList.add(
-            "selected"
-          );
-
-          $("walletBox")
-            .style.display =
-            "block";
-
-          if(
-            selectedWallet ===
-            "Phantom"
-          ){
-
-            await connectPhantom();
-
-            return;
-
-          }
-
-          if(
-            selectedWallet ===
-            "Solflare"
-          ){
-
-            await connectSolflare();
-
-            return;
-
-          }
-
-          if(
-            selectedWallet ===
-            "MetaMask"
-          ){
-
-            await connectMetaMask();
-
-            return;
-
-          }
-
-        };
-
-    }
-  );
-
-/* =====================================================
-   WALLET INPUT
-===================================================== */
-
-$("walletInput")
-  .addEventListener(
-    "input",
-    function(){
-
-      if(
-        connectedProvider !==
-        "Manual"
-      ){
-
-        return;
-
-      }
-
-      const wallet =
-        this.value.trim();
-
-      setWalletError("");
-
-      if(
-        validSolanaAddress(
-          wallet
-        )
-      ){
-
-        connectedWallet =
-          wallet;
-
-        $("verifyBtn")
-          .disabled =
-          false;
-
-        $("walletInput")
-          .style.borderColor =
-          "var(--green)";
-
-        $("walletHint")
-          .textContent =
-          "Valid Solana wallet address.";
+        $("walletHint").textContent =
+          "Paste your Solana wallet address below.";
 
       }else{
 
-        connectedWallet =
-          "";
-
-        $("verifyBtn")
-          .disabled =
-          true;
-
-        $("walletInput")
-          .style.borderColor =
-          "";
-
-        $("walletHint")
-          .textContent =
-          "Paste your Solana wallet address below.";
+        $("walletHint").textContent =
+          selectedWallet +
+          " selected — paste the wallet address below.";
 
       }
 
-    }
-  );
+      $("walletInput").focus();
 
-/* =====================================================
-   CLAIM
-===================================================== */
+    };
+
+  });
+
+$("walletInput").addEventListener(
+  "input",
+  function(){
+
+    const wallet =
+      this.value.trim();
+
+    $("verifyBtn").disabled =
+      wallet.length < 32;
+
+    $("walletError").style.display =
+      "none";
+
+    $("verifyStatus").style.display =
+      "none";
+
+  }
+);
 
 async function submitClaim(
   handle,
@@ -3384,10 +2109,7 @@ async function submitClaim(
 
     await new Promise(
       resolve =>
-        setTimeout(
-          resolve,
-          250
-        )
+        setTimeout(resolve,250)
     );
 
     status.textContent =
@@ -3397,28 +2119,16 @@ async function submitClaim(
       await fetch(
         API_CLAIM,
         {
-
           method:"POST",
-
           headers:{
             "Content-Type":
               "application/json"
           },
-
-          body:
-            JSON.stringify({
-
-              x_handle:
-                handle,
-
-              wallet:
-                wallet,
-
-              test_key:
-                TEST_KEY
-
-            })
-
+          body:JSON.stringify({
+            x_handle:handle,
+            wallet:wallet,
+            test_key:TEST_KEY
+          })
         }
       );
 
@@ -3465,8 +2175,7 @@ async function submitClaim(
       "block";
 
     status.textContent =
-      "> " +
-      error.message;
+      "> " + error.message;
 
     return null;
 
@@ -3474,82 +2183,20 @@ async function submitClaim(
 
 }
 
-/* =====================================================
-   WATERMARK
-===================================================== */
-
-function updateWatermark(){
-
-  if(!claim){
-
-    return;
-
-  }
-
-  const spot =
-    "SPOT #" +
-    String(
-      claim.spot
-    ).padStart(
-      3,
-      "0"
-    );
-
-  const handle =
-    claim.x_handle ||
-    currentHandle ||
-    "@theroad";
-
-  const wallet =
-    claim.wallet ||
-    connectedWallet ||
-    "";
-
-  $("watermarkMain")
-    .textContent =
-    "THE ROAD PROVIDES · " +
-    spot;
-
-  $("watermarkSub")
-    .textContent =
-    handle +
-    " · " +
-    maskWallet(wallet);
-
-  $("watermarkCorner")
-    .textContent =
-    "SEALED · " +
-    spot +
-    " · " +
-    maskWallet(wallet);
-
-}
-
-/* =====================================================
-   VERIFY
-===================================================== */
-
 $("verifyBtn").onclick =
   async function(){
 
     const wallet =
-      connectedWallet ||
       $("walletInput")
         .value
         .trim();
 
-    if(
-      !validSolanaAddress(
-        wallet
-      )
-    ){
+    if(wallet.length < 32){
 
-      $("walletError")
-        .textContent =
+      $("walletError").textContent =
         "Enter a valid Solana wallet address.";
 
-      $("walletError")
-        .style.display =
+      $("walletError").style.display =
         "block";
 
       return;
@@ -3564,8 +2211,7 @@ $("verifyBtn").onclick =
 
     }
 
-    $("verifyBtn")
-      .disabled =
+    $("verifyBtn").disabled =
       true;
 
     const result =
@@ -3576,8 +2222,7 @@ $("verifyBtn").onclick =
 
     if(!result){
 
-      $("verifyBtn")
-        .disabled =
+      $("verifyBtn").disabled =
         false;
 
       return;
@@ -3587,41 +2232,31 @@ $("verifyBtn").onclick =
     claim =
       result.claim;
 
-    $("finalSpot")
-      .textContent =
-      "SPOT #" +
-      String(
-        claim.spot
-      ).padStart(
-        3,
-        "0"
-      );
+    if(result.test_mode){
 
-    $("finalHandle")
-      .textContent =
+      $("testMode").style.display =
+        "block";
+
+    }
+
+    $("finalSpot").textContent =
+      "SPOT #" +
+      String(claim.spot)
+        .padStart(3,"0");
+
+    $("finalHandle").textContent =
       claim.x_handle;
 
-    $("finalWallet")
-      .textContent =
-      maskWallet(
-        claim.wallet
-      );
+    $("finalWallet").textContent =
+      maskWallet(claim.wallet);
 
-    updateWatermark();
-
-    loadNFT(
-      claim.spot
-    );
+    loadNFT(claim.spot);
 
     updateSpots();
 
     setStep(4);
 
   };
-
-/* =====================================================
-   NFT IMAGE
-===================================================== */
 
 function loadNFT(n){
 
@@ -3632,11 +2267,7 @@ function loadNFT(n){
     $("nftFallback");
 
   const number =
-    String(n)
-      .padStart(
-        3,
-        "0"
-      );
+    String(n).padStart(3,"0");
 
   img.style.display =
     "none";
@@ -3644,26 +2275,20 @@ function loadNFT(n){
   fallback.style.display =
     "none";
 
-  img.removeAttribute(
-    "src"
-  );
+  img.removeAttribute("src");
 
-  const formats =
-    [
-      "png",
-      "webp",
-      "jpg",
-      "jpeg"
-    ];
+  const formats = [
+    "png",
+    "webp",
+    "jpg",
+    "jpeg"
+  ];
 
   let index = 0;
 
   function tryNext(){
 
-    if(
-      index >=
-      formats.length
-    ){
+    if(index >= formats.length){
 
       img.style.display =
         "none";
@@ -3681,18 +2306,15 @@ function loadNFT(n){
       "." +
       formats[index++];
 
-    img.onload =
-      function(){
+    img.onload = function(){
 
-        img.style.display =
-          "block";
+      img.style.display =
+        "block";
 
-        fallback.style.display =
-          "none";
+      fallback.style.display =
+        "none";
 
-        updateWatermark();
-
-      };
+    };
 
     img.onerror =
       tryNext;
@@ -3706,10 +2328,6 @@ function loadNFT(n){
 
 }
 
-/* =====================================================
-   NFT PROTECTION
-===================================================== */
-
 const nftFrame =
   $("nftFrame");
 
@@ -3721,50 +2339,35 @@ if(nftFrame){
   nftFrame.addEventListener(
     "contextmenu",
     function(event){
-
       event.preventDefault();
-      event.stopPropagation();
-
     }
   );
 
   nftFrame.addEventListener(
     "dragstart",
     function(event){
-
       event.preventDefault();
-      event.stopPropagation();
-
     }
   );
 
   nftFrame.addEventListener(
     "selectstart",
     function(event){
-
       event.preventDefault();
-      event.stopPropagation();
-
     }
   );
 
   nftFrame.addEventListener(
     "copy",
     function(event){
-
       event.preventDefault();
-      event.stopPropagation();
-
     }
   );
 
   nftFrame.addEventListener(
     "cut",
     function(event){
-
       event.preventDefault();
-      event.stopPropagation();
-
     }
   );
 
@@ -3774,8 +2377,7 @@ if(nftFrame){
 
       if(
         event.touches &&
-        event.touches.length ===
-        1
+        event.touches.length === 1
       ){
 
         event.preventDefault();
@@ -3795,35 +2397,26 @@ if(nftImg){
   nftImg.addEventListener(
     "contextmenu",
     function(event){
-
       event.preventDefault();
-
     }
   );
 
   nftImg.addEventListener(
     "dragstart",
     function(event){
-
       event.preventDefault();
-
     }
   );
 
 }
-
-/* =====================================================
-   GLOBAL PROTECTION
-===================================================== */
 
 document.addEventListener(
   "dragstart",
   function(event){
 
     if(
-      event.target &&
-      event.target.tagName ===
-      "IMG"
+      event.target === nftImg ||
+      event.target.closest?.("#nftFrame")
     ){
 
       event.preventDefault();
@@ -3834,119 +2427,22 @@ document.addEventListener(
 );
 
 document.addEventListener(
-  "copy",
-  function(event){
-
-    if(
-      event.target &&
-      event.target.closest &&
-      event.target.closest(
-        ".nft-frame"
-      )
-    ){
-
-      event.preventDefault();
-
-    }
-
-  },
-  true
-);
-
-document.addEventListener(
-  "cut",
-  function(event){
-
-    if(
-      event.target &&
-      event.target.closest &&
-      event.target.closest(
-        ".nft-frame"
-      )
-    ){
-
-      event.preventDefault();
-
-    }
-
-  },
-  true
-);
-
-document.addEventListener(
-  "keydown",
-  function(event){
-
-    const tag =
-      event.target?.tagName;
-
-    if(
-      tag === "INPUT" ||
-      tag === "TEXTAREA"
-    ){
-
-      return;
-
-    }
-
-    const key =
-      String(
-        event.key || ""
-      ).toLowerCase();
-
-    const blocked =
-      (
-        event.ctrlKey ||
-        event.metaKey
-      ) &&
-      (
-        key === "s" ||
-        key === "u" ||
-        key === "p"
-      );
-
-    if(blocked){
-
-      event.preventDefault();
-
-    }
-
-  },
-  true
-);
-
-/* =====================================================
-   GLOBAL CONTEXT MENU
-===================================================== */
-
-document.addEventListener(
   "contextmenu",
   function(event){
 
     if(
-      event.target &&
-      (
-        event.target.closest &&
-        event.target.closest(
-          ".nft-frame"
-        )
-      )
+      event.target === nftImg ||
+      event.target.closest?.("#nftFrame")
     ){
 
       event.preventDefault();
 
     }
 
-  },
-  true
+  }
 );
 
-/* =====================================================
-   GALLERY
-===================================================== */
-
-$("galleryBtn")
-  .onclick =
+$("galleryBtn").onclick =
   function(){
 
     window.location.assign(
@@ -3955,41 +2451,32 @@ $("galleryBtn")
 
   };
 
-/* =====================================================
-   MARKERS
-===================================================== */
-
 document
-  .querySelectorAll(
-    ".marker"
-  )
-  .forEach(
-    marker => {
+  .querySelectorAll(".marker")
+  .forEach(marker => {
 
-      marker.onclick =
-        function(){
+    marker.onclick =
+      function(){
 
-          const n =
-            Number(
-              marker.dataset.step
-            );
+        const n =
+          Number(
+            marker.dataset.step
+          );
 
-          if(
-            n <= step
-          ){
+        if(n <= step){
 
-            setStep(n);
+          setStep(n);
 
-          }
+        }
 
-        };
+      };
 
-    }
-  );
+  });
 
-/* =====================================================
-   INITIAL LOAD
-===================================================== */
+updateRoadmanJourney(
+  1,
+  false
+);
 
 setStep(1);
 
@@ -3998,5 +2485,4 @@ updateSpots();
 </script>
 
 </body>
-
 </html>
