@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>The Road Provides — theRoadMan</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #090909;
+      --text: #f0f0ed;
+      --muted: rgba(240,240,237,0.58);
+      --line: rgba(240,240,237,0.14);
+      --orange: #ff5a00;
+      --mono: "IBM Plex Mono", monospace;
+      --display: "Anton", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      padding: 42px 6vw 0;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-brand {
+      font-family: var(--display);
+      font-size: 34px;
+      line-height: 0.9;
+      letter-spacing: 0.01em;
+    }
+
+    .header-mark {
+      width: 9px;
+      height: 9px;
+      background: var(--orange);
+      border-radius: 50%;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      padding: 105px 0 115px;
+      max-width: 1150px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--orange);
+      margin-bottom: 25px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: clamp(80px, 13vw, 190px);
+      line-height: 0.82;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--orange);
+    }
+
+    .hero-description {
+      max-width: 620px;
+      margin-top: 48px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    /* =========================
+       SECTIONS
+    ========================= */
+
+    section {
+      border-top: 1px solid var(--line);
+      padding: 80px 0;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: 70px;
+    }
+
+    .section-number {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--orange);
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(42px, 6vw, 82px);
+      font-weight: 400;
+      line-height: 0.9;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+
+    .section-text {
+      max-width: 700px;
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+
+    .section-text + .section-text {
+      margin-top: 22px;
+    }
+
+    /* =========================
+       ROAD COIN
+    ========================= */
+
+    .coin-symbol {
+      display: inline-block;
+      margin-bottom: 30px;
+      font-family: var(--display);
+      font-size: 80px;
+      line-height: 0.9;
+      color: var(--orange);
+    }
+
+    .coin-name {
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      margin-bottom: 25px;
+      color: rgba(240,240,237,0.82);
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       FIRST 100
+    ========================= */
+
+    .number-large {
+      font-family: var(--display);
+      font-size: clamp(100px, 18vw, 260px);
+      line-height: 0.7;
+      color: var(--orange);
+      margin-bottom: 35px;
+    }
+
+    .first100-title {
+      font-family: var(--display);
+      font-size: clamp(45px, 7vw, 95px);
+      line-height: 0.9;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+
+    /* =========================
+       EXPERIENCE
+    ========================= */
+
+    .experience-box {
+      border: 1px solid var(--line);
+      padding: 55px;
+      margin-top: 20px;
+    }
+
+    .experience-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--orange);
+      margin-bottom: 25px;
+      text-transform: uppercase;
+    }
+
+    .experience-title {
+      font-family: var(--display);
+      font-size: clamp(42px, 6vw, 80px);
+      line-height: 0.9;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+
+    .experience-text {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.9;
+    }
+
+    .enter-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 22px;
+      margin-top: 40px;
+      padding: 18px 25px;
+      border: 1px solid var(--text);
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      transition: 0.25s ease;
+    }
+
+    .enter-button span {
+      color: var(--orange);
+      font-size: 20px;
+      line-height: 0;
+    }
+
+    .enter-button:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      border-top: 1px solid var(--line);
+      margin-top: 40px;
+      padding: 55px 0 65px;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 30px;
+    }
+
+    .footer-brand {
+      font-family: var(--display);
+      font-size: 34px;
+      line-height: 0.9;
+    }
+
+    .footer-sub {
+      margin-top: 9px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.20em;
+      color: rgba(240,240,237,0.55);
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      color: rgba(240,240,237,0.90);
+    }
+
+    .footer-links a {
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--orange);
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 700px) {
+
+      .page {
+        padding: 25px 6vw 0;
+      }
+
+      header {
+        padding-bottom: 20px;
+      }
+
+      .header-brand {
+        font-size: 27px;
+      }
+
+      .hero {
+        padding: 75px 0 85px;
+      }
+
+      .eyebrow {
+        font-size: 9px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 21vw;
+      }
+
+      .hero-description {
+        margin-top: 35px;
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      section {
+        padding: 60px 0;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .section-title {
+        font-size: 52px;
+      }
+
+      .section-text {
+        font-size: 13px;
+      }
+
+      .coin-symbol {
+        font-size: 65px;
+      }
+
+      .number-large {
+        font-size: 40vw;
+      }
+
+      .first100-title {
+        font-size: 55px;
+      }
+
+      .experience-box {
+        padding: 30px 24px;
+      }
+
+      .experience-title {
+        font-size: 52px;
+      }
+
+      .experience-text {
+        font-size: 13px;
+      }
+
+      .enter-button {
+        font-size: 11px;
+        padding: 16px 18px;
+      }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 45px 0 55px;
+      }
+
+      .footer-brand {
+        font-size: 27px;
+      }
+
+      .footer-sub {
+        font-size: 8px;
+      }
+
+      .footer-links {
+        gap: 18px;
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <header>
+      <div class="header-brand">THE ROAD PROVIDES</div>
+      <div class="header-mark"></div>
+    </header>
+
+    <main>
+
+      <div class="hero">
+        <div class="eyebrow">THE FIRST CHAPTER</div>
+
+        <h1>
+          THE ROAD
+          <span>PROVIDES</span>
+        </h1>
+
+        <p class="hero-description">
+          The Road Provides is an open-ended experiment built around one character,
+          many roads, and the people who decide to enter them.
+          The Roadman is the first chapter.
+        </p>
+      </div>
+
+      <section>
+        <div class="section-grid">
+
+          <div>
+            <div class="section-number">01 / THE PROJECT</div>
+          </div>
+
+          <div>
+            <div class="section-title">One character.<br>Many roads.</div>
+
+            <p class="section-text">
+              The Roadman is a character moving through an unknown road.
+              There is no single destination and no predetermined ending.
+            </p>
+
+            <p class="section-text">
+              The project is built as an experience rather than simply an image.
+              Each person who enters becomes part of the road and discovers
+              what exists beyond the next step.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <div class="section-grid">
+
+          <div>
+            <div class="section-number">02 / THE COIN</div>
+          </div>
+
+          <div>
+            <div class="coin-symbol">$ROAD</div>
+
+            <div class="coin-name">THE ROAD PROVIDES — SOLANA</div>
+
+            <p class="section-text">
+              $ROAD is the coin created for The Road Provides.
+              It exists as part of the project's on-chain layer and as one
+              of the entry points into the first chapter.
+            </p>
+
+            <p class="section-text">
+              The project does not promise a price, return, or financial outcome.
+              What happens on the market belongs to the market.
+              The Road is the experience.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <div class="section-grid">
+
+          <div>
+            <div class="section-number">03 / FIRST 100</div>
+          </div>
+
+          <div>
+
+            <div class="number-large">100</div>
+
+            <div class="first100-title">
+              The First<br>Roadmen
+            </div>
+
+            <p class="section-text">
+              The first chapter is limited to 100 Roadman NFTs.
+            </p>
+
+            <p class="section-text">
+              These are not simply 100 copies of an image.
+              They represent the first 100 participants who find their way
+              through the experience and reach its conclusion.
+            </p>
+
+            <p class="section-text">
+              Each participant receives their own place in the first chapter,
+              while all 100 eventually converge on the same final discovery.
+            </p>
+
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <div class="section-grid">
+
+          <div>
+            <div class="section-number">04 / THE EXPERIENCE</div>
+          </div>
+
+          <div>
+
+            <div class="experience-box">
+
+              <div class="experience-label">
+                ENTER THE ROAD
+              </div>
+
+              <div class="experience-title">
+                Find the<br>next road.
+              </div>
+
+              <p class="experience-text">
+                The experience connects the website, social channels,
+                Telegram, the $ROAD ecosystem and the first 100 NFTs.
+                The path is intentionally discovered step by step.
+              </p>
+
+              <a href="./index.html" class="enter-button">
+                ENTER THE EXPERIENCE
+                <span>→</span>
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <div>
+        <div class="footer-brand">theRoadMan</div>
+        <div class="footer-sub">One character. Many roads.</div>
+      </div>
+
+      <nav class="footer-links">
+        <a
+          href="https://x.com/theroadprovides"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          X
+        </a>
+
+        <a href="#" onclick="return false;">
+          TELEGRAM
+        </a>
+
+        <a
+          href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          PUMP.FUN
+        </a>
+      </nav>
+    </footer>
+
+  </div>
+
+</body>
+</html>
