@@ -15,13 +15,11 @@ const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
 
 // TESTE ATUAL
-// Depois alterar para 3_000_000
-const MIN_USD_REQUIRED = 1;
+// PRODUÇÃO: alterar para 3_000_000
+const MIN_ROAD_REQUIRED = 30;
 
 const SOLANA_RPC =
   "https://api.mainnet-beta.solana.com";
-
-const NONCE_MAX_AGE_SECONDS = 300;
 
 // =====================================================
 // RESPONSE
@@ -291,103 +289,18 @@ async function getRoadBalance(wallet) {
         ?.uiAmountString;
 
     if (amount) {
-      balance += Number(amount);
+      const parsedAmount =
+        Number(amount);
+
+      if (Number.isFinite(parsedAmount)) {
+        balance += parsedAmount;
+      }
     }
   }
 
   return Number.isFinite(balance)
     ? balance
     : 0;
-}
-
-// =====================================================
-// $ROAD PRICE
-// =====================================================
-
-async function getRoadPrice() {
-  const url =
-    `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_MINT}`;
-
-  const response =
-    await fetch(url, {
-      headers: {
-        Accept:
-          "application/json"
-      }
-    });
-
-  if (!response.ok) {
-    throw new Error(
-      `Price API HTTP ${response.status}`
-    );
-  }
-
-  const data =
-    await response.json();
-
-  const pairs =
-    Array.isArray(data?.pairs)
-      ? data.pairs
-      : [];
-
-  const validPairs =
-    pairs
-      .filter((pair) => {
-        if (
-          String(pair?.chainId || "")
-            .toLowerCase() !==
-          "solana"
-        ) {
-          return false;
-        }
-
-        const base =
-          pair?.baseToken?.address;
-
-        const quote =
-          pair?.quoteToken?.address;
-
-        if (
-          base !== TOKEN_MINT &&
-          quote !== TOKEN_MINT
-        ) {
-          return false;
-        }
-
-        const price =
-          Number(pair?.priceUsd);
-
-        return (
-          Number.isFinite(price) &&
-          price > 0
-        );
-      })
-      .sort((a, b) => {
-        const liquidityA =
-          Number(
-            a?.liquidity?.usd || 0
-          );
-
-        const liquidityB =
-          Number(
-            b?.liquidity?.usd || 0
-          );
-
-        return (
-          liquidityB -
-          liquidityA
-        );
-      });
-
-  if (!validPairs.length) {
-    throw new Error(
-      "Unable to determine $ROAD price."
-    );
-  }
-
-  return Number(
-    validPairs[0].priceUsd
-  );
 }
 
 // =====================================================
@@ -724,56 +637,12 @@ module.exports = async function handler(
     }
 
     // =================================================
-    // PRICE
-    // =================================================
-
-    let roadPrice = null;
-    let usdValue = null;
-
-    try {
-      roadPrice =
-        await getRoadPrice();
-
-      usdValue =
-        roadBalance *
-        roadPrice;
-    } catch (error) {
-      console.error(
-        "ROADMAN PRICE ERROR:",
-        error
-      );
-
-      /*
-       * IMPORTANT:
-       * Price is auxiliary information.
-       *
-       * The blockchain remains the source
-       * of truth for token ownership.
-       *
-       * We do not allow a price API outage
-       * to automatically prove ownership.
-       *
-       * For the current US$1 test rule,
-       * however, we need a price to calculate
-       * the USD threshold.
-       */
-
-      return json(res, 503, {
-        success: false,
-        error:
-          "Unable to determine $ROAD price.",
-        detail:
-          "Your wallet was not rejected. The market-price service is currently unavailable."
-      });
-    }
-
-    // =================================================
-    // MINIMUM USD
+    // MINIMUM $ROAD
     // =================================================
 
     if (
       !TEST_MODE &&
-      usdValue < MIN_USD_REQUIRED
+      roadBalance < MIN_ROAD_REQUIRED
     ) {
       return json(res, 403, {
         success: false,
@@ -781,12 +650,8 @@ module.exports = async function handler(
           "Insufficient $ROAD balance.",
         balance:
           roadBalance,
-        road_price:
-          roadPrice,
-        usd_value:
-          usdValue,
-        minimum_usd:
-          MIN_USD_REQUIRED
+        minimum_road:
+          MIN_ROAD_REQUIRED
       });
     }
 
@@ -849,7 +714,7 @@ module.exports = async function handler(
           NOW(),
           NOW(),
           ${roadBalance},
-          ${usdValue},
+          NULL,
           'HOLDING',
           'PENDING'
         )
@@ -876,28 +741,41 @@ module.exports = async function handler(
 
     return json(res, 200, {
       success: true,
+
       message:
         "Roadman spot claimed successfully.",
 
       claim: {
-        id: claim.id,
-        spot: claim.spot,
+        id:
+          claim.id,
+
+        spot:
+          claim.spot,
+
         x_handle:
           claim.x_handle,
+
         wallet:
           claim.wallet,
+
         status:
           claim.status,
+
         created_at:
           claim.created_at,
+
         claimed_at:
           claim.claimed_at,
+
         initial_balance:
           claim.initial_balance,
+
         initial_usd_value:
-          claim.initial_usd_value,
+          null,
+
         holding_status:
           claim.holding_status,
+
         nft_status:
           claim.nft_status
       },
@@ -905,12 +783,12 @@ module.exports = async function handler(
       token: {
         mint:
           TOKEN_MINT,
+
         balance:
           roadBalance,
-        price_usd:
-          roadPrice,
-        usd_value:
-          usdValue
+
+        minimum_required:
+          MIN_ROAD_REQUIRED
       }
     });
 
