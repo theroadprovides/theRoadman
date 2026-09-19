@@ -1,39 +1,72 @@
 const { neon } = require("@neondatabase/serverless");
 
+// =====================================================
+// CONFIG
+// =====================================================
+
 const TOTAL_SPOTS = 100;
 
-// TESTE: $1
-// PRODUÇÃO: mudar para 10
-const MIN_USD_REQUIRED = 1;
+// Quantidade mínima de $ROAD necessária.
+//
+// PODE ALTERAR AQUI FUTURAMENTE.
+// Exemplo:
+// 3_000_000 = 3 milhões de $ROAD
+//
+const MIN_ROAD_REQUIRED = 3_000_000;
 
 const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
+
+const SOLANA_RPC =
+  "https://api.mainnet-beta.solana.com";
+
+
+// =====================================================
+// RESPONSE
+// =====================================================
 
 function json(res, status, data) {
   res.status(status).json(data);
 }
 
+
+// =====================================================
+// WALLET
+// =====================================================
+
 function normalizeWallet(wallet) {
   return String(wallet || "").trim();
 }
 
+
+// =====================================================
+// SOLANA BALANCE
+// =====================================================
+
 async function getRoadBalance(wallet) {
   const response = await fetch(
-    "https://api.mainnet-beta.solana.com",
+    SOLANA_RPC,
     {
       method: "POST",
+
       headers: {
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify({
         jsonrpc: "2.0",
         id: 1,
-        method: "getTokenAccountsByOwner",
+
+        method:
+          "getTokenAccountsByOwner",
+
         params: [
           wallet,
+
           {
             mint: TOKEN_MINT,
           },
+
           {
             encoding: "jsonParsed",
             commitment: "finalized",
@@ -53,19 +86,30 @@ async function getRoadBalance(wallet) {
 
   if (data.error) {
     throw new Error(
-      data.error.message || "Solana RPC error"
+      data.error.message ||
+      "Solana RPC error."
     );
   }
 
-  const accounts = data.result?.value || [];
+  const accounts =
+    data.result?.value || [];
 
   let totalBalance = 0;
 
   for (const account of accounts) {
     const amount =
-      account?.account?.data?.parsed?.info?.tokenAmount?.uiAmount;
+      account
+        ?.account
+        ?.data
+        ?.parsed
+        ?.info
+        ?.tokenAmount
+        ?.uiAmount;
 
-    if (typeof amount === "number") {
+    if (
+      typeof amount === "number" &&
+      Number.isFinite(amount)
+    ) {
       totalBalance += amount;
     }
   }
@@ -73,53 +117,17 @@ async function getRoadBalance(wallet) {
   return totalBalance;
 }
 
-async function getRoadPrice() {
-  const response = await fetch(
-    `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_MINT}`
-  );
 
-  if (!response.ok) {
-    throw new Error(
-      `DexScreener returned HTTP ${response.status}`
-    );
-  }
-
-  const data = await response.json();
-
-  const pairs = Array.isArray(data.pairs)
-    ? data.pairs
-    : [];
-
-  const validPairs = pairs
-    .filter((pair) => {
-      return (
-        pair.chainId === "solana" &&
-        pair.baseToken?.address === TOKEN_MINT &&
-        pair.priceUsd &&
-        Number(pair.priceUsd) > 0
-      );
-    })
-    .sort((a, b) => {
-      const liquidityA =
-        Number(a.liquidity?.usd) || 0;
-
-      const liquidityB =
-        Number(b.liquidity?.usd) || 0;
-
-      return liquidityB - liquidityA;
-    });
-
-  if (validPairs.length === 0) {
-    throw new Error(
-      "Could not find a valid Solana $ROAD price."
-    );
-  }
-
-  return Number(validPairs[0].priceUsd);
-}
+// =====================================================
+// MAIN
+// =====================================================
 
 module.exports = async function handler(req, res) {
+
+  // ===================================================
   // CORS
+  // ===================================================
+
   res.setHeader(
     "Access-Control-Allow-Origin",
     "*"
@@ -135,9 +143,24 @@ module.exports = async function handler(req, res) {
     "Content-Type"
   );
 
+  res.setHeader(
+    "Cache-Control",
+    "no-store"
+  );
+
+
+  // ===================================================
+  // OPTIONS
+  // ===================================================
+
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
+
+
+  // ===================================================
+  // METHOD
+  // ===================================================
 
   if (
     req.method !== "GET" &&
@@ -149,19 +172,30 @@ module.exports = async function handler(req, res) {
     });
   }
 
+
+  // ===================================================
+  // DATABASE
+  // ===================================================
+
   if (!process.env.DATABASE_URL) {
     return json(res, 500, {
       success: false,
-      error: "DATABASE_URL is not configured.",
+      error:
+        "DATABASE_URL is not configured.",
     });
   }
 
-  const sql = neon(process.env.DATABASE_URL);
+
+  const sql =
+    neon(process.env.DATABASE_URL);
+
 
   try {
-    /*
-     * Busca todos os holders atualmente em HOLDING.
-     */
+
+    // =================================================
+    // FIND CURRENT HOLDERS
+    // =================================================
+
     const holders = await sql`
       SELECT
         id,
@@ -171,160 +205,292 @@ module.exports = async function handler(req, res) {
         status,
         holding_status,
         initial_balance,
-        initial_usd_value,
         final_balance,
-        final_usd_value,
         qualified_at,
         disqualified_at,
         nft_number,
         nft_status
+
       FROM roadman_claims
-      WHERE holding_status = 'HOLDING'
-      ORDER BY spot ASC
+
+      WHERE
+        holding_status = 'HOLDING'
+
+      ORDER BY
+        spot ASC
     `;
 
-    /*
-     * Não há holders para verificar.
-     */
-    if (holders.length === 0) {
+
+    // =================================================
+    // NO HOLDERS
+    // =================================================
+
+    if (!holders.length) {
       return json(res, 200, {
+
         success: true,
-        minimum_required: MIN_USD_REQUIRED,
-        road_price: null,
+
+        minimum_required:
+          MIN_ROAD_REQUIRED,
+
+        token_mint:
+          TOKEN_MINT,
+
+        total_spots:
+          TOTAL_SPOTS,
+
         checked: 0,
+
         holding: 0,
+
         disqualified: 0,
+
         qualified: 0,
-        total_spots: TOTAL_SPOTS,
-        message: "No holders currently in HOLDING status.",
+
         results: [],
+
+        message:
+          "No holders currently in HOLDING status.",
       });
     }
 
-    /*
-     * Busca o preço atual do $ROAD.
-     */
-    const roadPrice = await getRoadPrice();
+
+    // =================================================
+    // RESULTS
+    // =================================================
 
     const results = [];
 
     let holdingCount = 0;
+
     let disqualifiedCount = 0;
 
-    /*
-     * Verifica cada holder individualmente.
-     */
+
+    // =================================================
+    // CHECK EACH HOLDER
+    // =================================================
+
     for (const holder of holders) {
-      const wallet = normalizeWallet(holder.wallet);
+
+      const wallet =
+        normalizeWallet(holder.wallet);
+
 
       try {
-        const balance = await getRoadBalance(wallet);
 
-        const usdValue =
-          balance * roadPrice;
+        const balance =
+          await getRoadBalance(wallet);
 
-        /*
-         * Ainda possui o mínimo exigido.
-         */
-        if (usdValue >= MIN_USD_REQUIRED) {
+
+        // =============================================
+        // STILL HOLDING
+        // =============================================
+
+        if (
+          balance >=
+          MIN_ROAD_REQUIRED
+        ) {
+
           await sql`
             UPDATE roadman_claims
+
             SET
-              final_balance = ${balance},
-              final_usd_value = ${usdValue},
-              holding_status = 'HOLDING'
-            WHERE id = ${holder.id}
+              final_balance =
+                ${balance},
+
+              holding_status =
+                'HOLDING'
+
+            WHERE
+              id =
+              ${holder.id}
           `;
+
 
           holdingCount++;
 
-          results.push({
-            id: holder.id,
-            spot: holder.spot,
-            x_handle: holder.x_handle,
-            wallet: wallet,
-            status: "HOLDING",
-            balance: balance,
-            usd_value: usdValue,
-          });
-        }
-
-        /*
-         * Caiu abaixo do mínimo.
-         */
-        else {
-          await sql`
-            UPDATE roadman_claims
-            SET
-              final_balance = ${balance},
-              final_usd_value = ${usdValue},
-              holding_status = 'DISQUALIFIED',
-              disqualified_at = NOW()
-            WHERE id = ${holder.id}
-          `;
-
-          disqualifiedCount++;
 
           results.push({
-            id: holder.id,
-            spot: holder.spot,
-            x_handle: holder.x_handle,
-            wallet: wallet,
-            status: "DISQUALIFIED",
-            balance: balance,
-            usd_value: usdValue,
+
+            id:
+              Number(holder.id),
+
+            spot:
+              Number(holder.spot),
+
+            x_handle:
+              holder.x_handle,
+
+            wallet:
+              wallet,
+
+            status:
+              "HOLDING",
+
+            balance:
+              balance,
+
+            minimum_required:
+              MIN_ROAD_REQUIRED,
+
+            eligible:
+              true
+
           });
+
+
+          continue;
         }
-      } catch (holderError) {
-        /*
-         * Um erro em uma carteira não interrompe
-         * a verificação das demais.
-         */
+
+
+        // =============================================
+        // DISQUALIFIED
+        // =============================================
+
+        await sql`
+          UPDATE roadman_claims
+
+          SET
+            final_balance =
+              ${balance},
+
+            holding_status =
+              'DISQUALIFIED',
+
+            disqualified_at =
+              NOW()
+
+          WHERE
+            id =
+            ${holder.id}
+        `;
+
+
+        disqualifiedCount++;
+
+
         results.push({
-          id: holder.id,
-          spot: holder.spot,
-          x_handle: holder.x_handle,
-          wallet: wallet,
-          status: "ERROR",
+
+          id:
+            Number(holder.id),
+
+          spot:
+            Number(holder.spot),
+
+          x_handle:
+            holder.x_handle,
+
+          wallet:
+            wallet,
+
+          status:
+            "DISQUALIFIED",
+
+          balance:
+            balance,
+
+          minimum_required:
+            MIN_ROAD_REQUIRED,
+
+          eligible:
+            false
+
+        });
+
+      } catch (holderError) {
+
+        // =============================================
+        // WALLET ERROR
+        // =============================================
+
+        results.push({
+
+          id:
+            Number(holder.id),
+
+          spot:
+            Number(holder.spot),
+
+          x_handle:
+            holder.x_handle,
+
+          wallet:
+            wallet,
+
+          status:
+            "ERROR",
+
+          eligible:
+            false,
+
           error:
             holderError.message ||
-            "Could not verify wallet.",
+            "Could not verify wallet."
+
         });
+
       }
+
     }
 
-    /*
-     * QUALIFIED NÃO É DEFINIDO AQUI.
-     *
-     * A qualificação definitiva será feita
-     * posteriormente, no momento da distribuição
-     * dos NFTs.
-     *
-     * Isso é proposital para respeitar a regra:
-     *
-     * "O holder precisa manter o mínimo até que
-     * os 100 NFTs sejam distribuídos."
-     */
+
+    // =================================================
+    // RESPONSE
+    // =================================================
 
     return json(res, 200, {
+
       success: true,
-      minimum_required: MIN_USD_REQUIRED,
-      road_price: roadPrice,
-      checked: holders.length,
-      holding: holdingCount,
-      disqualified: disqualifiedCount,
-      qualified: 0,
-      total_spots: TOTAL_SPOTS,
-      results: results,
+
+      token_mint:
+        TOKEN_MINT,
+
+      minimum_required:
+        MIN_ROAD_REQUIRED,
+
+      checked:
+        holders.length,
+
+      holding:
+        holdingCount,
+
+      disqualified:
+        disqualifiedCount,
+
+      qualified:
+        0,
+
+      total_spots:
+        TOTAL_SPOTS,
+
+      available_spots:
+        TOTAL_SPOTS -
+        holdingCount,
+
+      results:
+        results
+
     });
+
+
   } catch (error) {
-    console.error("QUALIFY ERROR:", error);
+
+    console.error(
+      "QUALIFY ERROR:",
+      error
+    );
+
 
     return json(res, 500, {
+
       success: false,
+
       error:
         error.message ||
-        "Internal server error.",
+        "Internal server error."
+
     });
+
   }
+
 };
