@@ -4,20 +4,19 @@ const { neon } = require("@neondatabase/serverless");
 // CONFIG
 // =====================================================
 
+const TOTAL_SPOTS = 100;
+
+// Quantidade mínima de $ROAD necessária.
+//
+// PODE ALTERAR AQUI FUTURAMENTE.
+//
+const MIN_ROAD_REQUIRED = 3_000_000;
+
 const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
 
-// =====================================================
-// HOLDING TEST LIMIT
-// =====================================================
-//
-// DURANTE O TESTE:
-// US$1
-//
-// ANTES DO LANÇAMENTO:
-// alterar para 10
-//
-const MIN_USD_REQUIRED = 1;
+const SOLANA_RPC =
+  "https://api.mainnet-beta.solana.com";
 
 
 // =====================================================
@@ -25,7 +24,6 @@ const MIN_USD_REQUIRED = 1;
 // =====================================================
 
 function json(res, statusCode, data) {
-
   res.status(statusCode);
 
   res.setHeader(
@@ -54,7 +52,6 @@ function json(res, statusCode, data) {
   );
 
   return res.json(data);
-
 }
 
 
@@ -64,61 +61,52 @@ function json(res, statusCode, data) {
 
 async function getRoadBalance(wallet) {
 
-  const rpc =
-    "https://api.mainnet-beta.solana.com";
+  const response = await fetch(
+    SOLANA_RPC,
+    {
+      method: "POST",
 
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-  const response =
-    await fetch(
-      rpc,
-      {
-        method: "POST",
+      body: JSON.stringify({
 
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
+        jsonrpc: "2.0",
 
-        body:
-          JSON.stringify({
+        id: 1,
 
-            jsonrpc:
-              "2.0",
+        method:
+          "getTokenAccountsByOwner",
 
-            id:
-              1,
+        params: [
 
-            method:
-              "getTokenAccountsByOwner",
+          wallet,
 
-            params: [
+          {
+            mint:
+              TOKEN_MINT
+          },
 
-              wallet,
+          {
+            encoding:
+              "jsonParsed",
 
-              {
-                mint:
-                  TOKEN_MINT
-              },
+            commitment:
+              "finalized"
+          }
 
-              {
-                encoding:
-                  "jsonParsed",
+        ]
 
-                commitment:
-                  "finalized"
-              }
-
-            ]
-
-          })
-      }
-    );
+      })
+    }
+  );
 
 
   if (!response.ok) {
 
     throw new Error(
-      "Solana RPC unavailable."
+      `Solana RPC returned HTTP ${response.status}`
     );
 
   }
@@ -131,6 +119,7 @@ async function getRoadBalance(wallet) {
   if (data.error) {
 
     throw new Error(
+      data.error.message ||
       "Solana RPC error."
     );
 
@@ -151,28 +140,16 @@ async function getRoadBalance(wallet) {
         ?.data
         ?.parsed
         ?.info
-        ?.tokenAmount;
-
-
-    if (!amount) {
-      continue;
-    }
-
-
-    const uiAmount =
-      Number(
-        amount.uiAmount || 0
-      );
+        ?.tokenAmount
+        ?.uiAmount;
 
 
     if (
-      Number.isFinite(
-        uiAmount
-      )
+      typeof amount === "number" &&
+      Number.isFinite(amount)
     ) {
 
-      balance +=
-        uiAmount;
+      balance += amount;
 
     }
 
@@ -180,89 +157,6 @@ async function getRoadBalance(wallet) {
 
 
   return balance;
-
-}
-
-
-// =====================================================
-// ROAD PRICE
-// =====================================================
-
-async function getRoadPrice() {
-
-  try {
-
-    const response =
-      await fetch(
-        "https://api.dexscreener.com/latest/dex/tokens/" +
-        TOKEN_MINT,
-        {
-          cache:
-            "no-store"
-        }
-      );
-
-
-    if (!response.ok) {
-
-      return 0;
-
-    }
-
-
-    const data =
-      await response.json();
-
-
-    const pairs =
-      Array.isArray(
-        data?.pairs
-      )
-        ? data.pairs
-        : [];
-
-
-    const validPairs =
-      pairs
-        .filter(
-          pair =>
-            pair?.chainId === "solana" &&
-            pair?.baseToken?.address === TOKEN_MINT &&
-            Number.isFinite(
-              Number(pair?.priceUsd)
-            ) &&
-            Number(pair?.priceUsd) > 0
-        )
-        .sort(
-          (a, b) =>
-            Number(
-              b?.liquidity?.usd || 0
-            ) -
-            Number(
-              a?.liquidity?.usd || 0
-            )
-        );
-
-
-    if (
-      !validPairs.length
-    ) {
-
-      return 0;
-
-    }
-
-
-    return Number(
-      validPairs[0].priceUsd
-    );
-
-  } catch {
-
-    return 0;
-
-  }
-
 }
 
 
@@ -270,15 +164,14 @@ async function getRoadPrice() {
 // MAIN
 // =====================================================
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
 
   // ===================================================
   // OPTIONS
   // ===================================================
 
   if (
-    req.method ===
-    "OPTIONS"
+    req.method === "OPTIONS"
   ) {
 
     res.status(204);
@@ -347,9 +240,9 @@ export default async function handler(req, res) {
       );
 
 
-    // ===============================================
-    // FIND ALL HOLDERS IN HOLDING
-    // ===============================================
+    // =================================================
+    // FIND CURRENT HOLDERS
+    // =================================================
 
     const holders =
       await sql`
@@ -360,7 +253,6 @@ export default async function handler(req, res) {
           x_handle,
           wallet,
           initial_balance,
-          initial_usd_value,
           holding_status,
           nft_status
 
@@ -374,9 +266,9 @@ export default async function handler(req, res) {
       `;
 
 
-    // ===============================================
+    // =================================================
     // NO HOLDERS
-    // ===============================================
+    // =================================================
 
     if (
       !holders.length
@@ -390,17 +282,32 @@ export default async function handler(req, res) {
           success:
             true,
 
-          message:
-            "No holders currently in HOLDING.",
+          token_mint:
+            TOKEN_MINT,
+
+          minimum_required:
+            MIN_ROAD_REQUIRED,
+
+          total_spots:
+            TOTAL_SPOTS,
 
           checked:
+            0,
+
+          holding:
             0,
 
           disqualified:
             0,
 
-          holding:
-            0
+          available_spots:
+            TOTAL_SPOTS,
+
+          results:
+            [],
+
+          message:
+            "No holders currently in HOLDING."
 
         }
       );
@@ -408,39 +315,9 @@ export default async function handler(req, res) {
     }
 
 
-    // ===============================================
-    // CURRENT ROAD PRICE
-    // ===============================================
-
-    const price =
-      await getRoadPrice();
-
-
-    if (
-      !Number.isFinite(price) ||
-      price <= 0
-    ) {
-
-      return json(
-        res,
-        503,
-        {
-
-          success:
-            false,
-
-          error:
-            "Unable to determine $ROAD price."
-
-        }
-      );
-
-    }
-
-
-    // ===============================================
-    // RESULTS
-    // ===============================================
+    // =================================================
+    // COUNTERS
+    // =================================================
 
     let checked = 0;
 
@@ -451,9 +328,9 @@ export default async function handler(req, res) {
     const results = [];
 
 
-    // ===============================================
+    // =================================================
     // CHECK EACH HOLDER
-    // ===============================================
+    // =================================================
 
     for (
       const holder
@@ -463,9 +340,7 @@ export default async function handler(req, res) {
       checked++;
 
 
-      let balance = 0;
-
-      let usdValue = 0;
+      let balance;
 
 
       try {
@@ -474,12 +349,6 @@ export default async function handler(req, res) {
           await getRoadBalance(
             holder.wallet
           );
-
-
-        usdValue =
-          balance *
-          price;
-
 
       } catch (error) {
 
@@ -502,13 +371,20 @@ export default async function handler(req, res) {
               holder.spot
             ),
 
+          x_handle:
+            holder.x_handle,
+
           wallet:
             holder.wallet,
 
           status:
             "ERROR",
 
+          eligible:
+            false,
+
           error:
+            error.message ||
             "Unable to verify wallet balance."
 
         });
@@ -519,13 +395,13 @@ export default async function handler(req, res) {
       }
 
 
-      // =============================================
+      // =================================================
       // STILL HOLDING
-      // =============================================
+      // =================================================
 
       if (
-        usdValue >=
-        MIN_USD_REQUIRED
+        balance >=
+        MIN_ROAD_REQUIRED
       ) {
 
         holding++;
@@ -539,9 +415,6 @@ export default async function handler(req, res) {
 
               final_balance =
                 ${balance},
-
-              final_usd_value =
-                ${usdValue},
 
               holding_status =
                 'HOLDING'
@@ -557,8 +430,7 @@ export default async function handler(req, res) {
               x_handle,
               wallet,
               holding_status,
-              final_balance,
-              final_usd_value
+              final_balance
           `;
 
 
@@ -586,8 +458,11 @@ export default async function handler(req, res) {
           balance:
             balance,
 
-          usd_value:
-            usdValue
+          minimum_required:
+            MIN_ROAD_REQUIRED,
+
+          eligible:
+            true
 
         });
 
@@ -597,9 +472,9 @@ export default async function handler(req, res) {
       }
 
 
-      // =============================================
+      // =================================================
       // DISQUALIFIED
-      // =============================================
+      // =================================================
 
       disqualified++;
 
@@ -612,9 +487,6 @@ export default async function handler(req, res) {
 
             final_balance =
               ${balance},
-
-            final_usd_value =
-              ${usdValue},
 
             holding_status =
               'DISQUALIFIED',
@@ -634,7 +506,6 @@ export default async function handler(req, res) {
             wallet,
             holding_status,
             final_balance,
-            final_usd_value,
             disqualified_at
         `;
 
@@ -663,17 +534,31 @@ export default async function handler(req, res) {
         balance:
           balance,
 
-        usd_value:
-          usdValue
+        minimum_required:
+          MIN_ROAD_REQUIRED,
+
+        eligible:
+          false
 
       });
 
     }
 
 
-    // ===============================================
+    // =================================================
+    // AVAILABLE SPOTS
+    // =================================================
+
+    const availableSpots =
+      Math.max(
+        0,
+        TOTAL_SPOTS - holding
+      );
+
+
+    // =================================================
     // SUCCESS
-    // ===============================================
+    // =================================================
 
     return json(
       res,
@@ -683,11 +568,14 @@ export default async function handler(req, res) {
         success:
           true,
 
-        minimum_required:
-          MIN_USD_REQUIRED,
+        token_mint:
+          TOKEN_MINT,
 
-        road_price:
-          price,
+        minimum_required:
+          MIN_ROAD_REQUIRED,
+
+        total_spots:
+          TOTAL_SPOTS,
 
         checked:
           checked,
@@ -697,6 +585,9 @@ export default async function handler(req, res) {
 
         disqualified:
           disqualified,
+
+        available_spots:
+          availableSpots,
 
         results:
           results
@@ -722,6 +613,7 @@ export default async function handler(req, res) {
           false,
 
         error:
+          error.message ||
           "Unable to check holding status."
 
       }
@@ -729,4 +621,4 @@ export default async function handler(req, res) {
 
   }
 
-}
+};
