@@ -11,6 +11,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
+<!-- MetaMask Connect -->
+<script src="https://cdn.jsdelivr.net/npm/@metamask/sdk@0.36.0/dist/browser/metamask-sdk.js"></script>
+
 <style>
 
 :root{
@@ -59,10 +62,6 @@ body{
   padding-bottom:24px;
 }
 
-/* =====================================================
-PAGE STAGE
-===================================================== */
-
 .page-stage{
   position:relative;
   width:100%;
@@ -76,30 +75,11 @@ PAGE STAGE
 }
 
 @keyframes roadStageMove{
-  0%{
-    transform:translate3d(0,0,0);
-    opacity:1;
-  }
-
-  35%{
-    transform:translate3d(-22px,0,0);
-    opacity:.72;
-  }
-
-  65%{
-    transform:translate3d(22px,0,0);
-    opacity:.72;
-  }
-
-  100%{
-    transform:translate3d(0,0,0);
-    opacity:1;
-  }
+  0%{transform:translate3d(0,0,0);opacity:1}
+  35%{transform:translate3d(-22px,0,0);opacity:.72}
+  65%{transform:translate3d(22px,0,0);opacity:.72}
+  100%{transform:translate3d(0,0,0);opacity:1}
 }
-
-/* =====================================================
-BANNER
-===================================================== */
 
 .banner{
   height:clamp(130px,20svh,190px);
@@ -147,10 +127,6 @@ BANNER
   box-shadow:0 0 22px rgba(0,0,0,.95);
 }
 
-/* =====================================================
-ROADMAN JOURNEY
-===================================================== */
-
 .roadman-journey{
   position:relative;
   width:100%;
@@ -170,7 +146,6 @@ ROADMAN JOURNEY
   transform:translateY(-50%);
   background:var(--border);
   z-index:1;
-  pointer-events:none;
 }
 
 .roadman-journey:after{
@@ -185,24 +160,12 @@ ROADMAN JOURNEY
   box-shadow:0 0 7px rgba(255,90,31,.38);
   transition:width .62s cubic-bezier(.22,.61,.36,1);
   z-index:2;
-  pointer-events:none;
 }
 
-.roadman-journey.step-1:after{
-  width:0%;
-}
-
-.roadman-journey.step-2:after{
-  width:29%;
-}
-
-.roadman-journey.step-3:after{
-  width:59%;
-}
-
-.roadman-journey.step-4:after{
-  width:88%;
-}
+.roadman-journey.step-1:after{width:0%}
+.roadman-journey.step-2:after{width:29%}
+.roadman-journey.step-3:after{width:59%}
+.roadman-journey.step-4:after{width:88%}
 
 .roadman-scene{
   position:absolute;
@@ -211,7 +174,6 @@ ROADMAN JOURNEY
   width:clamp(60px,8vw,72px);
   height:clamp(60px,8vw,72px);
   object-fit:contain;
-  object-position:center center;
   transform:translate(-50%,-50%);
   display:block;
   user-select:none;
@@ -234,31 +196,8 @@ ROADMAN JOURNEY
     drop-shadow(0 0 10px rgba(255,90,31,.14));
 }
 
-/* =====================================================
-PROFILE
-===================================================== */
-
 .profile{
   display:none;
-}
-
-.avatar{
-  width:62px;
-  height:62px;
-  border-radius:50%;
-  background:var(--raise);
-  border:3px solid var(--border);
-  display:grid;
-  place-items:center;
-  overflow:hidden;
-}
-
-.avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  border-radius:50%;
 }
 
 .identity{
@@ -304,10 +243,6 @@ PROFILE
   color:var(--orange);
 }
 
-/* =====================================================
-LINKS
-===================================================== */
-
 .links{
   display:flex;
   gap:8px;
@@ -327,10 +262,7 @@ LINKS
 .x{
   border:1px solid var(--border);
   color:var(--ink);
-  transition:
-    border-color .2s,
-    color .2s,
-    box-shadow .2s;
+  transition:border-color .2s,color .2s,box-shadow .2s;
 }
 
 .x:hover{
@@ -342,19 +274,13 @@ LINKS
 .roadbtn{
   background:var(--orange);
   color:#fff;
-  transition:
-    background .2s,
-    box-shadow .2s;
+  transition:background .2s,box-shadow .2s;
 }
 
 .roadbtn:hover{
   background:var(--orange2);
   box-shadow:0 0 18px rgba(255,90,31,.16);
 }
-
-/* =====================================================
-ROAD PROGRESS
-===================================================== */
 
 .road{
   padding:clamp(14px,2.2svh,21px) 22px 0;
@@ -434,10 +360,6 @@ ROAD PROGRESS
   color:var(--ink);
 }
 
-/* =====================================================
-PANEL
-===================================================== */
-
 .panel{
   margin:clamp(16px,2.8svh,23px) 22px 0;
   border:1px solid var(--border);
@@ -457,15 +379,8 @@ PANEL
 }
 
 @keyframes in{
-  from{
-    opacity:0;
-    transform:translateY(4px);
-  }
-
-  to{
-    opacity:1;
-    transform:none;
-  }
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:1;transform:none}
 }
 
 .eyebrow{
@@ -492,19 +407,11 @@ PANEL
   font:11px/1.8 var(--mono);
   color:var(--dim);
   margin-bottom:17px;
+  word-break:break-word;
 }
 
-.ok{
-  color:var(--green);
-}
-
-.ready{
-  color:var(--orange);
-}
-
-/* =====================================================
-FORM
-===================================================== */
+.ok{color:var(--green)}
+.ready{color:var(--orange)}
 
 .field{
   display:flex;
@@ -539,13 +446,8 @@ input.invalid{
 }
 
 @keyframes shake{
-  25%{
-    transform:translateX(-4px);
-  }
-
-  75%{
-    transform:translateX(4px);
-  }
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
 }
 
 button.cta{
@@ -559,9 +461,7 @@ button.cta{
 .accent{
   background:var(--orange);
   color:#fff;
-  transition:
-    background .2s,
-    box-shadow .2s;
+  transition:background .2s,box-shadow .2s;
 }
 
 .accent:hover{
@@ -579,9 +479,7 @@ button.cta{
   background:transparent;
   color:var(--ink);
   border:1px solid var(--border)!important;
-  transition:
-    border-color .2s,
-    color .2s;
+  transition:border-color .2s,color .2s;
 }
 
 .ghost:hover{
@@ -598,10 +496,6 @@ button.cta{
 .nav>*{
   flex:1;
 }
-
-/* =====================================================
-WALLET
-===================================================== */
 
 .wallets{
   display:grid;
@@ -622,10 +516,7 @@ WALLET
   display:flex;
   align-items:center;
   gap:9px;
-  transition:
-    border-color .2s,
-    background .2s,
-    transform .15s;
+  transition:border-color .2s,background .2s,transform .15s;
   min-width:0;
 }
 
@@ -705,10 +596,6 @@ WALLET
   color:var(--green);
 }
 
-/* =====================================================
-CONFIRM
-===================================================== */
-
 .confirm{
   text-align:center;
   border:1px solid var(--border);
@@ -755,10 +642,6 @@ CONFIRM
 .green{
   color:var(--green)!important;
 }
-
-/* =====================================================
-FINAL
-===================================================== */
 
 .final-message{
   text-align:center;
@@ -811,10 +694,6 @@ FINAL
   color:var(--ink);
 }
 
-/* =====================================================
-FOOTER
-===================================================== */
-
 footer{
   position:relative;
   text-align:center;
@@ -834,210 +713,62 @@ footer:before{
   box-shadow:0 0 10px rgba(255,90,31,.22);
 }
 
-/* =====================================================
-RESPONSIVE HEIGHT
-===================================================== */
-
 @media(max-height:900px) and (min-width:481px){
-
-  .banner{
-    height:160px;
-  }
-
-  .roadman-journey{
-    height:68px;
-  }
-
-  .identity{
-    padding-top:9px;
-  }
-
-  .bio{
-    line-height:1.4;
-  }
-
-  .links{
-    margin-top:9px;
-  }
-
-  .road{
-    padding-top:15px;
-  }
-
-  .panel{
-    margin-top:17px;
-    padding:21px;
-  }
-
-  .step p{
-    margin-bottom:14px;
-  }
-
-  .terminal{
-    margin-bottom:14px;
-  }
-
-  footer{
-    padding-top:11px;
-  }
-
+  .banner{height:160px}
+  .roadman-journey{height:68px}
+  .identity{padding-top:9px}
+  .bio{line-height:1.4}
+  .links{margin-top:9px}
+  .road{padding-top:15px}
+  .panel{margin-top:17px;padding:21px}
+  .step p{margin-bottom:14px}
+  .terminal{margin-bottom:14px}
+  footer{padding-top:11px}
 }
 
 @media(max-height:760px) and (min-width:481px){
-
-  .banner{
-    height:118px;
-  }
-
-  .roadman-journey{
-    height:56px;
-  }
-
-  .roadman-scene{
-    width:58px;
-    height:58px;
-  }
-
-  .identity{
-    padding-top:5px;
-  }
-
-  .bio{
-    display:none;
-  }
-
-  .links{
-    margin-top:6px;
-  }
-
-  .road{
-    padding-top:9px;
-  }
-
-  .panel{
-    margin-top:11px;
-    padding:15px;
-  }
-
-  .step p{
-    margin-bottom:8px;
-  }
-
-  .terminal{
-    margin-bottom:8px;
-  }
-
+  .banner{height:118px}
+  .roadman-journey{height:56px}
+  .roadman-scene{width:58px;height:58px}
+  .identity{padding-top:5px}
+  .bio{display:none}
+  .links{margin-top:6px}
+  .road{padding-top:9px}
+  .panel{margin-top:11px;padding:15px}
+  .step p{margin-bottom:8px}
+  .terminal{margin-bottom:8px}
 }
 
 @media(max-width:480px){
-
-  .wrap{
-    padding-bottom:16px;
-  }
-
-  .banner{
-    height:150px;
-  }
-
-  .roadman-journey{
-    height:64px;
-  }
-
-  .roadman-scene{
-    width:64px;
-    height:64px;
-  }
-
-  .panel{
-    margin-top:17px;
-    padding:18px;
-    min-height:0;
-  }
-
-  .road{
-    padding-top:15px;
-  }
-
-  .links{
-    margin-top:8px;
-  }
-
-  .step h2{
-    font-size:21px;
-  }
-
-  .wallet{
-    padding:10px 8px;
-  }
-
-  .wallet-logo{
-    width:23px;
-    height:23px;
-    flex-basis:23px;
-  }
-
-  .wallet-name strong{
-    font-size:11px;
-  }
-
-  .wallet-name span{
-    font-size:8px;
-  }
-
+  .wrap{padding-bottom:16px}
+  .banner{height:150px}
+  .roadman-journey{height:64px}
+  .roadman-scene{width:64px;height:64px}
+  .panel{margin-top:17px;padding:18px}
+  .road{padding-top:15px}
+  .links{margin-top:8px}
+  .step h2{font-size:21px}
+  .wallet{padding:10px 8px}
+  .wallet-logo{width:23px;height:23px;flex-basis:23px}
+  .wallet-name strong{font-size:11px}
+  .wallet-name span{font-size:8px}
 }
 
 @media(max-width:480px) and (max-height:720px){
-
-  .banner{
-    height:120px;
-  }
-
-  .roadman-journey{
-    height:58px;
-  }
-
-  .roadman-scene{
-    width:58px;
-    height:58px;
-  }
-
-  .identity{
-    padding-top:6px;
-  }
-
-  .bio{
-    display:none;
-  }
-
-  .links{
-    margin-top:7px;
-  }
-
-  .road{
-    padding-top:10px;
-  }
-
-  .panel{
-    margin-top:12px;
-    padding:15px;
-  }
-
-  .step p{
-    margin-bottom:9px;
-  }
-
-  .terminal{
-    margin-bottom:9px;
-  }
-
-  footer{
-    padding-top:8px;
-  }
-
+  .banner{height:120px}
+  .roadman-journey{height:58px}
+  .roadman-scene{width:58px;height:58px}
+  .identity{padding-top:6px}
+  .bio{display:none}
+  .links{margin-top:7px}
+  .road{padding-top:10px}
+  .panel{margin-top:12px;padding:15px}
+  .step p{margin-bottom:9px}
+  .terminal{margin-bottom:9px}
+  footer{padding-top:8px}
 }
 
 @media(max-width:390px){
-
   .wallets{
     grid-template-columns:1fr;
   }
@@ -1045,11 +776,9 @@ RESPONSIVE HEIGHT
   .wallet{
     padding:11px;
   }
-
 }
 
 </style>
-
 </head>
 
 <body>
@@ -1059,10 +788,10 @@ RESPONSIVE HEIGHT
 <div class="page-stage" id="pageStage">
 
 <section class="banner">
-  <h1>
-    THE ROAD<br>
-    PROVIDES
-  </h1>
+<h1>
+THE ROAD<br>
+PROVIDES
+</h1>
 </section>
 
 <div class="roadman-journey" id="roadmanJourney">
@@ -1080,7 +809,7 @@ oncontextmenu="return false"
 
 <div class="profile">
 
-  <div class="avatar">
+<div class="avatar">
 
 <img
 src="desert_roadman_badge.png"
@@ -1089,32 +818,32 @@ draggable="false"
 oncontextmenu="return false"
 >
 
-  </div>
+</div>
 
 </div>
 
 <section class="identity">
 
-  <div class="status">
-    EARLY ACCESS OPEN
-  </div>
+<div class="status">
+EARLY ACCESS OPEN
+</div>
 
-  <div class="name">
-    theRoadMan
-  </div>
+<div class="name">
+theRoadMan
+</div>
 
-  <div class="handle">
-    @theroadprovides ·
-    <span id="spotsHeader">
-      100 first spots
-    </span>
-  </div>
+<div class="handle">
+@theroadprovides ·
+<span id="spotsHeader">
+100 first spots
+</span>
+</div>
 
-  <div class="bio">
-    The first 100 NFTs go to those who walked with
-    <b>$ROAD</b>
-    before the road was paved.
-  </div>
+<div class="bio">
+The first 100 NFTs go to those who walked with
+<b>$ROAD</b>
+before the road was paved.
+</div>
 
 </section>
 
@@ -1142,16 +871,16 @@ Buy $ROAD
 
 <div class="road">
 
-  <div class="line">
+<div class="line">
 
 <div
-  class="fill"
-  id="fill"
+class="fill"
+id="fill"
 ></div>
 
-  </div>
+</div>
 
-  <div class="markers">
+<div class="markers">
 
 <button
 class="marker active"
@@ -1189,31 +918,30 @@ type="button"
 <span class="marker-label">Sealed</span>
 </button>
 
-  </div>
-
+</div>
 </div>
 
 <main class="panel">
 
 <section
-  class="step active"
-  data-step="1"
+class="step active"
+data-step="1"
 >
 
-  <div class="eyebrow">
-    01 · ENTER THE ROAD
-  </div>
+<div class="eyebrow">
+01 · ENTER THE ROAD
+</div>
 
-  <h2>
-    Confirm your handle
-  </h2>
+<h2>
+Confirm your handle
+</h2>
 
-  <p>
-    Your spot is tied to your X profile.
-    Enter your handle to continue.
-  </p>
+<p>
+Your spot is tied to your X profile.
+Enter your handle to continue.
+</p>
 
-  <div class="terminal">
+<div class="terminal">
 
 spots remaining:
 <span
@@ -1227,9 +955,9 @@ id="spots"
 
 one person · one NFT · one wallet
 
-  </div>
+</div>
 
-  <div class="field">
+<div class="field">
 
 <input
 id="handle"
@@ -1247,44 +975,44 @@ type="button"
 Enter
 </button>
 
-  </div>
+</div>
 
-  <div
-    class="error"
-    id="handleError"
-  >
-    Enter your X handle to continue.
-  </div>
+<div
+class="error"
+id="handleError"
+>
+Enter your X handle to continue.
+</div>
 
-  <div class="rule">
+<div class="rule">
 
 <strong>Eligibility:</strong>
 The first 100 eligible $ROAD holders who remain holding
 through the qualification period will receive the corresponding NFT.
 One person · one wallet · one NFT.
 
-  </div>
+</div>
 
 </section>
 
 <section
-  class="step"
-  data-step="2"
+class="step"
+data-step="2"
 >
 
-  <div class="eyebrow">
-    02 · SEAL THE SPOT
-  </div>
+<div class="eyebrow">
+02 · SEAL THE SPOT
+</div>
 
-  <h2>
-    Reserve your number
-  </h2>
+<h2>
+Reserve your number
+</h2>
 
-  <p>
-    Your spot will be assigned by the Roadman database.
-  </p>
+<p>
+Your spot will be assigned by the Roadman database.
+</p>
 
-  <div class="terminal">
+<div class="terminal">
 
 handle detected:
 <span
@@ -1296,9 +1024,9 @@ id="echo"
 
 wallet verification is next...
 
-  </div>
+</div>
 
-  <div class="nav">
+<div class="nav">
 
 <button
 class="cta ghost"
@@ -1316,35 +1044,36 @@ type="button"
 Continue
 </button>
 
-  </div>
+</div>
 
 </section>
 
 <section
-  class="step"
-  data-step="3"
+class="step"
+data-step="3"
 >
 
-  <div class="eyebrow">
-    03 · VERIFY WALLET
-  </div>
+<div class="eyebrow">
+03 · VERIFY WALLET
+</div>
 
-  <h2>
-    Connect the eligible wallet
-  </h2>
+<h2>
+Connect the eligible wallet
+</h2>
 
-  <p>
-    Connect a Solana wallet. The wallet must sign a
-    verification message to prove that you control it.
-  </p>
+<p>
+Connect a Solana wallet. The wallet must sign a
+verification message to prove that you control it.
+</p>
 
-  <div class="wallets">
+<div class="wallets">
 
 <button
 class="wallet"
 data-wallet="Phantom"
 type="button"
 >
+
 <img
 class="wallet-logo"
 src="images/phantom.png"
@@ -1355,11 +1084,11 @@ draggable="false"
 <span class="wallet-name">
 
 <strong>
-  Phantom
+Phantom
 </strong>
 
 <span>
-  Connect & sign
+Connect & sign
 </span>
 
 </span>
@@ -1371,6 +1100,7 @@ class="wallet"
 data-wallet="Solflare"
 type="button"
 >
+
 <img
 class="wallet-logo"
 src="images/solflare.png"
@@ -1381,11 +1111,11 @@ draggable="false"
 <span class="wallet-name">
 
 <strong>
-  Solflare
+Solflare
 </strong>
 
 <span>
-  Connect & sign
+Connect & sign
 </span>
 
 </span>
@@ -1397,6 +1127,7 @@ class="wallet"
 data-wallet="MetaMask"
 type="button"
 >
+
 <img
 class="wallet-logo"
 src="images/metamask.png"
@@ -1408,29 +1139,29 @@ onerror="this.style.display='none'"
 <span class="wallet-name">
 
 <strong>
-  MetaMask
+MetaMask
 </strong>
 
 <span>
-  Connect & sign
+Connect & sign
 </span>
 
 </span>
 
 </button>
 
-  </div>
-
-  <div
-    id="walletBox"
-    style="display:none"
-  >
+</div>
 
 <div
-  class="hint"
-  id="walletHint"
+id="walletBox"
+style="display:none"
 >
-  Connect a wallet to sign the verification message.
+
+<div
+class="hint"
+id="walletHint"
+>
+Connect a wallet to sign the verification message.
 </div>
 
 <input
@@ -1442,24 +1173,24 @@ readonly
 >
 
 <div
-  class="error"
-  id="walletError"
+class="error"
+id="walletError"
 ></div>
 
-  </div>
+</div>
 
-  <div
-    class="wallet-state"
-    id="walletState"
-  ></div>
+<div
+class="wallet-state"
+id="walletState"
+></div>
 
-  <div
-    class="terminal"
-    id="verifyStatus"
-    style="display:none;margin-top:8px;"
-  ></div>
+<div
+class="terminal"
+id="verifyStatus"
+style="display:none;margin-top:8px;"
+></div>
 
-  <div class="nav">
+<div class="nav">
 
 <button
 class="cta ghost"
@@ -1478,87 +1209,90 @@ type="button"
 Verify & continue
 </button>
 
-  </div>
+</div>
 
 </section>
 
 <section
-  class="step"
-  data-step="4"
+class="step"
+data-step="4"
 >
 
-  <div class="eyebrow">
-    04 · YOUR ROAD
-  </div>
+<div class="eyebrow">
+04 · YOUR ROAD
+</div>
 
-  <div class="confirm">
+<div class="confirm">
 
 <div class="small">
-  early access secured
+early access secured
 </div>
 
 <div
-  class="spot"
-  id="finalSpot"
+class="spot"
+id="finalSpot"
 >
-  SPOT #001
+SPOT #001
 </div>
 
 <div class="rows">
 
-  <div>
-    <span>
-      handle
-    </span>
+<div>
+
+<span>
+handle
+</span>
 
 <span id="finalHandle">
-  —
+—
 </span>
-
-  </div>
-
-  <div>
-    <span>
-      wallet
-    </span>
-
-<span id="finalWallet">
-  —
-</span>
-
-  </div>
-
-  <div>
-    <span>
-      status
-    </span>
-
-<span class="green">
-  ON THE ROAD · SEALED
-</span>
-
-  </div>
 
 </div>
 
-  </div>
+<div>
 
-  <div class="final-message">
+<span>
+wallet
+</span>
 
-    <div class="final-symbol">
-      ✓
-    </div>
+<span id="finalWallet">
+—
+</span>
 
-    <div class="final-title">
-      Your Road is Sealed
-    </div>
+</div>
 
-    <div class="final-sub">
-      Your early access spot has been secured.
-      Your personal Roadmap is the next part of the journey.
-    </div>
+<div>
 
-  </div>
+<span>
+status
+</span>
+
+<span class="green">
+ON THE ROAD · SEALED
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="final-message">
+
+<div class="final-symbol">
+✓
+</div>
+
+<div class="final-title">
+Your Road is Sealed
+</div>
+
+<div class="final-sub">
+Your early access spot has been secured.
+Your personal Roadmap is the next part of the journey.
+</div>
+
+</div>
 
 <button
 class="cta accent bottom-action"
@@ -1581,7 +1315,7 @@ qualification and NFT distribution process is complete.
 </main>
 
 <footer>
-  THE ROAD PROVIDES · 100 early access spots · 1 NFT per person
+THE ROAD PROVIDES · 100 early access spots · 1 NFT per person
 </footer>
 
 </div>
@@ -1589,27 +1323,48 @@ qualification and NFT distribution process is complete.
 
 <script>
 
+/* =====================================================
+CONFIG
+===================================================== */
+
 const TOTAL = 100;
 
 const API_SPOTS = "/api/spots";
 const API_NONCE = "/api/nonce";
 const API_CLAIM = "/api/claim";
 
+/* =====================================================
+STATE
+===================================================== */
+
 let step = 1;
+
 let currentHandle = "";
+
 let selectedWallet = "";
+
 let connectedWallet = "";
+
 let connectedProvider = null;
+
 let claim = null;
 
 let participationToken = "";
+
 let participationExpiresAt = "";
 
 let walletNonce = "";
+
 let walletSignature = "";
+
 let walletMessage = "";
 
-const $ = id => document.getElementById(id);
+let metamaskSDK = null;
+
+let metamaskProvider = null;
+
+const $ = id =>
+  document.getElementById(id);
 
 const ROADMAN_SCENES = [
   "roadman-scenes/scene1.png",
@@ -1626,24 +1381,35 @@ const ROADMAN_POSITIONS = [
 ];
 
 /* =====================================================
-ROADMAN JOURNEY
+ROADMAN
 ===================================================== */
 
-function updateRoadmanJourney(n, animate = true){
+function updateRoadmanJourney(
+  n,
+  animate = true
+){
 
-  const scene = $("roadmanScene");
-  const journey = $("roadmanJourney");
+  const scene =
+    $("roadmanScene");
+
+  const journey =
+    $("roadmanJourney");
 
   if(!scene){
     return;
   }
 
-  const index = Math.max(
-    0,
-    Math.min(3,n - 1)
-  );
+  const index =
+    Math.max(
+      0,
+      Math.min(
+        3,
+        n - 1
+      )
+    );
 
-  const position = ROADMAN_POSITIONS[index];
+  const position =
+    ROADMAN_POSITIONS[index];
 
   if(journey){
 
@@ -1655,70 +1421,97 @@ function updateRoadmanJourney(n, animate = true){
     );
 
     journey.classList.add(
-      "step-" + (index + 1)
+      "step-" +
+      (index + 1)
     );
 
   }
 
-  scene.style.left = position + "%";
+  scene.style.left =
+    position + "%";
 
   if(!animate){
 
-    scene.src = ROADMAN_SCENES[index];
+    scene.src =
+      ROADMAN_SCENES[index];
 
     scene.alt =
       "The Roadman — Scene " +
       (index + 1);
 
-    scene.style.opacity = "1";
+    scene.style.opacity =
+      "1";
 
     return;
 
   }
 
-  scene.classList.add("moving");
+  scene.classList.add(
+    "moving"
+  );
 
-  scene.style.opacity = ".35";
+  scene.style.opacity =
+    ".35";
 
-  window.setTimeout(function(){
+  window.setTimeout(
+    function(){
 
-    scene.src = ROADMAN_SCENES[index];
+      scene.src =
+        ROADMAN_SCENES[index];
 
-    scene.alt =
-      "The Roadman — Scene " +
-      (index + 1);
+      scene.alt =
+        "The Roadman — Scene " +
+        (index + 1);
 
-    scene.style.opacity = "1";
+      scene.style.opacity =
+        "1";
 
-  },180);
+    },
+    180
+  );
 
-  window.setTimeout(function(){
+  window.setTimeout(
+    function(){
 
-    scene.classList.remove("moving");
+      scene.classList.remove(
+        "moving"
+      );
 
-  },700);
+    },
+    700
+  );
 
 }
 
 function animateRoadStage(){
 
-  const stage = $("pageStage");
+  const stage =
+    $("pageStage");
 
   if(!stage){
     return;
   }
 
-  stage.classList.remove("road-transition");
+  stage.classList.remove(
+    "road-transition"
+  );
 
   void stage.offsetWidth;
 
-  stage.classList.add("road-transition");
+  stage.classList.add(
+    "road-transition"
+  );
 
-  setTimeout(function(){
+  setTimeout(
+    function(){
 
-    stage.classList.remove("road-transition");
+      stage.classList.remove(
+        "road-transition"
+      );
 
-  },450);
+    },
+    450
+  );
 
 }
 
@@ -1726,9 +1519,14 @@ function animateRoadStage(){
 HELPERS
 ===================================================== */
 
-function normalizeHandle(value){
+function normalizeHandle(
+  value
+){
 
-  let v = String(value || "").trim();
+  let v =
+    String(
+      value || ""
+    ).trim();
 
   if(!v){
     return "";
@@ -1742,9 +1540,14 @@ function normalizeHandle(value){
 
 }
 
-function maskWallet(wallet){
+function maskWallet(
+  wallet
+){
 
-  if(!wallet || wallet.length <= 10){
+  if(
+    !wallet ||
+    wallet.length <= 10
+  ){
     return wallet;
   }
 
@@ -1756,10 +1559,14 @@ function maskWallet(wallet){
 
 }
 
-function isValidSolanaAddress(address){
+function isValidSolanaAddress(
+  address
+){
 
   const value =
-    String(address || "").trim();
+    String(
+      address || ""
+    ).trim();
 
   if(
     value.length < 32 ||
@@ -1768,20 +1575,25 @@ function isValidSolanaAddress(address){
     return false;
   }
 
-  return /^[1-9A-HJ-NP-Za-km-z]+$/.test(value);
+  return /^[1-9A-HJ-NP-Za-km-z]+$/
+    .test(value);
 
 }
 
-function showWalletError(message){
+function showWalletError(
+  message
+){
 
-  const errorBox =
+  const box =
     $("walletError");
 
-  errorBox.textContent =
+  box.textContent =
     message || "";
 
-  errorBox.style.display =
-    message ? "block" : "none";
+  box.style.display =
+    message
+      ? "block"
+      : "none";
 
 }
 
@@ -1798,7 +1610,9 @@ BASE58
 const BASE58_ALPHABET =
   "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
-function bytesToBase58(bytes){
+function bytesToBase58(
+  bytes
+){
 
   let digits = [0];
 
@@ -1825,7 +1639,9 @@ function bytesToBase58(bytes){
         value % 58;
 
       carry =
-        Math.floor(value / 58);
+        Math.floor(
+          value / 58
+        );
 
     }
 
@@ -1836,7 +1652,9 @@ function bytesToBase58(bytes){
       );
 
       carry =
-        Math.floor(carry / 58);
+        Math.floor(
+          carry / 58
+        );
 
     }
 
@@ -1876,12 +1694,20 @@ function bytesToBase58(bytes){
 WALLET ADDRESS
 ===================================================== */
 
-function setWalletAddress(address){
+function setWalletAddress(
+  address
+){
 
   const wallet =
-    String(address || "").trim();
+    String(
+      address || ""
+    ).trim();
 
-  if(!isValidSolanaAddress(wallet)){
+  if(
+    !isValidSolanaAddress(
+      wallet
+    )
+  ){
 
     showWalletError(
       "The connected wallet returned an invalid Solana address."
@@ -1907,44 +1733,60 @@ function setWalletAddress(address){
 STEP
 ===================================================== */
 
-function setStep(n){
+function setStep(
+  n
+){
 
-  const previousStep = step;
+  const previousStep =
+    step;
 
-  step = n;
+  step =
+    n;
 
   document
     .querySelectorAll(".step")
-    .forEach(el => {
+    .forEach(
+      el => {
 
-      el.classList.toggle(
-        "active",
-        Number(el.dataset.step) === n
-      );
+        el.classList.toggle(
+          "active",
+          Number(
+            el.dataset.step
+          ) === n
+        );
 
-    });
+      }
+    );
 
   document
     .querySelectorAll(".marker")
-    .forEach(el => {
+    .forEach(
+      el => {
 
-      const s = Number(el.dataset.step);
+        const s =
+          Number(
+            el.dataset.step
+          );
 
-      el.classList.toggle(
-        "active",
-        s === n
-      );
+        el.classList.toggle(
+          "active",
+          s === n
+        );
 
-      el.classList.toggle(
-        "done",
-        s < n
-      );
+        el.classList.toggle(
+          "done",
+          s < n
+        );
 
-    });
+      }
+    );
 
   $("fill").style.width =
     (
-      (((n - 1) / 3) * 91) +
+      (
+        ((n - 1) / 3) *
+        91
+      ) +
       8.33
     ) + "%";
 
@@ -1953,7 +1795,9 @@ function setStep(n){
     previousStep !== n
   );
 
-  if(previousStep !== n){
+  if(
+    previousStep !== n
+  ){
     animateRoadStage();
   }
 
@@ -1983,21 +1827,30 @@ async function updateSpots(){
       !response.ok ||
       !data.success
     ){
+
       throw new Error(
         "Unable to read spots."
       );
+
     }
 
     const remaining =
-      Number(data.remaining);
+      Number(
+        data.remaining
+      );
 
     $("spots").textContent =
-      remaining + " / " + TOTAL;
+      remaining +
+      " / " +
+      TOTAL;
 
     $("spotsHeader").textContent =
-      remaining + " first spots";
+      remaining +
+      " first spots";
 
-    if(remaining <= 0){
+    if(
+      remaining <= 0
+    ){
 
       $("enterBtn").disabled =
         true;
@@ -2031,11 +1884,15 @@ function validHandle(){
     $("handle");
 
   const value =
-    normalizeHandle(input.value);
+    normalizeHandle(
+      input.value
+    );
 
   if(!value){
 
-    input.classList.add("invalid");
+    input.classList.add(
+      "invalid"
+    );
 
     $("handleError").textContent =
       "Enter your X handle to continue.";
@@ -2047,7 +1904,9 @@ function validHandle(){
 
     setTimeout(
       () =>
-        input.classList.remove("invalid"),
+        input.classList.remove(
+          "invalid"
+        ),
       350
     );
 
@@ -2074,8 +1933,12 @@ function validHandle(){
 $("enterBtn").onclick =
   function(){
 
-    if(validHandle()){
+    if(
+      validHandle()
+    ){
+
       setStep(2);
+
     }
 
   };
@@ -2084,7 +1947,10 @@ $("handle").addEventListener(
   "keydown",
   function(event){
 
-    if(event.key === "Enter"){
+    if(
+      event.key ===
+      "Enter"
+    ){
 
       event.preventDefault();
 
@@ -2111,41 +1977,54 @@ $("sealBtn").onclick =
   };
 
 /* =====================================================
-BACK BUTTONS
+BACK
 ===================================================== */
 
 document
-  .querySelectorAll("[data-back]")
-  .forEach(button => {
+  .querySelectorAll(
+    "[data-back]"
+  )
+  .forEach(
+    button => {
 
-    button.onclick =
-      function(){
+      button.onclick =
+        function(){
 
-        setStep(
-          Number(button.dataset.back)
-        );
+          setStep(
+            Number(
+              button.dataset.back
+            )
+          );
 
-      };
+        };
 
-  });
+    }
+  );
 
 /* =====================================================
-RESET SIGNATURE STATE
+RESET
 ===================================================== */
 
 function resetWalletProof(){
 
-  walletNonce = "";
-  walletSignature = "";
-  walletMessage = "";
+  walletNonce =
+    "";
+
+  walletSignature =
+    "";
+
+  walletMessage =
+    "";
 
 }
 
 /* =====================================================
-GET NONCE
+NONCE
 ===================================================== */
 
-async function requestNonce(wallet){
+async function requestNonce(
+  wallet
+){
 
   const response =
     await fetch(
@@ -2158,7 +2037,7 @@ async function requestNonce(wallet){
         },
         cache:"no-store",
         body:JSON.stringify({
-          wallet:wallet
+          wallet
         })
       }
     );
@@ -2206,10 +2085,14 @@ async function requestNonce(wallet){
   }
 
   walletNonce =
-    String(data.nonce);
+    String(
+      data.nonce
+    );
 
   walletMessage =
-    String(data.message);
+    String(
+      data.message
+    );
 
   return data;
 
@@ -2238,11 +2121,10 @@ async function signWalletMessage(){
   }
 
   const encodedMessage =
-    new TextEncoder().encode(
-      walletMessage
-    );
-
-  let signed;
+    new TextEncoder()
+      .encode(
+        walletMessage
+      );
 
   if(
     typeof connectedProvider.signMessage !==
@@ -2255,11 +2137,12 @@ async function signWalletMessage(){
 
   }
 
-  signed =
-    await connectedProvider.signMessage(
-      encodedMessage,
-      "utf8"
-    );
+  const signed =
+    await connectedProvider
+      .signMessage(
+        encodedMessage,
+        "utf8"
+      );
 
   const signatureBytes =
     signed?.signature ||
@@ -2267,7 +2150,8 @@ async function signWalletMessage(){
 
   if(
     !signatureBytes ||
-    typeof signatureBytes.length !== "number"
+    typeof signatureBytes.length !==
+      "number"
   ){
 
     throw new Error(
@@ -2299,7 +2183,9 @@ async function signWalletMessage(){
 WALLET UI
 ===================================================== */
 
-function prepareWalletUI(name){
+function prepareWalletUI(
+  name
+){
 
   clearWalletError();
 
@@ -2311,9 +2197,6 @@ function prepareWalletUI(name){
 
   $("verifyStatus").style.display =
     "block";
-
-  $("verifyStatus").className =
-    "terminal";
 
   $("verifyBtn").disabled =
     true;
@@ -2331,14 +2214,16 @@ function prepareWalletUI(name){
 
   document
     .querySelectorAll(".wallet")
-    .forEach(button => {
+    .forEach(
+      button => {
 
-      button.classList.remove(
-        "selected",
-        "connected"
-      );
+        button.classList.remove(
+          "selected",
+          "connected"
+        );
 
-    });
+      }
+    );
 
   document
     .querySelector(
@@ -2346,7 +2231,9 @@ function prepareWalletUI(name){
       name +
       '"]'
     )
-    ?.classList.add("selected");
+    ?.classList.add(
+      "selected"
+    );
 
 }
 
@@ -2356,7 +2243,9 @@ PHANTOM
 
 async function connectPhantom(){
 
-  prepareWalletUI("Phantom");
+  prepareWalletUI(
+    "Phantom"
+  );
 
   const status =
     $("verifyStatus");
@@ -2394,9 +2283,15 @@ async function connectPhantom(){
 
     const address =
       publicKey?.toString?.() ||
-      String(publicKey || "");
+      String(
+        publicKey || ""
+      );
 
-    if(!setWalletAddress(address)){
+    if(
+      !setWalletAddress(
+        address
+      )
+    ){
 
       connectedProvider =
         null;
@@ -2412,7 +2307,9 @@ async function connectPhantom(){
       .querySelector(
         '[data-wallet="Phantom"]'
       )
-      ?.classList.add("connected");
+      ?.classList.add(
+        "connected"
+      );
 
     $("walletHint").textContent =
       "Phantom connected. Requesting secure verification...";
@@ -2422,14 +2319,18 @@ async function connectPhantom(){
 
     $("walletState").innerHTML =
       "<strong>PHANTOM CONNECTED</strong><br>" +
-      maskWallet(address);
+      maskWallet(
+        address
+      );
 
     status.textContent =
       "> requesting secure verification...";
 
     resetWalletProof();
 
-    await requestNonce(address);
+    await requestNonce(
+      address
+    );
 
     status.textContent =
       "> sign the verification message in Phantom...";
@@ -2486,7 +2387,9 @@ SOLFLARE
 
 async function connectSolflare(){
 
-  prepareWalletUI("Solflare");
+  prepareWalletUI(
+    "Solflare"
+  );
 
   const status =
     $("verifyStatus");
@@ -2501,7 +2404,8 @@ async function connectSolflare(){
 
     if(
       !provider ||
-      typeof provider.connect !== "function"
+      typeof provider.connect !==
+        "function"
     ){
 
       throw new Error(
@@ -2520,9 +2424,15 @@ async function connectSolflare(){
 
     const address =
       publicKey?.toString?.() ||
-      String(publicKey || "");
+      String(
+        publicKey || ""
+      );
 
-    if(!setWalletAddress(address)){
+    if(
+      !setWalletAddress(
+        address
+      )
+    ){
 
       connectedProvider =
         null;
@@ -2538,7 +2448,9 @@ async function connectSolflare(){
       .querySelector(
         '[data-wallet="Solflare"]'
       )
-      ?.classList.add("connected");
+      ?.classList.add(
+        "connected"
+      );
 
     $("walletHint").textContent =
       "Solflare connected. Requesting secure verification...";
@@ -2548,14 +2460,18 @@ async function connectSolflare(){
 
     $("walletState").innerHTML =
       "<strong>SOLFLARE CONNECTED</strong><br>" +
-      maskWallet(address);
+      maskWallet(
+        address
+      );
 
     status.textContent =
       "> requesting secure verification...";
 
     resetWalletProof();
 
-    await requestNonce(address);
+    await requestNonce(
+      address
+    );
 
     status.textContent =
       "> sign the verification message in Solflare...";
@@ -2607,12 +2523,156 @@ async function connectSolflare(){
 }
 
 /* =====================================================
-METAMASK SOLANA
+METAMASK SDK
+===================================================== */
+
+async function initMetaMask(){
+
+  if(
+    metamaskSDK
+  ){
+
+    return metamaskSDK;
+
+  }
+
+  if(
+    !window.MetaMaskSDK ||
+    !window.MetaMaskSDK.MetaMaskSDK
+  ){
+
+    throw new Error(
+      "MetaMask Connect SDK could not be loaded."
+    );
+
+  }
+
+  metamaskSDK =
+    new window.MetaMaskSDK.MetaMaskSDK({
+
+      dappMetadata:{
+        name:
+          "THE ROAD PROVIDES",
+        url:
+          window.location.origin,
+        iconUrls:[
+          new URL(
+            "desert_roadman_badge.png",
+            window.location.href
+          ).href
+        ]
+      },
+
+      checkInstallationImmediately:
+        false,
+
+      i18nOptions:{
+        enabled:
+          true
+      },
+
+      logging:{
+        sdk:
+          false
+      }
+
+    });
+
+  await metamaskSDK.init();
+
+  metamaskProvider =
+    metamaskSDK.getProvider();
+
+  return metamaskSDK;
+
+}
+
+/* =====================================================
+EXTRACT SOLANA PROVIDER
+===================================================== */
+
+function findMetaMaskSolanaProvider(){
+
+  /*
+    Current MetaMask Connect can expose a multichain
+    provider. We first check the direct Solana namespace.
+  */
+
+  if(
+    metamaskProvider?.solana
+  ){
+
+    return metamaskProvider.solana;
+
+  }
+
+  if(
+    metamaskProvider?.providers &&
+    Array.isArray(
+      metamaskProvider.providers
+    )
+  ){
+
+    const solanaProvider =
+      metamaskProvider.providers.find(
+        provider =>
+          provider &&
+          (
+            provider.isMetaMask ||
+            provider.isMetaMaskSolana
+          ) &&
+          typeof provider.signMessage ===
+            "function"
+      );
+
+    if(
+      solanaProvider
+    ){
+
+      return solanaProvider;
+
+    }
+
+  }
+
+  /*
+    Some browser builds expose a Solana provider
+    after MetaMask has been initialized.
+  */
+
+  if(
+    window.metamask?.solana &&
+    typeof window.metamask.solana.signMessage ===
+      "function"
+  ){
+
+    return window.metamask.solana;
+
+  }
+
+  if(
+    window.solana?.isMetaMask &&
+    typeof window.solana.signMessage ===
+      "function"
+  ){
+
+    return window.solana;
+
+  }
+
+  return null;
+
+}
+
+/* =====================================================
+METAMASK
 ===================================================== */
 
 async function connectMetaMask(){
 
-  prepareWalletUI("MetaMask");
+  prepareWalletUI(
+    "MetaMask"
+  );
 
   const status =
     $("verifyStatus");
@@ -2622,113 +2682,68 @@ async function connectMetaMask(){
 
   try{
 
-    /*
-      MetaMask's Solana integration can expose a
-      Wallet Standard-compatible provider.
+    await initMetaMask();
 
-      We intentionally do NOT use window.ethereum here.
-      window.ethereum is the EVM provider and cannot
-      be treated as a Solana wallet for this claim.
+    /*
+      MetaMask Connect establishes the connection.
     */
 
-    let provider = null;
+    let accounts = [];
 
     if(
-      window.metamask?.solana
+      typeof metamaskSDK.connect ===
+        "function"
     ){
-      provider =
-        window.metamask.solana;
-    }
 
-    if(
-      !provider &&
-      window.metaMaskSolana
-    ){
-      provider =
-        window.metaMaskSolana;
-    }
+      accounts =
+        await metamaskSDK.connect();
 
-    if(
-      !provider &&
-      window.solana?.isMetaMask
-    ){
-      provider =
-        window.solana;
     }
 
     /*
-      Wallet Standard providers may be exposed through
-      the Solana wallet-standard registry.
-
-      We use it when available.
+      Some SDK versions return the provider accounts
+      directly.
     */
 
-    if(!provider){
+    if(
+      !Array.isArray(accounts) &&
+      accounts?.accounts
+    ){
 
-      const registry =
-        window.__walletStandardRegistry;
-
-      if(registry){
-
-        const wallets =
-          registry.get?.() ||
-          registry.getWallets?.()?.get?.() ||
-          [];
-
-        const list =
-          Array.from(wallets || []);
-
-        const meta =
-          list.find(wallet => {
-
-            const name =
-              String(
-                wallet?.name ||
-                wallet?.metadata?.name ||
-                ""
-              ).toLowerCase();
-
-            const rdns =
-              String(
-                wallet?.rdns ||
-                wallet?.metadata?.rdns ||
-                ""
-              ).toLowerCase();
-
-            return (
-              name.includes("metamask") ||
-              rdns.includes("metamask")
-            );
-
-          });
-
-        if(meta){
-          provider = meta;
-        }
-
-      }
+      accounts =
+        accounts.accounts;
 
     }
+
+    /*
+      Solana provider may become available after
+      MetaMask Connect has been initialized.
+    */
+
+    const provider =
+      findMetaMaskSolanaProvider();
 
     if(!provider){
 
       throw new Error(
-        "MetaMask Solana was not detected. Install or update MetaMask with Solana support, then reload this page."
+        "MetaMask connected, but its Solana wallet provider was not exposed by this browser session. Open MetaMask, make sure Solana is enabled, then try again."
       );
 
     }
 
+    connectedProvider =
+      provider;
+
+    let address = "";
+
     /*
-      Direct Solana-style provider.
+      Direct Solana provider.
     */
 
     if(
-      typeof provider.connect === "function" &&
-      typeof provider.signMessage === "function"
+      typeof provider.connect ===
+        "function"
     ){
-
-      connectedProvider =
-        provider;
 
       const response =
         await provider.connect();
@@ -2737,165 +2752,87 @@ async function connectMetaMask(){
         response?.publicKey ||
         provider.publicKey;
 
-      const address =
+      address =
         publicKey?.toString?.() ||
-        String(publicKey || "");
-
-      if(!setWalletAddress(address)){
-
-        connectedProvider =
-          null;
-
-        return false;
-
-      }
-
-      selectedWallet =
-        "MetaMask";
-
-      document
-        .querySelector(
-          '[data-wallet="MetaMask"]'
-        )
-        ?.classList.add("connected");
-
-      $("walletHint").textContent =
-        "MetaMask connected. Requesting secure verification...";
-
-      $("walletState").style.display =
-        "block";
-
-      $("walletState").innerHTML =
-        "<strong>METAMASK CONNECTED</strong><br>" +
-        maskWallet(address);
-
-      status.textContent =
-        "> requesting secure verification...";
-
-      resetWalletProof();
-
-      await requestNonce(address);
-
-      status.textContent =
-        "> sign the verification message in MetaMask...";
-
-      await signWalletMessage();
-
-      status.textContent =
-        "> wallet signature received. Ready to verify.";
-
-      $("verifyBtn").disabled =
-        false;
-
-      $("walletHint").textContent =
-        "Wallet control verified by signature.";
-
-      return true;
+        String(
+          publicKey || ""
+        );
 
     }
 
     /*
-      Wallet Standard wallet object.
-
-      We look for a Solana signMessage feature.
+      Fallback to accounts returned by MetaMask SDK.
     */
 
-    const wallet =
-      provider;
-
-    const accounts =
-      wallet.accounts ||
-      [];
-
-    let account =
-      accounts[0];
-
     if(
-      !account &&
-      typeof wallet.features?.["standard:connect"]?.connect ===
-      "function"
+      !address &&
+      Array.isArray(accounts)
     ){
 
-      const result =
-        await wallet.features[
-          "standard:connect"
-        ].connect();
-
-      account =
-        result?.accounts?.[0];
-
-    }
-
-    if(!account){
-
-      throw new Error(
-        "MetaMask connected but did not return a Solana account."
-      );
-
-    }
-
-    const address =
-      String(
-        account.address ||
-        account.publicKey ||
-        ""
-      );
-
-    if(!setWalletAddress(address)){
-
-      throw new Error(
-        "MetaMask returned an invalid Solana address."
-      );
-
-    }
-
-    const signFeature =
-      wallet.features?.[
-        "solana:signMessage"
-      ] ||
-      wallet.features?.[
-        "solana:signAndSendTransaction"
-      ];
-
-    if(
-      !wallet.features?.[
-        "solana:signMessage"
-      ]
-    ){
-
-      throw new Error(
-        "This MetaMask Solana connection does not expose message signing."
-      );
-
-    }
-
-    connectedProvider = {
-
-      async signMessage(message){
-
-        const result =
-          await wallet.features[
-            "solana:signMessage"
-          ].signMessage({
-
-            account,
-
-            message
-
-          });
-
-        const item =
-          result?.[0] ||
-          result;
-
-        return (
-          item?.signature ||
-          item
+      const solanaAccount =
+        accounts.find(
+          account =>
+            typeof account ===
+              "string" &&
+            isValidSolanaAddress(
+              account
+            )
         );
+
+      if(
+        solanaAccount
+      ){
+
+        address =
+          solanaAccount;
 
       }
 
-    };
+    }
+
+    /*
+      Wallet Standard account fallback.
+    */
+
+    if(
+      !address &&
+      Array.isArray(
+        provider.accounts
+      )
+    ){
+
+      const account =
+        provider.accounts[0];
+
+      address =
+        account?.address ||
+        account?.publicKey?.toString?.() ||
+        "";
+
+    }
+
+    if(
+      !setWalletAddress(
+        address
+      )
+    ){
+
+      throw new Error(
+        "MetaMask did not return a valid Solana wallet address."
+      );
+
+    }
+
+    if(
+      typeof provider.signMessage !==
+        "function"
+    ){
+
+      throw new Error(
+        "MetaMask connected to Solana, but message signing is not available in this browser."
+      );
+
+    }
 
     selectedWallet =
       "MetaMask";
@@ -2904,7 +2841,9 @@ async function connectMetaMask(){
       .querySelector(
         '[data-wallet="MetaMask"]'
       )
-      ?.classList.add("connected");
+      ?.classList.add(
+        "connected"
+      );
 
     $("walletHint").textContent =
       "MetaMask connected. Requesting secure verification...";
@@ -2914,14 +2853,18 @@ async function connectMetaMask(){
 
     $("walletState").innerHTML =
       "<strong>METAMASK CONNECTED</strong><br>" +
-      maskWallet(address);
+      maskWallet(
+        address
+      );
 
     status.textContent =
       "> requesting secure verification...";
 
     resetWalletProof();
 
-    await requestNonce(address);
+    await requestNonce(
+      address
+    );
 
     status.textContent =
       "> sign the verification message in MetaMask...";
@@ -2949,6 +2892,9 @@ async function connectMetaMask(){
     connectedProvider =
       null;
 
+    metamaskProvider =
+      null;
+
     resetWalletProof();
 
     $("verifyBtn").disabled =
@@ -2973,96 +2919,57 @@ async function connectMetaMask(){
 }
 
 /* =====================================================
-WALLET SELECTION
+WALLET BUTTONS
 ===================================================== */
 
 document
   .querySelectorAll(".wallet")
-  .forEach(button => {
+  .forEach(
+    button => {
 
-    button.onclick =
-      async function(){
+      button.onclick =
+        async function(){
 
-        selectedWallet =
-          button.dataset.wallet;
+          selectedWallet =
+            button.dataset.wallet;
 
-        clearWalletError();
+          if(
+            selectedWallet ===
+            "Phantom"
+          ){
 
-        $("walletInput").value =
-          "";
+            await connectPhantom();
 
-        $("walletBox").style.display =
-          "block";
+            return;
 
-        $("walletState").style.display =
-          "none";
+          }
 
-        $("verifyStatus").style.display =
-          "block";
+          if(
+            selectedWallet ===
+            "Solflare"
+          ){
 
-        $("verifyBtn").disabled =
-          true;
+            await connectSolflare();
 
-        $("verifyBtn").textContent =
-          "Verify & continue";
+            return;
 
-        connectedProvider =
-          null;
+          }
 
-        connectedWallet =
-          "";
+          if(
+            selectedWallet ===
+            "MetaMask"
+          ){
 
-        resetWalletProof();
+            await connectMetaMask();
 
-        document
-          .querySelectorAll(".wallet")
-          .forEach(b =>
-            b.classList.remove(
-              "selected",
-              "connected"
-            )
-          );
+            return;
 
-        button.classList.add(
-          "selected"
-        );
+          }
 
-        if(selectedWallet === "Phantom"){
+        };
 
-          $("walletHint").textContent =
-            "Connecting to Phantom...";
-
-          await connectPhantom();
-
-          return;
-
-        }
-
-        if(selectedWallet === "Solflare"){
-
-          $("walletHint").textContent =
-            "Connecting to Solflare...";
-
-          await connectSolflare();
-
-          return;
-
-        }
-
-        if(selectedWallet === "MetaMask"){
-
-          $("walletHint").textContent =
-            "Connecting to MetaMask...";
-
-          await connectMetaMask();
-
-          return;
-
-        }
-
-      };
-
-  });
+    }
+  );
 
 /* =====================================================
 CLAIM
@@ -3119,14 +3026,6 @@ async function submitClaim(
 
     }
 
-    await new Promise(
-      resolve =>
-        setTimeout(
-          resolve,
-          250
-        )
-    );
-
     status.textContent =
       "> verifying wallet signature...";
 
@@ -3141,10 +3040,19 @@ async function submitClaim(
           },
           cache:"no-store",
           body:JSON.stringify({
-            x_handle:handle,
-            wallet:wallet,
-            nonce:nonce,
-            signature:signature
+
+            x_handle:
+              handle,
+
+            wallet:
+              wallet,
+
+            nonce:
+              nonce,
+
+            signature:
+              signature
+
           })
         }
       );
@@ -3217,7 +3125,7 @@ async function submitClaim(
 }
 
 /* =====================================================
-VERIFY + CLAIM
+VERIFY
 ===================================================== */
 
 $("verifyBtn").onclick =
@@ -3229,7 +3137,9 @@ $("verifyBtn").onclick =
         .trim();
 
     if(
-      !isValidSolanaAddress(wallet)
+      !isValidSolanaAddress(
+        wallet
+      )
     ){
 
       showWalletError(
@@ -3320,7 +3230,8 @@ $("verifyBtn").onclick =
       result.participation.token;
 
     participationExpiresAt =
-      result.participation.expires_at || "";
+      result.participation.expires_at ||
+      "";
 
     if(!claim){
 
@@ -3340,14 +3251,20 @@ $("verifyBtn").onclick =
 
     $("finalSpot").textContent =
       "SPOT #" +
-      String(claim.spot)
-        .padStart(3,"0");
+      String(
+        claim.spot
+      ).padStart(
+        3,
+        "0"
+      );
 
     $("finalHandle").textContent =
       claim.x_handle;
 
     $("finalWallet").textContent =
-      maskWallet(claim.wallet);
+      maskWallet(
+        claim.wallet
+      );
 
     await updateSpots();
 
@@ -3363,21 +3280,8 @@ $("roadmapBtn").onclick =
   function(){
 
     /*
-      IMPORTANT:
-
-      participationToken remains only in memory.
-
-      A normal navigation to roadmap.html would destroy
-      this JavaScript state.
-
-      The roadmap page therefore cannot rely on this
-      variable directly. The secure handoff should be
-      completed server-side using a one-time exchange
-      endpoint before production launch.
-
-      For now the navigation preserves the intended
-      page architecture without exposing the token
-      in the URL or browser storage.
+      Do NOT put participationToken in the URL.
+      The secure handoff will be handled server-side.
     */
 
     window.location.assign(
@@ -3392,28 +3296,32 @@ MARKERS
 
 document
   .querySelectorAll(".marker")
-  .forEach(marker => {
+  .forEach(
+    marker => {
 
-    marker.onclick =
-      function(){
+      marker.onclick =
+        function(){
 
-        const n =
-          Number(
-            marker.dataset.step
-          );
+          const n =
+            Number(
+              marker.dataset.step
+            );
 
-        if(n <= step){
+          if(
+            n <= step
+          ){
 
-          setStep(n);
+            setStep(n);
 
-        }
+          }
 
-      };
+        };
 
-  });
+    }
+  );
 
 /* =====================================================
-INITIALIZE
+INIT
 ===================================================== */
 
 updateRoadmanJourney(
