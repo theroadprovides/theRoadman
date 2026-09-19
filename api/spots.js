@@ -28,7 +28,7 @@ function json(res, statusCode, data) {
 // MAIN
 // =====================================================
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
 
   // ---------------------------------------------------
   // OPTIONS
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
   if (req.method !== "GET") {
     return json(res, 405, {
       success: false,
-      error: "Method not allowed."
+      error: "METHOD_NOT_ALLOWED"
     });
   }
 
@@ -57,29 +57,28 @@ export default async function handler(req, res) {
   if (!process.env.DATABASE_URL) {
     return json(res, 500, {
       success: false,
-      error: "DATABASE_URL is not configured."
+      error: "DATABASE_NOT_CONFIGURED"
     });
   }
 
   try {
-
     const sql = neon(
       process.env.DATABASE_URL
     );
 
     // =================================================
-    // COUNT CLAIMS
+    // COUNT ACTIVE SPOTS
+    //
+    // ONLY HOLDING PARTICIPANTS OCCUPY A SPOT.
+    //
+    // DISQUALIFIED records remain in the database
+    // as history, but their Spot becomes available.
     // =================================================
 
     const result = await sql`
-
       SELECT COUNT(*)::int AS claimed
-
       FROM roadman_claims
-
-      WHERE
-        status = 'claimed'
-
+      WHERE holding_status = 'HOLDING'
     `;
 
     const claimed = Math.max(
@@ -100,18 +99,10 @@ export default async function handler(req, res) {
     // =================================================
 
     return json(res, 200, {
-
       success: true,
-
-      total:
-        TOTAL_SPOTS,
-
-      claimed:
-        claimed,
-
-      remaining:
-        remaining
-
+      total: TOTAL_SPOTS,
+      claimed,
+      remaining
     });
 
   } catch (error) {
@@ -122,14 +113,8 @@ export default async function handler(req, res) {
     );
 
     return json(res, 500, {
-
       success: false,
-
-      error:
-        "Unable to read Roadman spots."
-
+      error: "UNABLE_TO_READ_SPOTS"
     });
-
   }
-
-}
+};
