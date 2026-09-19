@@ -6,11 +6,8 @@ const { neon } = require("@neondatabase/serverless");
 
 const TOTAL_SPOTS = 100;
 
-// Quantidade mínima de $ROAD necessária.
-//
-// Durante os testes: 30
-// Antes do lançamento, você poderá alterar aqui.
-//
+// TESTE ATUAL
+// PRODUÇÃO: alterar para 3_000_000
 const MIN_ROAD_REQUIRED = 30;
 
 const TOKEN_MINT =
@@ -19,13 +16,11 @@ const TOKEN_MINT =
 const SOLANA_RPC =
   "https://api.mainnet-beta.solana.com";
 
-
 // =====================================================
 // RESPONSE
 // =====================================================
 
 function json(res, status, data) {
-
   res.status(status);
 
   res.setHeader(
@@ -56,26 +51,21 @@ function json(res, status, data) {
   return res.json(data);
 }
 
-
 // =====================================================
 // WALLET
 // =====================================================
 
 function normalizeWallet(wallet) {
-
   return String(
     wallet || ""
   ).trim();
-
 }
-
 
 // =====================================================
 // SOLANA BALANCE
 // =====================================================
 
 async function getRoadBalance(wallet) {
-
   const response =
     await fetch(
       SOLANA_RPC,
@@ -87,77 +77,59 @@ async function getRoadBalance(wallet) {
             "application/json"
         },
 
-        body:
-          JSON.stringify({
+        body: JSON.stringify({
+          jsonrpc: "2.0",
 
-            jsonrpc:
-              "2.0",
+          id: 1,
 
-            id:
-              1,
+          method:
+            "getTokenAccountsByOwner",
 
-            method:
-              "getTokenAccountsByOwner",
+          params: [
+            wallet,
 
-            params: [
+            {
+              mint:
+                TOKEN_MINT
+            },
 
-              wallet,
+            {
+              encoding:
+                "jsonParsed",
 
-              {
-                mint:
-                  TOKEN_MINT
-              },
-
-              {
-                encoding:
-                  "jsonParsed",
-
-                commitment:
-                  "finalized"
-              }
-
-            ]
-
-          })
+              commitment:
+                "finalized"
+            }
+          ]
+        })
       }
     );
 
-
   if (!response.ok) {
-
     throw new Error(
       `Solana RPC returned HTTP ${response.status}`
     );
-
   }
-
 
   const data =
     await response.json();
 
-
   if (data.error) {
-
     throw new Error(
       data.error.message ||
       "Solana RPC error."
     );
-
   }
-
 
   const accounts =
     data.result?.value || [];
 
-
   let totalBalance = 0;
-
 
   for (
     const account
     of accounts
   ) {
-
     const amount =
       account
         ?.account
@@ -165,31 +137,38 @@ async function getRoadBalance(wallet) {
         ?.parsed
         ?.info
         ?.tokenAmount
-        ?.uiAmount;
+        ?.uiAmountString;
 
+    if (amount) {
+      const parsedAmount =
+        Number(amount);
 
-    if (
-      typeof amount === "number" &&
-      Number.isFinite(amount)
-    ) {
-
-      totalBalance += amount;
-
+      if (
+        Number.isFinite(
+          parsedAmount
+        )
+      ) {
+        totalBalance +=
+          parsedAmount;
+      }
     }
-
   }
 
-
-  return totalBalance;
-
+  return Number.isFinite(
+    totalBalance
+  )
+    ? totalBalance
+    : 0;
 }
-
 
 // =====================================================
 // MAIN
 // =====================================================
 
-export default async function handler(req, res) {
+module.exports = async function handler(
+  req,
+  res
+) {
 
   // ===================================================
   // OPTIONS
@@ -198,13 +177,9 @@ export default async function handler(req, res) {
   if (
     req.method === "OPTIONS"
   ) {
-
     res.status(204);
-
     return res.end();
-
   }
-
 
   // ===================================================
   // METHOD
@@ -214,23 +189,16 @@ export default async function handler(req, res) {
     req.method !== "GET" &&
     req.method !== "POST"
   ) {
-
     return json(
       res,
       405,
       {
-
-        success:
-          false,
-
+        success: false,
         error:
           "Method not allowed."
-
       }
     );
-
   }
-
 
   // ===================================================
   // DATABASE
@@ -239,23 +207,16 @@ export default async function handler(req, res) {
   if (
     !process.env.DATABASE_URL
   ) {
-
     return json(
       res,
       500,
       {
-
-        success:
-          false,
-
+        success: false,
         error:
           "DATABASE_URL is not configured."
-
       }
     );
-
   }
-
 
   try {
 
@@ -264,7 +225,6 @@ export default async function handler(req, res) {
         process.env.DATABASE_URL
       );
 
-
     // =================================================
     // FIND CURRENT HOLDERS
     // =================================================
@@ -272,7 +232,6 @@ export default async function handler(req, res) {
     const holders =
       await sql`
         SELECT
-
           id,
           spot,
           x_handle,
@@ -285,16 +244,10 @@ export default async function handler(req, res) {
           disqualified_at,
           nft_number,
           nft_status
-
         FROM roadman_claims
-
-        WHERE
-          holding_status = 'HOLDING'
-
-        ORDER BY
-          spot ASC
+        WHERE holding_status = 'HOLDING'
+        ORDER BY spot ASC
       `;
-
 
     // =================================================
     // NO HOLDERS
@@ -303,14 +256,11 @@ export default async function handler(req, res) {
     if (
       !holders.length
     ) {
-
       return json(
         res,
         200,
         {
-
-          success:
-            true,
+          success: true,
 
           minimum_required:
             MIN_ROAD_REQUIRED,
@@ -321,29 +271,21 @@ export default async function handler(req, res) {
           total_spots:
             TOTAL_SPOTS,
 
-          checked:
-            0,
+          checked: 0,
 
-          holding:
-            0,
+          holding: 0,
 
-          disqualified:
-            0,
+          disqualified: 0,
 
-          qualified:
-            0,
+          qualified: 0,
 
-          results:
-            [],
+          results: [],
 
           message:
             "No holders currently in HOLDING status."
-
         }
       );
-
     }
-
 
     // =================================================
     // RESULTS
@@ -356,7 +298,6 @@ export default async function handler(req, res) {
     let disqualifiedCount = 0;
 
     let qualifiedCount = 0;
-
 
     // =================================================
     // CHECK EACH HOLDER
@@ -372,14 +313,12 @@ export default async function handler(req, res) {
           holder.wallet
         );
 
-
       try {
 
         const balance =
           await getRoadBalance(
             wallet
           );
-
 
         // =============================================
         // STILL HOLDING / QUALIFIED
@@ -393,9 +332,7 @@ export default async function handler(req, res) {
           const updated =
             await sql`
               UPDATE roadman_claims
-
               SET
-
                 final_balance =
                   ${balance},
 
@@ -410,13 +347,10 @@ export default async function handler(req, res) {
 
                 disqualified_at =
                   NULL
-
               WHERE
                 id =
                 ${holder.id}
-
               RETURNING
-
                 id,
                 spot,
                 x_handle,
@@ -428,14 +362,11 @@ export default async function handler(req, res) {
                 nft_status
             `;
 
-
           holdingCount++;
 
           qualifiedCount++;
 
-
           results.push({
-
             id:
               Number(
                 updated[0].id
@@ -472,14 +403,10 @@ export default async function handler(req, res) {
 
             nft_status:
               updated[0].nft_status
-
           });
 
-
           continue;
-
         }
-
 
         // =============================================
         // DISQUALIFIED
@@ -488,9 +415,7 @@ export default async function handler(req, res) {
         const updated =
           await sql`
             UPDATE roadman_claims
-
             SET
-
               final_balance =
                 ${balance},
 
@@ -499,13 +424,10 @@ export default async function handler(req, res) {
 
               disqualified_at =
                 NOW()
-
             WHERE
               id =
-              ${holder.id}
-
+                ${holder.id}
             RETURNING
-
               id,
               spot,
               x_handle,
@@ -518,12 +440,9 @@ export default async function handler(req, res) {
               nft_status
           `;
 
-
         disqualifiedCount++;
 
-
         results.push({
-
           id:
             Number(
               updated[0].id
@@ -563,7 +482,6 @@ export default async function handler(req, res) {
 
           nft_status:
             updated[0].nft_status
-
         });
 
       } catch (holderError) {
@@ -573,7 +491,6 @@ export default async function handler(req, res) {
         // =============================================
 
         results.push({
-
           id:
             Number(
               holder.id
@@ -599,25 +516,31 @@ export default async function handler(req, res) {
           error:
             holderError.message ||
             "Could not verify wallet."
-
         });
-
       }
-
     }
-
 
     // =================================================
     // AVAILABLE SPOTS
     // =================================================
 
+    /*
+     * IMPORTANT:
+     *
+     * Neste momento, um spot continua pertencendo
+     * ao registro original mesmo depois de uma
+     * desqualificação.
+     *
+     * A redistribuição/reclaim dos spots será tratada
+     * separadamente quando definirmos a regra final.
+     */
+
     const availableSpots =
       Math.max(
         0,
         TOTAL_SPOTS -
-        holdingCount
+        holders.length
       );
-
 
     // =================================================
     // RESPONSE
@@ -627,9 +550,7 @@ export default async function handler(req, res) {
       res,
       200,
       {
-
-        success:
-          true,
+        success: true,
 
         token_mint:
           TOKEN_MINT,
@@ -657,10 +578,8 @@ export default async function handler(req, res) {
 
         results:
           results
-
       }
     );
-
 
   } catch (error) {
 
@@ -669,22 +588,16 @@ export default async function handler(req, res) {
       error
     );
 
-
     return json(
       res,
       500,
       {
-
-        success:
-          false,
+        success: false,
 
         error:
           error.message ||
           "Internal server error."
-
       }
     );
-
   }
-
-}
+};
