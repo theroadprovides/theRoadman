@@ -871,21 +871,6 @@ NFT
 }
 
 /* =====================================================
-TEST MODE
-===================================================== */
-
-.test-mode{
-  display:none;
-  margin-top:10px;
-  padding:7px 10px;
-  border:1px solid rgba(255,90,31,.35);
-  border-radius:8px;
-  font:9px var(--mono);
-  color:var(--orange);
-  text-align:center;
-}
-
-/* =====================================================
 FOOTER
 ===================================================== */
 
@@ -1154,10 +1139,10 @@ oncontextmenu="return false"
   <div class="avatar">
 
 <img
-  src="desert_roadman_badge.png"
-  alt="The Roadman"
-  draggable="false"
-  oncontextmenu="return false"
+src="desert_roadman_badge.png"
+alt="The Roadman"
+draggable="false"
+oncontextmenu="return false"
 >
 
   </div>
@@ -1225,39 +1210,39 @@ Buy $ROAD
   <div class="markers">
 
 <button
-  class="marker active"
-  data-step="1"
-  type="button"
+class="marker active"
+data-step="1"
+type="button"
 >
-  <span class="dot"></span>
-  <span class="marker-label">Enter</span>
+<span class="dot"></span>
+<span class="marker-label">Enter</span>
 </button>
 
 <button
-  class="marker"
-  data-step="2"
-  type="button"
+class="marker"
+data-step="2"
+type="button"
 >
-  <span class="dot"></span>
-  <span class="marker-label">Seal</span>
+<span class="dot"></span>
+<span class="marker-label">Seal</span>
 </button>
 
 <button
-  class="marker"
-  data-step="3"
-  type="button"
+class="marker"
+data-step="3"
+type="button"
 >
-  <span class="dot"></span>
-  <span class="marker-label">Wallet</span>
+<span class="dot"></span>
+<span class="marker-label">Wallet</span>
 </button>
 
 <button
-  class="marker"
-  data-step="4"
-  type="button"
+class="marker"
+data-step="4"
+type="button"
 >
-  <span class="dot"></span>
-  <span class="marker-label">Sealed</span>
+<span class="dot"></span>
+<span class="marker-label">Sealed</span>
 </button>
 
   </div>
@@ -1286,36 +1271,36 @@ Buy $ROAD
 
   <div class="terminal">
 
-> spots remaining:
+spots remaining:
 <span
-  class="ready"
-  id="spots"
+class="ready"
+id="spots"
 >
-  100 / 100
+100 / 100
 </span>
 
 <br>
 
-> one person · one NFT · one wallet
+one person · one NFT · one wallet
 
   </div>
 
   <div class="field">
 
 <input
-  id="handle"
-  type="text"
-  placeholder="@yourhandle"
-  autocomplete="off"
-  maxlength="50"
+id="handle"
+type="text"
+placeholder="@yourhandle"
+autocomplete="off"
+maxlength="50"
 >
 
 <button
-  class="cta accent"
-  id="enterBtn"
-  type="button"
+class="cta accent"
+id="enterBtn"
+type="button"
 >
-  Enter
+Enter
 </button>
 
   </div>
@@ -1357,37 +1342,34 @@ One person · one wallet · one NFT.
 
   <div class="terminal">
 
-> handle detected:
+handle detected:
 <span
-  class="ok"
-  id="echo"
+class="ok"
+id="echo"
 ></span>
 
 <br>
 
-> route confirmed
-<br>
-
-> wallet verification is next...
+wallet verification is next...
 
   </div>
 
   <div class="nav">
 
 <button
-  class="cta ghost"
-  data-back="1"
-  type="button"
+class="cta ghost"
+data-back="1"
+type="button"
 >
-  Back
+Back
 </button>
 
 <button
-  class="cta accent"
-  id="sealBtn"
-  type="button"
+class="cta accent"
+id="sealBtn"
+type="button"
 >
-  Continue
+Continue
 </button>
 
   </div>
@@ -1415,80 +1397,78 @@ One person · one wallet · one NFT.
   <div class="wallets">
 
 <button
-  class="wallet"
-  data-wallet="Phantom"
-  type="button"
+class="wallet"
+data-wallet="Phantom"
+type="button"
+>
+<img
+class="wallet-logo"
+src="images/phantom.png"
+alt="Phantom"
+draggable="false"
 >
 
-  <img
-    class="wallet-logo"
-    src="images/phantom.png"
-    alt="Phantom"
-    draggable="false"
-  >
+<span class="wallet-name">
 
-  <span class="wallet-name">
+<strong>
+  Phantom
+</strong>
 
-    <strong>
-      Phantom
-    </strong>
+<span>
+  Connect & sign
+</span>
 
-    <span>
-      Connect & sign
-    </span>
-
-  </span>
+</span>
 
 </button>
 
 <button
-  class="wallet"
-  data-wallet="Solflare"
-  type="button"
+class="wallet"
+data-wallet="Solflare"
+type="button"
+>
+<img
+class="wallet-logo"
+src="images/solflare.png"
+alt="Solflare"
+draggable="false"
 >
 
-  <img
-    class="wallet-logo"
-    src="images/solflare.png"
-    alt="Solflare"
-    draggable="false"
-  >
+<span class="wallet-name">
 
-  <span class="wallet-name">
+<strong>
+  Solflare
+</strong>
 
-    <strong>
-      Solflare
-    </strong>
+<span>
+  Connect & sign
+</span>
 
-    <span>
-      Connect & sign
-    </span>
-
-  </span>
+</span>
 
 </button>
 
 <button
-  class="wallet manual"
-  data-wallet="Manual"
-  type="button"
+class="wallet manual"
+data-wallet="Manual"
+type="button"
 >
 
-  <span class="manual-icon">
-    +
-  </span>
+<span class="manual-icon">
+  +
+</span>
 
-  <span class="wallet-name">
+<span class="wallet-name">
 
-    <strong>
-      Enter wallet address
-    </strong>
+<strong>
+  Enter wallet address
+</strong>
 
-    <span>
-      Address only · signature required
-    </span>
+<span>
+  Address only · signature required
+</span>
 
-  </span>
+</span>
 
 </button>
 
@@ -1507,10 +1487,10 @@ One person · one wallet · one NFT.
 </div>
 
 <input
-  id="walletInput"
-  placeholder="Solana wallet address"
-  autocomplete="off"
-  spellcheck="false"
+id="walletInput"
+placeholder="Solana wallet address"
+autocomplete="off"
+spellcheck="false"
 >
 
 <div
@@ -1531,30 +1511,23 @@ One person · one wallet · one NFT.
     style="display:none;margin-top:8px;"
   ></div>
 
-  <div
-    class="test-mode"
-    id="testMode"
-  >
-    TEST MODE · $ROAD verification simulated
-  </div>
-
   <div class="nav">
 
 <button
-  class="cta ghost"
-  data-back="2"
-  type="button"
+class="cta ghost"
+data-back="2"
+type="button"
 >
-  Back
+Back
 </button>
 
 <button
-  class="cta accent"
-  id="verifyBtn"
-  disabled
-  type="button"
+class="cta accent"
+id="verifyBtn"
+disabled
+type="button"
 >
-  Verify & continue
+Verify & continue
 </button>
 
   </div>
@@ -1590,9 +1563,10 @@ One person · one wallet · one NFT.
       handle
     </span>
 
-    <span id="finalHandle">
-      —
-    </span>
+<span id="finalHandle">
+  —
+</span>
+
   </div>
 
   <div>
@@ -1600,9 +1574,10 @@ One person · one wallet · one NFT.
       wallet
     </span>
 
-    <span id="finalWallet">
-      —
-    </span>
+<span id="finalWallet">
+  —
+</span>
+
   </div>
 
   <div>
@@ -1610,9 +1585,10 @@ One person · one wallet · one NFT.
       status
     </span>
 
-    <span class="green">
-      ON THE ROAD · SEALED
-    </span>
+<span class="green">
+  ON THE ROAD · SEALED
+</span>
+
   </div>
 
 </div>
@@ -1627,21 +1603,21 @@ One person · one wallet · one NFT.
   oncontextmenu="return false"
 >
 
-  <img
-    id="nftImg"
-    class="nft-img"
-    alt="Roadman NFT"
-    decoding="async"
-    draggable="false"
-    oncontextmenu="return false"
-  >
+<img
+id="nftImg"
+class="nft-img"
+alt="Roadman NFT"
+decoding="async"
+draggable="false"
+oncontextmenu="return false"
+>
 
-  <div
-    class="nft-fallback"
-    id="nftFallback"
-  >
-    ROAD IMAGE UNAVAILABLE
-  </div>
+<div
+  class="nft-fallback"
+  id="nftFallback"
+>
+  ROAD IMAGE UNAVAILABLE
+</div>
 
 </div>
 
@@ -1682,14 +1658,24 @@ const API_SPOTS = "/api/spots";
 const API_NONCE = "/api/nonce";
 const API_CLAIM = "/api/claim";
 
-const TEST_KEY = "ROADMAN_TEST_2026";
-
 let step = 1;
 let currentHandle = "";
 let selectedWallet = "";
 let connectedWallet = "";
 let connectedProvider = null;
 let claim = null;
+
+/*
+  PARTICIPATION STATE
+
+  The participation token is returned by the backend
+  only after a successful claim.
+
+  The raw token exists only in memory.
+  It is never stored in localStorage/sessionStorage.
+*/
+let participationToken = "";
+let participationExpiresAt = "";
 
 /*
   SECURITY STATE
@@ -2884,8 +2870,7 @@ async function submitClaim(
             x_handle:handle,
             wallet:wallet,
             nonce:nonce,
-            signature:signature,
-            test_key:TEST_KEY
+            signature:signature
           })
         }
       );
@@ -3056,6 +3041,38 @@ $("verifyBtn").onclick =
     claim =
       result.claim;
 
+    /*
+      The backend must return an opaque participation token.
+
+      The raw token is kept only in memory.
+      It is never stored in localStorage/sessionStorage.
+    */
+
+    if(
+      !result.participation ||
+      !result.participation.token
+    ){
+
+      showWalletError(
+        "The server confirmed the claim but did not return a secure participation token."
+      );
+
+      $("verifyBtn").disabled =
+        false;
+
+      $("verifyBtn").textContent =
+        "Verify & continue";
+
+      return;
+
+    }
+
+    participationToken =
+      result.participation.token;
+
+    participationExpiresAt =
+      result.participation.expires_at || "";
+
     if(!claim){
 
       showWalletError(
@@ -3069,13 +3086,6 @@ $("verifyBtn").onclick =
         "Verify & continue";
 
       return;
-
-    }
-
-    if(result.test_mode){
-
-      $("testMode").style.display =
-        "block";
 
     }
 
