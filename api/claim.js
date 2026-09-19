@@ -3,78 +3,64 @@ const crypto = require("crypto");
 
 const TOTAL_SPOTS = 100;
 
+// =====================================================
+// CONFIG
+// =====================================================
+
+// TESTE:
+// 30 = mínimo atual para testar sem precisar comprar/mover
+// PRODUÇÃO:
+// 3_000_000 = mínimo definitivo
+const MIN_ROAD_REQUIRED = 30;
+
 const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
-
-// TESTE ATUAL
-// PRODUÇÃO: alterar para 3_000_000
-const MIN_ROAD_REQUIRED = 30;
 
 const SOLANA_RPC =
   "https://api.mainnet-beta.solana.com";
 
-// Token de participação válido por 24 horas.
-// Ele NÃO substitui a posse da wallet/$ROAD.
-// Serve apenas para identificar com segurança
-// a participação já registrada no backend.
-const PARTICIPATION_TOKEN_TTL_SECONDS =
-  60 * 60 * 24;
+const PARTICIPATION_TOKEN_TTL_SECONDS = 86400;
 
 // =====================================================
-// RESPONSE
+// HELPERS
 // =====================================================
 
-function json(res, statusCode, data) {
-  res.status(statusCode);
+function json(res, status, data) {
+  res.status(status);
 
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
-    "Content-Type",
-    "application/json"
+    "Access-Control-Allow-Methods",
+    "POST, OPTIONS"
   );
-
-  res.setHeader(
-    "Cache-Control",
-    "no-store"
-  );
-
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    "*"
-  );
-
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type"
   );
 
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "POST, OPTIONS"
-  );
-
   return res.json(data);
 }
 
-// =====================================================
-// VALIDATION
-// =====================================================
-
-function isValidSolanaAddress(wallet) {
-  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(
-    wallet
-  );
-}
-
 function normalizeHandle(value) {
-  let handle = String(value || "")
-    .trim()
-    .replace(/^@+/, "");
+  let handle = String(value || "").trim();
 
-  if (!handle) {
-    return "";
+  if (!handle) return null;
+
+  if (!handle.startsWith("@")) {
+    handle = "@" + handle;
   }
 
-  return `@${handle}`;
+  return handle;
+}
+
+function isValidWallet(wallet) {
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(wallet);
+}
+
+function isValidNonce(nonce) {
+  return /^[a-f0-9]{64}$/i.test(nonce);
 }
 
 // =====================================================
@@ -86,94 +72,66 @@ const BASE58_ALPHABET =
 
 function base58Decode(value) {
   if (!value || typeof value !== "string") {
-    throw new Error(
-      "Invalid Base58 value."
-    );
+    throw new Error("Invalid base58 value");
   }
 
-  let num = 0n;
+  let bytes = [0];
 
   for (const char of value) {
-    const index =
-      BASE58_ALPHABET.indexOf(char);
+    const index = BASE58_ALPHABET.indexOf(char);
 
     if (index === -1) {
-      throw new Error(
-        "Invalid Base58 character."
-      );
+      throw new Error("Invalid base58 character");
     }
 
-    num =
-      num * 58n +
-      BigInt(index);
-  }
+    let carry = index;
 
-  let hex = num.toString(16);
+    for (let i = 0; i < bytes.length; i++) {
+      const current = bytes[i] * 58 + carry;
 
-  if (hex.length % 2 !== 0) {
-    hex = `0${hex}`;
-  }
-
-  let bytes =
-    hex.length > 0
-      ? Buffer.from(hex, "hex")
-      : Buffer.alloc(0);
-
-  let leadingZeros = 0;
-
-  for (const char of value) {
-    if (char !== "1") {
-      break;
+      bytes[i] = current & 0xff;
+      carry = current >> 8;
     }
 
-    leadingZeros++;
+    while (carry > 0) {
+      bytes.push(carry & 0xff);
+      carry >>= 8;
+    }
   }
 
-  if (leadingZeros > 0) {
-    bytes = Buffer.concat([
-      Buffer.alloc(leadingZeros),
-      bytes
-    ]);
+  // Leading zero bytes represented by "1"
+  for (let i = 0; i < value.length && value[i] === "1"; i++) {
+    bytes.push(0);
   }
 
-  return bytes;
+  return Buffer.from(bytes.reverse());
 }
 
 // =====================================================
-// ED25519
+// WALLET SIGNATURE
 // =====================================================
 
-function createEd25519PublicKey(
-  rawPublicKey
-) {
-  if (
-    !Buffer.isBuffer(rawPublicKey) ||
-    rawPublicKey.length !== 32
-  ) {
-    throw new Error(
-      "Invalid Solana public key."
-    );
+function walletPublicKeyFromRaw(walletBytes) {
+  if (!Buffer.isBuffer(walletBytes)) {
+    throw new Error("Invalid wallet bytes");
   }
 
-  const ED25519_SPKI_PREFIX =
-    Buffer.from(
-      "302a300506032b6570032100",
-      "hex"
-    );
+  if (walletBytes.length !== 32) {
+    throw new Error("Invalid Solana public key length");
+  }
+
+  // Ed25519 SubjectPublicKeyInfo prefix
+  const prefix = Buffer.from(
+    "302a300506032b6570032100",
+    "hex"
+  );
 
   return crypto.createPublicKey({
-    key: Buffer.concat([
-      ED25519_SPKI_PREFIX,
-      rawPublicKey
-    ]),
+    key: Buffer.concat([prefix, walletBytes]),
     format: "der",
-    type: "spki"
+    type: "spki",
   });
 }
-
-// =====================================================
-// SIGNATURE
-// =====================================================
 
 function verifyWalletSignature(
   wallet,
@@ -181,13 +139,10 @@ function verifyWalletSignature(
   signature
 ) {
   try {
-    const publicKeyBytes =
-      base58Decode(wallet);
+    const walletBytes = base58Decode(wallet);
+    const signatureBytes = base58Decode(signature);
 
-    const signatureBytes =
-      base58Decode(signature);
-
-    if (publicKeyBytes.length !== 32) {
+    if (walletBytes.length !== 32) {
       return false;
     }
 
@@ -196,9 +151,7 @@ function verifyWalletSignature(
     }
 
     const publicKey =
-      createEd25519PublicKey(
-        publicKeyBytes
-      );
+      walletPublicKeyFromRaw(walletBytes);
 
     return crypto.verify(
       null,
@@ -206,41 +159,50 @@ function verifyWalletSignature(
       publicKey,
       signatureBytes
     );
-
-  } catch (error) {
-    console.error(
-      "ROADMAN SIGNATURE ERROR:",
-      error
-    );
-
+  } catch {
     return false;
   }
 }
 
 // =====================================================
-// RPC
+// VERIFICATION MESSAGE
+// MUST MATCH /api/nonce.js EXACTLY
 // =====================================================
 
-async function solanaRpc(
-  method,
-  params
+function buildVerificationMessage(
+  wallet,
+  nonce,
+  expiresAt
 ) {
-  const response =
-    await fetch(SOLANA_RPC, {
-      method: "POST",
+  return `THE ROAD PROVIDES
 
-      headers: {
-        "Content-Type":
-          "application/json"
-      },
+ROADMAN WALLET VERIFICATION
 
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: 1,
-        method,
-        params
-      })
-    });
+Wallet: ${wallet}
+Nonce: ${nonce}
+Expires: ${expiresAt.toISOString()}
+
+Sign this message to prove control of this wallet.
+This signature does not authorize any transaction.`;
+}
+
+// =====================================================
+// SOLANA RPC
+// =====================================================
+
+async function solanaRpc(method, params) {
+  const response = await fetch(SOLANA_RPC, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method,
+      params,
+    }),
+  });
 
   if (!response.ok) {
     throw new Error(
@@ -248,13 +210,11 @@ async function solanaRpc(
     );
   }
 
-  const data =
-    await response.json();
+  const data = await response.json();
 
   if (data.error) {
     throw new Error(
-      data.error.message ||
-      "Solana RPC error."
+      data.error.message || "Solana RPC error"
     );
   }
 
@@ -266,238 +226,188 @@ async function solanaRpc(
 // =====================================================
 
 async function getRoadBalance(wallet) {
-  const result =
-    await solanaRpc(
-      "getTokenAccountsByOwner",
-      [
-        wallet,
-        {
-          mint: TOKEN_MINT
-        },
-        {
-          encoding: "jsonParsed"
-        }
-      ]
-    );
+  const result = await solanaRpc(
+    "getTokenAccountsByOwner",
+    [
+      wallet,
+      {
+        mint: TOKEN_MINT,
+      },
+      {
+        encoding: "jsonParsed",
+        commitment: "finalized",
+      },
+    ]
+  );
 
-  const accounts =
-    result?.value || [];
+  let total = 0;
 
-  let balance = 0;
-
-  for (const account of accounts) {
+  for (const account of result.value || []) {
     const amount =
-      account?.account?.data
-        ?.parsed?.info?.tokenAmount
-        ?.uiAmountString;
+      account?.account?.data?.parsed?.info
+        ?.tokenAmount?.uiAmountString;
 
-    if (amount) {
-      const parsedAmount =
-        Number(amount);
-
-      if (Number.isFinite(parsedAmount)) {
-        balance += parsedAmount;
-      }
+    if (amount !== undefined && amount !== null) {
+      total += Number(amount);
     }
   }
 
-  return Number.isFinite(balance)
-    ? balance
-    : 0;
+  if (!Number.isFinite(total)) {
+    throw new Error(
+      "Invalid $ROAD balance returned by Solana"
+    );
+  }
+
+  return total;
 }
 
 // =====================================================
-// VERIFICATION MESSAGE
+// MAIN
 // =====================================================
 
-function buildVerificationMessage(
-  wallet,
-  nonce,
-  expiresAt
-) {
-  return [
-    "THE ROAD PROVIDES",
-    "",
-    "ROADMAN WALLET VERIFICATION",
-    "",
-    `Wallet: ${wallet}`,
-    `Nonce: ${nonce}`,
-    `Expires: ${expiresAt.toISOString()}`,
-    "",
-    "Sign this message to prove control of this wallet.",
-    "This signature does not authorize any transaction."
-  ].join("\n");
-}
-
-// =====================================================
-// PARTICIPATION TOKEN
-// =====================================================
-
-function createParticipationToken() {
-  return crypto.randomBytes(32).toString("hex");
-}
-
-function hashParticipationToken(token) {
-  return crypto
-    .createHash("sha256")
-    .update(token, "utf8")
-    .digest("hex");
-}
-
-// =====================================================
-// HANDLER
-// =====================================================
-
-module.exports = async function handler(
-  req,
-  res
-) {
+module.exports = async function handler(req, res) {
   if (req.method === "OPTIONS") {
-    res.status(204);
-    return res.end();
+    return json(res, 200, {
+      success: true,
+    });
   }
 
   if (req.method !== "POST") {
     return json(res, 405, {
       success: false,
-      error: "Method not allowed."
+      error: "METHOD_NOT_ALLOWED",
     });
   }
 
   if (!process.env.DATABASE_URL) {
     return json(res, 500, {
       success: false,
-      error:
-        "DATABASE_URL is not configured."
+      error: "DATABASE_NOT_CONFIGURED",
     });
   }
 
+  const sql = neon(process.env.DATABASE_URL);
+
   try {
-    const body =
-      typeof req.body === "string"
-        ? JSON.parse(req.body)
-        : req.body || {};
+    const body = req.body || {};
 
-    const xHandle =
-      normalizeHandle(
-        body.x_handle
-      );
+    const xHandle = normalizeHandle(
+      body.x_handle
+    );
 
-    const wallet =
-      String(
-        body.wallet || ""
-      ).trim();
+    const wallet = String(
+      body.wallet || ""
+    ).trim();
 
-    const nonce =
-      String(
-        body.nonce || ""
-      ).trim();
+    const nonce = String(
+      body.nonce || ""
+    ).trim();
 
-    const signature =
-      String(
-        body.signature || ""
-      ).trim();
+    const signature = String(
+      body.signature || ""
+    ).trim();
 
-    // =================================================
+    // -------------------------------------------------
     // BASIC VALIDATION
-    // =================================================
+    // -------------------------------------------------
 
     if (!xHandle) {
       return json(res, 400, {
         success: false,
-        error:
-          "X handle is required."
+        error: "X_HANDLE_REQUIRED",
       });
     }
 
-    if (!isValidSolanaAddress(wallet)) {
+    if (xHandle.length > 100) {
       return json(res, 400, {
         success: false,
-        error:
-          "Invalid Solana wallet address."
+        error: "X_HANDLE_TOO_LONG",
       });
     }
 
-    if (
-      !nonce ||
-      nonce.length !== 64
-    ) {
-      return json(res, 401, {
+    if (!isValidWallet(wallet)) {
+      return json(res, 400, {
         success: false,
-        error:
-          "Wallet verification is required."
+        error: "INVALID_WALLET",
+      });
+    }
+
+    if (!isValidNonce(nonce)) {
+      return json(res, 400, {
+        success: false,
+        error: "INVALID_NONCE",
       });
     }
 
     if (!signature) {
-      return json(res, 401, {
+      return json(res, 400, {
         success: false,
-        error:
-          "Wallet signature is required."
+        error: "SIGNATURE_REQUIRED",
       });
     }
 
-    const sql =
-      neon(
-        process.env.DATABASE_URL
-      );
+    // -------------------------------------------------
+    // FIND NONCE
+    // -------------------------------------------------
 
-    // =================================================
-    // VERIFY NONCE
-    // =================================================
+    const nonceRows = await sql`
+      SELECT
+        id,
+        wallet,
+        nonce,
+        created_at,
+        expires_at,
+        used_at
+      FROM wallet_nonces
+      WHERE wallet = ${wallet}
+        AND nonce = ${nonce}
+      LIMIT 1
+    `;
 
-    const nonceRows =
-      await sql`
-        SELECT
-          id,
-          wallet,
-          nonce,
-          created_at,
-          expires_at,
-          used_at
-        FROM wallet_nonces
-        WHERE wallet = ${wallet}
-          AND nonce = ${nonce}
-        LIMIT 1
-      `;
-
-    if (!nonceRows.length) {
+    if (nonceRows.length === 0) {
       return json(res, 401, {
         success: false,
-        error:
-          "Verification challenge not found."
+        error: "NONCE_NOT_FOUND",
       });
     }
 
-    const challenge =
-      nonceRows[0];
+    const challenge = nonceRows[0];
+
+    // -------------------------------------------------
+    // NONCE VALIDATION
+    // -------------------------------------------------
 
     if (challenge.used_at) {
       return json(res, 401, {
         success: false,
-        error:
-          "Verification challenge already used."
+        error: "NONCE_ALREADY_USED",
       });
     }
 
     const expiresAt =
-      new Date(
-        challenge.expires_at
-      );
+      new Date(challenge.expires_at);
 
     if (
-      Number.isNaN(
+      !Number.isFinite(
         expiresAt.getTime()
-      ) ||
-      expiresAt.getTime() <=
-        Date.now()
+      )
     ) {
-      return json(res, 401, {
+      return json(res, 500, {
         success: false,
-        error:
-          "Verification challenge expired."
+        error: "INVALID_NONCE_EXPIRATION",
       });
     }
+
+    if (expiresAt.getTime() <= Date.now()) {
+      return json(res, 401, {
+        success: false,
+        error: "NONCE_EXPIRED",
+      });
+    }
+
+    // -------------------------------------------------
+    // VERIFY SIGNATURE
+    // -------------------------------------------------
 
     const message =
       buildVerificationMessage(
@@ -516,16 +426,15 @@ module.exports = async function handler(
     if (!validSignature) {
       return json(res, 401, {
         success: false,
-        error:
-          "Invalid wallet signature."
+        error: "INVALID_WALLET_SIGNATURE",
       });
     }
 
-    // =================================================
-    // CONSUME NONCE
-    // =================================================
+    // -------------------------------------------------
+    // CONSUME NONCE ATOMICALLY
+    // -------------------------------------------------
 
-    const consumed =
+    const consumedNonce =
       await sql`
         UPDATE wallet_nonces
         SET used_at = NOW()
@@ -535,17 +444,17 @@ module.exports = async function handler(
         RETURNING id
       `;
 
-    if (!consumed.length) {
+    if (consumedNonce.length === 0) {
       return json(res, 409, {
         success: false,
-        error:
-          "Verification challenge was already consumed."
+        error: "NONCE_ALREADY_CONSUMED",
       });
     }
 
-    // =================================================
-    // DUPLICATE HANDLE
-    // =================================================
+    // -------------------------------------------------
+    // CHECK X HANDLE
+    // Only active HOLDING claims block a new Spot.
+    // -------------------------------------------------
 
     const existingHandle =
       await sql`
@@ -553,29 +462,24 @@ module.exports = async function handler(
           id,
           spot,
           wallet,
-          status,
           holding_status,
-          nft_number,
           nft_status
         FROM roadman_claims
-        WHERE LOWER(x_handle) =
-              LOWER(${xHandle})
+        WHERE LOWER(x_handle) = LOWER(${xHandle})
+          AND holding_status = 'HOLDING'
         LIMIT 1
       `;
 
-    if (existingHandle.length) {
+    if (existingHandle.length > 0) {
       return json(res, 409, {
         success: false,
-        error:
-          "This X handle has already claimed a Roadman.",
-        claim:
-          existingHandle[0]
+        error: "X_HANDLE_ALREADY_CLAIMED",
       });
     }
 
-    // =================================================
-    // DUPLICATE WALLET
-    // =================================================
+    // -------------------------------------------------
+    // CHECK WALLET
+    // -------------------------------------------------
 
     const existingWallet =
       await sql`
@@ -583,70 +487,61 @@ module.exports = async function handler(
           id,
           spot,
           x_handle,
-          status,
           holding_status,
-          nft_number,
           nft_status
         FROM roadman_claims
         WHERE wallet = ${wallet}
+          AND holding_status = 'HOLDING'
         LIMIT 1
       `;
 
-    if (existingWallet.length) {
+    if (existingWallet.length > 0) {
       return json(res, 409, {
         success: false,
-        error:
-          "This wallet has already claimed a Roadman.",
-        claim:
-          existingWallet[0]
+        error: "WALLET_ALREADY_CLAIMED",
       });
     }
 
-    // =================================================
-    // BLOCKCHAIN BALANCE
-    // =================================================
+    // -------------------------------------------------
+    // CHECK $ROAD ON-CHAIN
+    // -------------------------------------------------
 
-    let roadBalance = 0;
+    let roadBalance;
 
     try {
       roadBalance =
-        await getRoadBalance(
-          wallet
-        );
+        await getRoadBalance(wallet);
     } catch (error) {
       console.error(
-        "ROADMAN BALANCE ERROR:",
+        "SOLANA_BALANCE_ERROR",
         error
       );
 
       return json(res, 502, {
         success: false,
-        error:
-          "Unable to verify $ROAD balance on Solana."
+        error: "SOLANA_BALANCE_CHECK_FAILED",
       });
     }
 
-    // =================================================
-    // MINIMUM $ROAD
-    // =================================================
-
     if (
-      roadBalance < MIN_ROAD_REQUIRED
+      roadBalance <
+      MIN_ROAD_REQUIRED
     ) {
       return json(res, 403, {
         success: false,
-        error:
-          "Insufficient $ROAD balance.",
-        balance:
-          roadBalance,
-        minimum_road:
-          MIN_ROAD_REQUIRED
+        error: "INSUFFICIENT_ROAD",
+        required: MIN_ROAD_REQUIRED,
+        balance: roadBalance,
       });
     }
 
-    // =================================================
-    // SPOT ALLOCATION
-    // =================================================
+    // -------------------------------------------------
+    // FIND AVAILABLE SPOT
+    //
+    // IMPORTANT:
+    // Only HOLDING records occupy a Spot.
+    // DISQUALIFIED records remain as history.
+    // -------------------------------------------------
 
     const availableSpots =
       await sql`
@@ -659,36 +554,35 @@ module.exports = async function handler(
           SELECT 1
           FROM roadman_claims r
           WHERE r.spot = s.spot
+            AND r.holding_status = 'HOLDING'
         )
         ORDER BY RANDOM()
         LIMIT 1
       `;
 
-    if (!availableSpots.length) {
+    if (availableSpots.length === 0) {
       return json(res, 409, {
         success: false,
-        error:
-          "All Roadman spots have already been claimed."
+        error: "ALL_SPOTS_FILLED",
       });
     }
 
     const spot =
-      Number(
-        availableSpots[0].spot
-      );
+      Number(availableSpots[0].spot);
 
-    // =================================================
-    // CLAIM
-    // =================================================
+    // -------------------------------------------------
+    // INSERT CLAIM
+    // -------------------------------------------------
 
-    const inserted =
-      await sql`
+    let claimRows;
+
+    try {
+      claimRows = await sql`
         INSERT INTO roadman_claims (
           spot,
           x_handle,
           wallet,
           status,
-          created_at,
           claimed_at,
           initial_balance,
           initial_usd_value,
@@ -700,7 +594,6 @@ module.exports = async function handler(
           ${xHandle},
           ${wallet},
           'claimed',
-          NOW(),
           NOW(),
           ${roadBalance},
           NULL,
@@ -716,39 +609,57 @@ module.exports = async function handler(
           created_at,
           claimed_at,
           initial_balance,
-          initial_usd_value,
           holding_status,
-          nft_status
+          qualified_at,
+          disqualified_at,
+          nft_number,
+          nft_status,
+          delivery_tx,
+          delivered_at,
+          nft_assigned_at
       `;
+    } catch (error) {
+      // The database UNIQUE constraint on spot/wallet
+      // is the final concurrency protection.
+      console.error(
+        "CLAIM_INSERT_ERROR",
+        error
+      );
 
-    if (!inserted.length) {
+      return json(res, 409, {
+        success: false,
+        error: "CLAIM_COULD_NOT_BE_CREATED",
+      });
+    }
+
+    if (claimRows.length === 0) {
       return json(res, 500, {
         success: false,
-        error:
-          "Unable to create Roadman claim."
+        error: "CLAIM_CREATION_FAILED",
       });
     }
 
     const claim =
-      inserted[0];
+      claimRows[0];
 
-    // =================================================
-    // CREATE PARTICIPATION TOKEN
-    // =================================================
+    // -------------------------------------------------
+    // PARTICIPATION TOKEN
+    // -------------------------------------------------
 
-    const participationToken =
-      createParticipationToken();
+    const rawToken =
+      crypto.randomBytes(32).toString("hex");
 
-    const participationTokenHash =
-      hashParticipationToken(
-        participationToken
-      );
+    const tokenHash =
+      crypto
+        .createHash("sha256")
+        .update(rawToken)
+        .digest("hex");
 
-    const participationExpiresAt =
+    const tokenExpiresAt =
       new Date(
         Date.now() +
-        PARTICIPATION_TOKEN_TTL_SECONDS *
-          1000
+          PARTICIPATION_TOKEN_TTL_SECONDS *
+            1000
       );
 
     await sql`
@@ -756,91 +667,74 @@ module.exports = async function handler(
         claim_id,
         token_hash,
         created_at,
-        expires_at
+        expires_at,
+        revoked_at
       )
       VALUES (
         ${claim.id},
-        ${participationTokenHash},
+        ${tokenHash},
         NOW(),
-        ${participationExpiresAt}
+        ${tokenExpiresAt},
+        NULL
       )
     `;
 
-    // =================================================
-    // SUCCESS
-    // =================================================
+    // -------------------------------------------------
+    // RESPONSE
+    // -------------------------------------------------
 
     return json(res, 200, {
       success: true,
 
-      message:
-        "Roadman spot claimed successfully.",
-
       claim: {
-        id:
-          claim.id,
-
-        spot:
-          claim.spot,
-
-        x_handle:
-          claim.x_handle,
-
-        wallet:
-          claim.wallet,
-
-        status:
-          claim.status,
-
-        created_at:
-          claim.created_at,
-
-        claimed_at:
-          claim.claimed_at,
-
+        id: claim.id,
+        spot: claim.spot,
+        x_handle: claim.x_handle,
+        wallet: claim.wallet,
+        status: claim.status,
+        claimed_at: claim.claimed_at,
         initial_balance:
           claim.initial_balance,
-
-        initial_usd_value:
-          null,
-
         holding_status:
           claim.holding_status,
-
+        qualified_at:
+          claim.qualified_at,
+        disqualified_at:
+          claim.disqualified_at,
+        nft_number:
+          claim.nft_number,
         nft_status:
-          claim.nft_status
+          claim.nft_status,
+        delivery_tx:
+          claim.delivery_tx,
+        delivered_at:
+          claim.delivered_at,
+        nft_assigned_at:
+          claim.nft_assigned_at,
       },
 
       participation: {
-        token:
-          participationToken,
-
-        expires_at:
-          participationExpiresAt
+        token: rawToken,
+        expires_at: tokenExpiresAt.toISOString(),
       },
 
-      token: {
-        mint:
-          TOKEN_MINT,
-
-        balance:
+      verification: {
+        token_mint: TOKEN_MINT,
+        minimum_road_required:
+          MIN_ROAD_REQUIRED,
+        verified_balance:
           roadBalance,
-
-        minimum_required:
-          MIN_ROAD_REQUIRED
-      }
+      },
     });
-
   } catch (error) {
     console.error(
-      "ROADMAN CLAIM ERROR:",
+      "CLAIM_API_ERROR",
       error
     );
 
     return json(res, 500, {
       success: false,
-      error:
-        "Unable to complete Roadman claim."
+      error: "INTERNAL_SERVER_ERROR",
     });
   }
 };
