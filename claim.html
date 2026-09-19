@@ -605,7 +605,7 @@ WALLET
 
 .wallets{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
   gap:8px;
   margin-bottom:14px;
 }
@@ -672,29 +672,6 @@ WALLET
   color:var(--dim);
 }
 
-.wallet.manual{
-  grid-column:1 / -1;
-  width:min(300px,100%);
-  justify-self:center;
-  justify-content:center;
-  text-align:center;
-}
-
-.manual-icon{
-  width:26px;
-  height:26px;
-  flex:0 0 26px;
-  border:1px solid var(--border);
-  border-radius:7px;
-  display:grid;
-  place-items:center;
-  font-size:13px;
-  color:var(--dim);
-}
-
-.wallet.manual .wallet-name{
-  text-align:left;
-}
 
 .hint{
   font:10.5px var(--mono);
@@ -1048,8 +1025,7 @@ RESPONSIVE HEIGHT
     padding:10px;
   }
 
-  .wallet-logo,
-  .manual-icon{
+  .wallet-logo{
     width:23px;
     height:23px;
     flex-basis:23px;
@@ -1495,29 +1471,7 @@ One person · one wallet · one NFT.
 
 </button>
 
-<button
-  class="wallet manual"
-  data-wallet="Manual"
-  type="button"
->
 
-  <span class="manual-icon">
-    +
-  </span>
-
-  <span class="wallet-name">
-
-    <strong>
-      Enter wallet address
-    </strong>
-
-    <span>
-      Address only · signature required
-    </span>
-
-  </span>
-
-</button>
 
   </div>
 
@@ -1535,9 +1489,10 @@ One person · one wallet · one NFT.
 
 <input
   id="walletInput"
-  placeholder="Solana wallet address"
+  placeholder="Connected Solana wallet"
   autocomplete="off"
   spellcheck="false"
+  readonly
 >
 
 <div
@@ -2018,6 +1973,9 @@ function setWalletAddress(address){
 
   $("walletInput").value =
     wallet;
+
+  $("walletInput").readOnly =
+    true;
 
   connectedWallet =
     wallet;
@@ -3010,25 +2968,8 @@ document
         $("verifyBtn").textContent =
           "Verify & continue";
 
-        if(selectedWallet === "Manual"){
-
-          $("walletHint").textContent =
-            "Address entry is for reference only. A wallet signature is required to prove ownership.";
-
-          $("walletInput").value =
-            "";
-
-          $("walletInput").focus();
-
-          $("verifyStatus").style.display =
-            "block";
-
-          $("verifyStatus").textContent =
-            "> manual address entered — wallet signature still required.";
-
-          return;
-
-        }
+        $("walletInput").value =
+          "";
 
         $("walletHint").textContent =
           "Connecting to " +
@@ -3056,58 +2997,6 @@ document
       };
 
   });
-
-/* =====================================================
-MANUAL WALLET INPUT
-===================================================== */
-
-$("walletInput").addEventListener(
-  "input",
-  function(){
-
-    const wallet =
-      this.value.trim();
-
-    /*
-      Manual input NEVER creates a valid authentication proof.
-
-      It is only allowed to display an address.
-      A signature from a real wallet provider is mandatory.
-    */
-
-    connectedWallet =
-      "";
-
-    connectedProvider =
-      null;
-
-    metamaskAccount =
-      null;
-
-    resetWalletProof();
-
-    $("verifyBtn").disabled =
-      true;
-
-    clearWalletError();
-
-    $("verifyStatus").style.display =
-      "block";
-
-    if(isValidSolanaAddress(wallet)){
-
-      $("verifyStatus").textContent =
-        "> address detected. Connect Phantom or Solflare to sign ownership.";
-
-    }else{
-
-      $("verifyStatus").textContent =
-        "> waiting for a valid Solana address.";
-
-    }
-
-  }
-);
 
 /* =====================================================
 CLAIM
@@ -3270,16 +3159,14 @@ $("verifyBtn").onclick =
   async function(){
 
     const wallet =
-      $("walletInput")
-        .value
-        .trim();
+      String(connectedWallet || "").trim();
 
     if(
       !isValidSolanaAddress(wallet)
     ){
 
       showWalletError(
-        "Connect a valid Solana wallet."
+        "Connect a Solana wallet before continuing."
       );
 
       return;
