@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>THE ROAD PROVIDES — Early Access</title>
+
 <link rel="icon" type="image/png" href="desert_roadman_badge.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+
 :root{
   --bg:#000;
   --raise:#090909;
@@ -25,383 +27,1681 @@
   --body:'Inter',sans-serif;
   --mono:'IBM Plex Mono',monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{width:100%;min-height:100%;background:var(--bg);overflow-x:hidden}
-body{width:100%;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--body);overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.wrap{width:min(700px,100%);min-height:100svh;margin:auto;padding-bottom:24px}
-.page-stage{position:relative;width:100%;transform:translate3d(0,0,0);opacity:1;will-change:transform,opacity}
-.page-stage.road-transition{animation:roadStageMove .42s cubic-bezier(.22,.61,.36,1)}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  width:100%;
+  min-height:100%;
+  background:var(--bg);
+  overflow-x:hidden;
+}
+
+body{
+  width:100%;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--body);
+  overflow-x:hidden;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+.wrap{
+  width:min(700px,100%);
+  min-height:100svh;
+  margin:auto;
+  padding-bottom:24px;
+}
+
+/* =====================================================
+PAGE STAGE
+===================================================== */
+
+.page-stage{
+  position:relative;
+  width:100%;
+  transform:translate3d(0,0,0);
+  opacity:1;
+  will-change:transform,opacity;
+}
+
+.page-stage.road-transition{
+  animation:roadStageMove .42s cubic-bezier(.22,.61,.36,1);
+}
+
 @keyframes roadStageMove{
-0%{transform:translate3d(0,0,0);opacity:1}
-35%{transform:translate3d(-22px,0,0);opacity:.72}
-65%{transform:translate3d(22px,0,0);opacity:.72}
-100%{transform:translate3d(0,0,0);opacity:1}
+  0%{
+    transform:translate3d(0,0,0);
+    opacity:1;
+  }
+
+  35%{
+    transform:translate3d(-22px,0,0);
+    opacity:.72;
+  }
+
+  65%{
+    transform:translate3d(22px,0,0);
+    opacity:.72;
+  }
+
+  100%{
+    transform:translate3d(0,0,0);
+    opacity:1;
+  }
 }
+
+/* =====================================================
+BANNER
+===================================================== */
+
 .banner{
-height:clamp(130px,20svh,190px);
-position:relative;
-display:grid;
-place-items:center;
-overflow:hidden;
-background:linear-gradient(to bottom,transparent calc(50% - 1px),rgba(255,90,31,.92) calc(50% - 1px),rgba(255,90,31,.92) calc(50% + 1px),transparent calc(50% + 1px))
+  height:clamp(130px,20svh,190px);
+  position:relative;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent calc(50% - 1px),
+      rgba(255,90,31,.92) calc(50% - 1px),
+      rgba(255,90,31,.92) calc(50% + 1px),
+      transparent calc(50% + 1px)
+    );
 }
+
 .banner:before{
-content:"";
-position:absolute;
-inset:0;
-background:radial-gradient(ellipse 65% 110% at 30% 20%,rgba(255,90,31,.075),transparent 62%),repeating-linear-gradient(115deg,rgba(255,255,255,.018) 0,transparent 2px,transparent 40px);
-pointer-events:none
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(
+      ellipse 65% 110% at 30% 20%,
+      rgba(255,90,31,.075),
+      transparent 62%
+    ),
+    repeating-linear-gradient(
+      115deg,
+      rgba(255,255,255,.018) 0,
+      transparent 2px,
+      transparent 40px
+    );
+  pointer-events:none;
 }
+
 .banner h1{
-position:relative;
-z-index:2;
-background:#000;
-padding:0 16px;
-font:clamp(36px,8vw,58px)/.92 var(--display);
-text-align:center;
-letter-spacing:.01em;
-box-shadow:0 0 22px rgba(0,0,0,.95)
+  position:relative;
+  z-index:2;
+  background:#000;
+  padding:0 16px;
+  font:clamp(36px,8vw,58px)/.92 var(--display);
+  text-align:center;
+  letter-spacing:.01em;
+  box-shadow:0 0 22px rgba(0,0,0,.95);
 }
+
+/* =====================================================
+ROADMAN JOURNEY
+===================================================== */
+
 .roadman-journey{
-position:relative;
-width:100%;
-height:clamp(62px,8svh,76px);
-overflow:hidden;
-background:#000
+  position:relative;
+  width:100%;
+  height:clamp(62px,8svh,76px);
+  margin-top:0;
+  overflow:hidden;
+  background:#000;
 }
+
 .roadman-journey:before{
-content:"";
-position:absolute;
-left:6%;
-right:6%;
-top:50%;
-height:3px;
-transform:translateY(-50%);
-background:var(--border);
-z-index:1
+  content:"";
+  position:absolute;
+  left:6%;
+  right:6%;
+  top:50%;
+  height:3px;
+  transform:translateY(-50%);
+  background:var(--border);
+  z-index:1;
+  pointer-events:none;
 }
+
 .roadman-journey:after{
-content:"";
-position:absolute;
-left:6%;
-top:50%;
-width:0;
-height:3px;
-transform:translateY(-50%);
-background:var(--orange);
-box-shadow:0 0 7px rgba(255,90,31,.38);
-transition:width .62s cubic-bezier(.22,.61,.36,1);
-z-index:2
+  content:"";
+  position:absolute;
+  left:6%;
+  top:50%;
+  width:0;
+  height:3px;
+  transform:translateY(-50%);
+  background:var(--orange);
+  box-shadow:0 0 7px rgba(255,90,31,.38);
+  transition:width .62s cubic-bezier(.22,.61,.36,1);
+  z-index:2;
+  pointer-events:none;
 }
-.roadman-journey.step-1:after{width:0}
-.roadman-journey.step-2:after{width:29%}
-.roadman-journey.step-3:after{width:59%}
-.roadman-journey.step-4:after{width:88%}
+
+.roadman-journey.step-1:after{
+  width:0%;
+}
+
+.roadman-journey.step-2:after{
+  width:29%;
+}
+
+.roadman-journey.step-3:after{
+  width:59%;
+}
+
+.roadman-journey.step-4:after{
+  width:88%;
+}
+
 .roadman-scene{
-position:absolute;
-left:6%;
-top:50%;
-width:clamp(60px,8vw,72px);
-height:clamp(60px,8vw,72px);
-object-fit:contain;
-transform:translate(-50%,-50%);
-display:block;
-user-select:none;
--webkit-user-select:none;
--webkit-user-drag:none;
--webkit-touch-callout:none;
-pointer-events:none;
-filter:drop-shadow(0 5px 7px rgba(0,0,0,.9));
-opacity:1;
-transition:left .62s cubic-bezier(.22,.61,.36,1),opacity .18s ease,filter .25s ease;
-z-index:10
+  position:absolute;
+  left:6%;
+  top:50%;
+  width:clamp(60px,8vw,72px);
+  height:clamp(60px,8vw,72px);
+  object-fit:contain;
+  object-position:center center;
+  transform:translate(-50%,-50%);
+  display:block;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-user-drag:none;
+  -webkit-touch-callout:none;
+  pointer-events:none;
+  filter:drop-shadow(0 5px 7px rgba(0,0,0,.9));
+  opacity:1;
+  transition:
+    left .62s cubic-bezier(.22,.61,.36,1),
+    opacity .18s ease,
+    filter .25s ease;
+  z-index:10;
 }
-.roadman-scene.moving{filter:drop-shadow(0 5px 8px rgba(0,0,0,.95)) drop-shadow(0 0 10px rgba(255,90,31,.14))}
-.profile{display:none}
-.identity{padding:clamp(9px,1.5svh,13px) 22px 0}
-.status{display:flex;align-items:center;gap:7px;font:10.5px var(--mono);letter-spacing:.06em;color:var(--orange);margin-bottom:5px}
-.status:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px rgba(255,90,31,.45)}
-.name{font-size:19px;font-weight:800}
-.handle{font-size:12.5px;color:var(--dim);margin:2px 0 8px}
-.bio{font-size:13px;line-height:1.45}
-.bio b{color:var(--orange)}
-.links{display:flex;gap:8px;margin:clamp(9px,1.6svh,13px) 22px 0}
-.links a{flex:1;text-align:center;text-decoration:none;border-radius:999px;padding:9px 12px;font-size:11.5px;font-weight:700}
-.x{border:1px solid var(--border);color:var(--ink);transition:border-color .2s,color .2s,box-shadow .2s}
-.x:hover{border-color:var(--orange);color:var(--orange);box-shadow:0 0 14px rgba(255,90,31,.12)}
-.roadbtn{background:var(--orange);color:#fff;transition:background .2s,box-shadow .2s}
-.roadbtn:hover{background:var(--orange2);box-shadow:0 0 18px rgba(255,90,31,.16)}
-.road{padding:clamp(14px,2.2svh,21px) 22px 0}
-.line{height:2px;background:var(--border);margin:0 12px;position:relative}
-.fill{position:absolute;left:0;top:0;height:100%;width:8.33%;background:var(--orange);box-shadow:0 0 10px rgba(255,90,31,.25);transition:.25s}
-.markers{display:flex;justify-content:space-between;margin-top:-8px}
-.marker{border:0;background:none;color:inherit;display:flex;flex-direction:column;align-items:center;gap:6px;font:8.5px var(--mono);text-transform:uppercase;cursor:pointer}
-.dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--border);background:#000}
-.marker.active .dot{background:var(--orange);border-color:var(--orange);box-shadow:0 0 10px rgba(255,90,31,.3)}
-.marker.done .dot{border-color:var(--orange)}
-.marker.done .dot:after{content:"";display:block;width:5px;height:5px;border-radius:50%;background:var(--orange);margin:3px}
-.marker-label{color:var(--dim)}
-.marker.active .marker-label,.marker.done .marker-label{color:var(--ink)}
-.panel{margin:clamp(16px,2.8svh,23px) 22px 0;border:1px solid var(--border);border-radius:16px;background:var(--raise);padding:clamp(18px,2.8svh,25px);min-height:0}
-.step{display:none}
-.step.active{display:block;animation:in .22s ease}
-@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.eyebrow{font:10.5px var(--mono);color:var(--orange);letter-spacing:.08em;margin-bottom:8px}
-.step h2{font:24px/1 var(--display);text-transform:uppercase;margin-bottom:10px}
-.step p{font-size:13px;line-height:1.5;color:var(--dim);margin-bottom:17px}
-.terminal{font:11px/1.8 var(--mono);color:var(--dim);margin-bottom:17px;word-break:break-word}
-.ok{color:var(--green)}
-.ready{color:var(--orange)}
-.field{display:flex;gap:8px}
-.field input{flex:1;min-width:0}
-input{background:#000;border:1px solid var(--border);border-radius:10px;color:var(--ink);font:13px var(--mono);padding:12px 13px;outline:0;width:100%;transition:.2s}
-input:focus{border-color:var(--orange);box-shadow:0 0 0 1px rgba(255,90,31,.12)}
-input.invalid{border-color:var(--red);animation:shake .25s}
-@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-button.cta{border:0;border-radius:999px;padding:12px 20px;font:700 12px var(--body);cursor:pointer}
-.accent{background:var(--orange);color:#fff;transition:background .2s,box-shadow .2s}
-.accent:hover{background:var(--orange2);box-shadow:0 0 18px rgba(255,90,31,.15)}
-.accent:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
-.ghost{background:transparent;color:var(--ink);border:1px solid var(--border)!important;transition:border-color .2s,color .2s}
-.ghost:hover{border-color:var(--orange)!important;color:var(--orange)}
-.nav{display:flex;gap:8px;margin-top:9px}
-.nav>*{flex:1}
-.wallets{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+
+.roadman-scene.moving{
+  filter:
+    drop-shadow(0 5px 8px rgba(0,0,0,.95))
+    drop-shadow(0 0 10px rgba(255,90,31,.14));
+}
+
+/* =====================================================
+PROFILE
+===================================================== */
+
+.profile{
+  display:none;
+}
+
+.avatar{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  background:var(--raise);
+  border:3px solid var(--border);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  border-radius:50%;
+}
+
+.identity{
+  padding:clamp(9px,1.5svh,13px) 22px 0;
+}
+
+.status{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font:10.5px var(--mono);
+  letter-spacing:.06em;
+  color:var(--orange);
+  margin-bottom:5px;
+}
+
+.status:before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--orange);
+  box-shadow:0 0 8px rgba(255,90,31,.45);
+}
+
+.name{
+  font-size:19px;
+  font-weight:800;
+}
+
+.handle{
+  font-size:12.5px;
+  color:var(--dim);
+  margin:2px 0 8px;
+}
+
+.bio{
+  font-size:13px;
+  line-height:1.45;
+}
+
+.bio b{
+  color:var(--orange);
+}
+
+/* =====================================================
+LINKS
+===================================================== */
+
+.links{
+  display:flex;
+  gap:8px;
+  margin:clamp(9px,1.6svh,13px) 22px 0;
+}
+
+.links a{
+  flex:1;
+  text-align:center;
+  text-decoration:none;
+  border-radius:999px;
+  padding:9px 12px;
+  font-size:11.5px;
+  font-weight:700;
+}
+
+.x{
+  border:1px solid var(--border);
+  color:var(--ink);
+  transition:
+    border-color .2s,
+    color .2s,
+    box-shadow .2s;
+}
+
+.x:hover{
+  border-color:var(--orange);
+  color:var(--orange);
+  box-shadow:0 0 14px rgba(255,90,31,.12);
+}
+
+.roadbtn{
+  background:var(--orange);
+  color:#fff;
+  transition:
+    background .2s,
+    box-shadow .2s;
+}
+
+.roadbtn:hover{
+  background:var(--orange2);
+  box-shadow:0 0 18px rgba(255,90,31,.16);
+}
+
+/* =====================================================
+ROAD PROGRESS
+===================================================== */
+
+.road{
+  padding:clamp(14px,2.2svh,21px) 22px 0;
+}
+
+.line{
+  height:2px;
+  background:var(--border);
+  margin:0 12px;
+  position:relative;
+}
+
+.fill{
+  position:absolute;
+  left:0;
+  top:0;
+  height:100%;
+  width:8.33%;
+  background:var(--orange);
+  box-shadow:0 0 10px rgba(255,90,31,.25);
+  transition:.25s;
+}
+
+.markers{
+  display:flex;
+  justify-content:space-between;
+  margin-top:-8px;
+}
+
+.marker{
+  border:0;
+  background:none;
+  color:inherit;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  font:8.5px var(--mono);
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.dot{
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  border:2px solid var(--border);
+  background:#000;
+}
+
+.marker.active .dot{
+  background:var(--orange);
+  border-color:var(--orange);
+  box-shadow:0 0 10px rgba(255,90,31,.3);
+}
+
+.marker.done .dot{
+  border-color:var(--orange);
+}
+
+.marker.done .dot:after{
+  content:"";
+  display:block;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--orange);
+  margin:3px;
+}
+
+.marker-label{
+  color:var(--dim);
+}
+
+.marker.active .marker-label,
+.marker.done .marker-label{
+  color:var(--ink);
+}
+
+/* =====================================================
+PANEL
+===================================================== */
+
+.panel{
+  margin:clamp(16px,2.8svh,23px) 22px 0;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--raise);
+  padding:clamp(18px,2.8svh,25px);
+  min-height:0;
+}
+
+.step{
+  display:none;
+}
+
+.step.active{
+  display:block;
+  animation:in .22s ease;
+}
+
+@keyframes in{
+  from{
+    opacity:0;
+    transform:translateY(4px);
+  }
+
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.eyebrow{
+  font:10.5px var(--mono);
+  color:var(--orange);
+  letter-spacing:.08em;
+  margin-bottom:8px;
+}
+
+.step h2{
+  font:24px/1 var(--display);
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+
+.step p{
+  font-size:13px;
+  line-height:1.5;
+  color:var(--dim);
+  margin-bottom:17px;
+}
+
+.terminal{
+  font:11px/1.8 var(--mono);
+  color:var(--dim);
+  margin-bottom:17px;
+}
+
+.ok{
+  color:var(--green);
+}
+
+.ready{
+  color:var(--orange);
+}
+
+/* =====================================================
+FORM
+===================================================== */
+
+.field{
+  display:flex;
+  gap:8px;
+}
+
+.field input{
+  flex:1;
+  min-width:0;
+}
+
+input{
+  background:#000;
+  border:1px solid var(--border);
+  border-radius:10px;
+  color:var(--ink);
+  font:13px var(--mono);
+  padding:12px 13px;
+  outline:0;
+  width:100%;
+  transition:.2s;
+}
+
+input:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 1px rgba(255,90,31,.12);
+}
+
+input.invalid{
+  border-color:var(--red);
+  animation:shake .25s;
+}
+
+@keyframes shake{
+  25%{
+    transform:translateX(-4px);
+  }
+
+  75%{
+    transform:translateX(4px);
+  }
+}
+
+button.cta{
+  border:0;
+  border-radius:999px;
+  padding:12px 20px;
+  font:700 12px var(--body);
+  cursor:pointer;
+}
+
+.accent{
+  background:var(--orange);
+  color:#fff;
+  transition:
+    background .2s,
+    box-shadow .2s;
+}
+
+.accent:hover{
+  background:var(--orange2);
+  box-shadow:0 0 18px rgba(255,90,31,.15);
+}
+
+.accent:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+
+.ghost{
+  background:transparent;
+  color:var(--ink);
+  border:1px solid var(--border)!important;
+  transition:
+    border-color .2s,
+    color .2s;
+}
+
+.ghost:hover{
+  border-color:var(--orange)!important;
+  color:var(--orange);
+}
+
+.nav{
+  display:flex;
+  gap:8px;
+  margin-top:9px;
+}
+
+.nav>*{
+  flex:1;
+}
+
+/* =====================================================
+WALLET
+===================================================== */
+
+.wallets{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:14px;
+}
+
 .wallet{
-background:#000;
-border:1px solid var(--border);
-border-radius:10px;
-color:var(--ink);
-padding:13px 10px;
-text-align:left;
-font-size:12px;
-cursor:pointer;
-display:flex;
-align-items:center;
-gap:9px;
-transition:border-color .2s,background .2s,transform .15s;
-min-width:0
+  background:#000;
+  border:1px solid var(--border);
+  border-radius:10px;
+  color:var(--ink);
+  padding:13px;
+  text-align:left;
+  font-size:12px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition:
+    border-color .2s,
+    background .2s,
+    transform .15s;
 }
-.wallet:hover{border-color:var(--orange)}
-.wallet:active{transform:scale(.98)}
-.wallet.selected{border-color:var(--orange);background:rgba(255,90,31,.07);box-shadow:0 0 14px rgba(255,90,31,.08)}
-.wallet.connected{border-color:var(--green);background:rgba(0,186,124,.06)}
-.wallet-logo{width:26px;height:26px;flex:0 0 26px;object-fit:contain;display:block}
-.wallet-name{display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
-.wallet-name strong{font-size:12px;font-weight:700}
-.wallet-name span{font:8.5px var(--mono);color:var(--dim);white-space:nowrap}
-.hint{font:10.5px var(--mono);color:var(--dim);margin-bottom:7px}
-.error{color:var(--red);font:10.5px/1.5 var(--mono);margin-top:7px;display:none;word-break:break-word}
-.wallet-state{display:none;margin:10px 0 0;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:#000;font:10px/1.6 var(--mono);color:var(--dim);text-align:center}
-.wallet-state strong{color:var(--green)}
-.confirm{text-align:center;border:1px solid var(--border);border-radius:13px;padding:18px;margin-bottom:13px}
-.small{font:10px var(--mono);color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
-.spot{font:36px var(--display);margin:5px 0 11px}
-.rows{border-top:1px solid var(--border);padding-top:9px;font:10.5px var(--mono);text-align:left}
-.rows div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;color:var(--dim)}
-.rows span:last-child{color:var(--ink);text-align:right;max-width:70%;overflow:hidden;text-overflow:ellipsis}
-.green{color:var(--green)!important}
-.final-message{text-align:center;border:1px solid var(--border);border-radius:13px;padding:24px 18px;margin-bottom:13px;background:#050505}
-.final-symbol{width:58px;height:58px;margin:0 auto 14px;border-radius:50%;border:1px solid var(--orange);display:grid;place-items:center;color:var(--orange);font:28px var(--display);box-shadow:0 0 22px rgba(255,90,31,.12)}
-.final-title{font:24px/1 var(--display);text-transform:uppercase;margin-bottom:8px}
-.final-sub{font-size:11.5px;line-height:1.5;color:var(--dim)}
-.bottom-action{margin-top:11px;width:100%}
-.rule{font:10px/1.5 var(--mono);color:var(--dim);margin-top:13px;border-top:1px solid var(--border);padding-top:11px}
-.rule strong{color:var(--ink)}
-footer{position:relative;text-align:center;font:9.5px var(--mono);color:var(--dim);padding:14px 20px 5px;margin-top:clamp(9px,1.8svh,13px)}
-footer:before{content:"";display:block;width:72px;height:2px;background:var(--orange);margin:0 auto 10px;box-shadow:0 0 10px rgba(255,90,31,.22)}
+
+.wallet:hover{
+  border-color:var(--orange);
+}
+
+.wallet:active{
+  transform:scale(.98);
+}
+
+.wallet.selected{
+  border-color:var(--orange);
+  background:rgba(255,90,31,.07);
+  box-shadow:0 0 14px rgba(255,90,31,.08);
+}
+
+.wallet.connected{
+  border-color:var(--green);
+  background:rgba(0,186,124,.06);
+}
+
+.wallet-logo{
+  width:26px;
+  height:26px;
+  flex:0 0 26px;
+  object-fit:contain;
+  display:block;
+}
+
+.wallet-name{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+}
+
+.wallet-name strong{
+  font-size:12px;
+  font-weight:700;
+}
+
+.wallet-name span{
+  font:8.5px var(--mono);
+  color:var(--dim);
+}
+
+.wallet.manual{
+  grid-column:1 / -1;
+  width:min(300px,100%);
+  justify-self:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.manual-icon{
+  width:26px;
+  height:26px;
+  flex:0 0 26px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  color:var(--dim);
+}
+
+.wallet.manual .wallet-name{
+  text-align:left;
+}
+
+.hint{
+  font:10.5px var(--mono);
+  color:var(--dim);
+  margin-bottom:7px;
+}
+
+.error{
+  color:var(--red);
+  font:10.5px/1.5 var(--mono);
+  margin-top:7px;
+  display:none;
+  word-break:break-word;
+}
+
+.wallet-state{
+  display:none;
+  margin:10px 0 0;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:#000;
+  font:10px/1.6 var(--mono);
+  color:var(--dim);
+  text-align:center;
+}
+
+.wallet-state strong{
+  color:var(--green);
+}
+
+/* =====================================================
+CONFIRM
+===================================================== */
+
+.confirm{
+  text-align:center;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:18px;
+  margin-bottom:13px;
+}
+
+.small{
+  font:10px var(--mono);
+  color:var(--dim);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.spot{
+  font:36px var(--display);
+  margin:5px 0 11px;
+}
+
+.rows{
+  border-top:1px solid var(--border);
+  padding-top:9px;
+  font:10.5px var(--mono);
+  text-align:left;
+}
+
+.rows div{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:4px 0;
+  color:var(--dim);
+}
+
+.rows span:last-child{
+  color:var(--ink);
+  text-align:right;
+  max-width:70%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.green{
+  color:var(--green)!important;
+}
+
+/* =====================================================
+NFT
+===================================================== */
+
+.nft{
+  text-align:center;
+}
+
+.nft-frame{
+  width:min(220px,55vw);
+  aspect-ratio:1;
+  margin:0 auto 10px;
+  padding:5px;
+  position:relative;
+  border:1px solid var(--orange);
+  border-radius:12px;
+  background:#050505;
+  box-shadow:0 0 25px rgba(255,90,31,.14);
+  overflow:hidden;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-user-drag:none;
+}
+
+.nft-img{
+  width:100%;
+  height:100%;
+  display:block;
+  border-radius:8px;
+  object-fit:cover;
+  object-position:center;
+  background:#050505;
+  image-rendering:auto;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-user-drag:none;
+  -webkit-touch-callout:none;
+  pointer-events:none;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.nft-frame::after{
+  content:"";
+  position:absolute;
+  inset:5px;
+  z-index:5;
+  border-radius:8px;
+  background:transparent;
+  pointer-events:auto;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-user-drag:none;
+}
+
+.nft-fallback{
+  width:100%;
+  height:100%;
+  display:none;
+  place-items:center;
+  font:10px var(--mono);
+  color:var(--dim);
+}
+
+.nft-title{
+  font:18px var(--display);
+  text-transform:uppercase;
+}
+
+.nft-sub{
+  font-size:11px;
+  color:var(--dim);
+  margin-top:3px;
+}
+
+.bottom-action{
+  margin-top:11px;
+  width:100%;
+}
+
+.rule{
+  font:10px/1.5 var(--mono);
+  color:var(--dim);
+  margin-top:13px;
+  border-top:1px solid var(--border);
+  padding-top:11px;
+}
+
+.rule strong{
+  color:var(--ink);
+}
+
+/* =====================================================
+TEST MODE
+===================================================== */
+
+.test-mode{
+  display:none;
+  margin-top:10px;
+  padding:7px 10px;
+  border:1px solid rgba(255,90,31,.35);
+  border-radius:8px;
+  font:9px var(--mono);
+  color:var(--orange);
+  text-align:center;
+}
+
+/* =====================================================
+FOOTER
+===================================================== */
+
+footer{
+  position:relative;
+  text-align:center;
+  font:9.5px var(--mono);
+  color:var(--dim);
+  padding:14px 20px 5px;
+  margin-top:clamp(9px,1.8svh,13px);
+}
+
+footer:before{
+  content:"";
+  display:block;
+  width:72px;
+  height:2px;
+  background:var(--orange);
+  margin:0 auto 10px;
+  box-shadow:0 0 10px rgba(255,90,31,.22);
+}
+
+/* =====================================================
+RESPONSIVE HEIGHT
+===================================================== */
+
 @media(max-height:900px) and (min-width:481px){
-.banner{height:160px}.roadman-journey{height:68px}.identity{padding-top:9px}.bio{line-height:1.4}.links{margin-top:9px}.road{padding-top:15px}.panel{margin-top:17px;padding:21px}.step p{margin-bottom:14px}.terminal{margin-bottom:14px}footer{padding-top:11px}
+
+  .banner{
+    height:160px;
+  }
+
+  .roadman-journey{
+    height:68px;
+  }
+
+  .identity{
+    padding-top:9px;
+  }
+
+  .bio{
+    line-height:1.4;
+  }
+
+  .links{
+    margin-top:9px;
+  }
+
+  .road{
+    padding-top:15px;
+  }
+
+  .panel{
+    margin-top:17px;
+    padding:21px;
+  }
+
+  .step p{
+    margin-bottom:14px;
+  }
+
+  .terminal{
+    margin-bottom:14px;
+  }
+
+  footer{
+    padding-top:11px;
+  }
+
 }
+
 @media(max-height:760px) and (min-width:481px){
-.banner{height:118px}.roadman-journey{height:56px}.roadman-scene{width:58px;height:58px}.identity{padding-top:5px}.bio{display:none}.links{margin-top:6px}.road{padding-top:9px}.panel{margin-top:11px;padding:15px}.step p{margin-bottom:8px}.terminal{margin-bottom:8px}
+
+  .banner{
+    height:118px;
+  }
+
+  .roadman-journey{
+    height:56px;
+  }
+
+  .roadman-scene{
+    width:58px;
+    height:58px;
+  }
+
+  .identity{
+    padding-top:5px;
+  }
+
+  .bio{
+    display:none;
+  }
+
+  .links{
+    margin-top:6px;
+  }
+
+  .road{
+    padding-top:9px;
+  }
+
+  .panel{
+    margin-top:11px;
+    padding:15px;
+  }
+
+  .step p{
+    margin-bottom:8px;
+  }
+
+  .terminal{
+    margin-bottom:8px;
+  }
+
 }
+
 @media(max-width:480px){
-.wrap{padding-bottom:16px}.banner{height:150px}.roadman-journey{height:64px}.roadman-scene{width:64px;height:64px}.panel{margin-top:17px;padding:18px}.road{padding-top:15px}.links{margin-top:8px}.step h2{font-size:21px}.wallet{padding:10px 8px}.wallet-logo{width:23px;height:23px;flex-basis:23px}.wallet-name strong{font-size:11px}.wallet-name span{font-size:8px}
+
+  .wrap{
+    padding-bottom:16px;
+  }
+
+  .banner{
+    height:150px;
+  }
+
+  .roadman-journey{
+    height:64px;
+  }
+
+  .roadman-scene{
+    width:64px;
+    height:64px;
+  }
+
+  .panel{
+    margin-top:17px;
+    padding:18px;
+    min-height:0;
+  }
+
+  .road{
+    padding-top:15px;
+  }
+
+  .links{
+    margin-top:8px;
+  }
+
+  .step h2{
+    font-size:21px;
+  }
+
+  .nft-frame{
+    width:min(190px,48vw);
+  }
+
+  .wallet{
+    padding:10px;
+  }
+
+  .wallet-logo,
+  .manual-icon{
+    width:23px;
+    height:23px;
+    flex-basis:23px;
+  }
+
+  .wallet-name strong{
+    font-size:11px;
+  }
+
+  .wallet-name span{
+    font-size:8px;
+  }
+
 }
+
 @media(max-width:480px) and (max-height:720px){
-.banner{height:120px}.roadman-journey{height:58px}.roadman-scene{width:58px;height:58px}.identity{padding-top:6px}.bio{display:none}.links{margin-top:7px}.road{padding-top:10px}.panel{margin-top:12px;padding:15px}.step p{margin-bottom:9px}.terminal{margin-bottom:9px}footer{padding-top:8px}
+
+  .banner{
+    height:120px;
+  }
+
+  .roadman-journey{
+    height:58px;
+  }
+
+  .roadman-scene{
+    width:58px;
+    height:58px;
+  }
+
+  .identity{
+    padding-top:6px;
+  }
+
+  .bio{
+    display:none;
+  }
+
+  .links{
+    margin-top:7px;
+  }
+
+  .road{
+    padding-top:10px;
+  }
+
+  .panel{
+    margin-top:12px;
+    padding:15px;
+  }
+
+  .step p{
+    margin-bottom:9px;
+  }
+
+  .terminal{
+    margin-bottom:9px;
+  }
+
+  .nft-frame{
+    width:150px;
+  }
+
+  footer{
+    padding-top:8px;
+  }
+
 }
-@media(max-width:390px){
-.wallets{grid-template-columns:1fr}.wallet{padding:11px}
-}
+
 </style>
+
 </head>
 
 <body>
+
 <div class="wrap">
+
 <div class="page-stage" id="pageStage">
 
 <section class="banner">
-<h1>THE ROAD<br>PROVIDES</h1>
+  <h1>
+    THE ROAD<br>
+    PROVIDES
+  </h1>
 </section>
 
 <div class="roadman-journey" id="roadmanJourney">
-<img class="roadman-scene" id="roadmanScene" src="roadman-scenes/scene1.png" alt="The Roadman — Scene 1" draggable="false" oncontextmenu="return false">
+
+<img
+class="roadman-scene"
+id="roadmanScene"
+src="roadman-scenes/scene1.png"
+alt="The Roadman — Scene 1"
+draggable="false"
+oncontextmenu="return false"
+>
+
 </div>
 
 <div class="profile">
-<div class="avatar">
-<img src="desert_roadman_badge.png" alt="The Roadman" draggable="false" oncontextmenu="return false">
-</div>
+
+  <div class="avatar">
+
+<img
+  src="desert_roadman_badge.png"
+  alt="The Roadman"
+  draggable="false"
+  oncontextmenu="return false"
+>
+
+  </div>
+
 </div>
 
 <section class="identity">
-<div class="status">EARLY ACCESS OPEN</div>
-<div class="name">theRoadMan</div>
-<div class="handle">@theroadprovides · <span id="spotsHeader">100 first spots</span></div>
-<div class="bio">The first 100 NFTs go to those who walked with <b>$ROAD</b> before the road was paved.</div>
+
+  <div class="status">
+    EARLY ACCESS OPEN
+  </div>
+
+  <div class="name">
+    theRoadMan
+  </div>
+
+  <div class="handle">
+    @theroadprovides ·
+    <span id="spotsHeader">
+      100 first spots
+    </span>
+  </div>
+
+  <div class="bio">
+    The first 100 NFTs go to those who walked with
+    <b>$ROAD</b>
+    before the road was paved.
+  </div>
+
 </section>
 
 <div class="links">
-<a class="x" href="https://x.com/theroadprovides" target="_blank" rel="noopener noreferrer">Follow on X</a>
-<a class="roadbtn" href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump" target="_blank" rel="noopener noreferrer">Buy $ROAD</a>
+
+<a
+class="x"
+href="https://x.com/theroadprovides"
+target="_blank"
+rel="noopener noreferrer"
+>
+Follow on X
+</a>
+
+<a
+class="roadbtn"
+href="https://pump.fun/coin/BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump"
+target="_blank"
+rel="noopener noreferrer"
+>
+Buy $ROAD
+</a>
+
 </div>
 
 <div class="road">
-<div class="line"><div class="fill" id="fill"></div></div>
 
-<div class="markers">
-<button class="marker active" data-step="1" type="button"><span class="dot"></span><span class="marker-label">Enter</span></button>
-<button class="marker" data-step="2" type="button"><span class="dot"></span><span class="marker-label">Seal</span></button>
-<button class="marker" data-step="3" type="button"><span class="dot"></span><span class="marker-label">Wallet</span></button>
-<button class="marker" data-step="4" type="button"><span class="dot"></span><span class="marker-label">Sealed</span></button>
-</div>
+  <div class="line">
+
+<div
+  class="fill"
+  id="fill"
+></div>
+
+  </div>
+
+  <div class="markers">
+
+<button
+  class="marker active"
+  data-step="1"
+  type="button"
+>
+  <span class="dot"></span>
+  <span class="marker-label">Enter</span>
+</button>
+
+<button
+  class="marker"
+  data-step="2"
+  type="button"
+>
+  <span class="dot"></span>
+  <span class="marker-label">Seal</span>
+</button>
+
+<button
+  class="marker"
+  data-step="3"
+  type="button"
+>
+  <span class="dot"></span>
+  <span class="marker-label">Wallet</span>
+</button>
+
+<button
+  class="marker"
+  data-step="4"
+  type="button"
+>
+  <span class="dot"></span>
+  <span class="marker-label">Sealed</span>
+</button>
+
+  </div>
+
 </div>
 
 <main class="panel">
 
-<section class="step active" data-step="1">
-<div class="eyebrow">01 · ENTER THE ROAD</div>
-<h2>Confirm your handle</h2>
-<p>Your spot is tied to your X profile. Enter your handle to continue.</p>
+<section
+  class="step active"
+  data-step="1"
+>
 
-<div class="terminal">
-spots remaining:
-<span class="ready" id="spots">100 / 100</span>
+  <div class="eyebrow">
+    01 · ENTER THE ROAD
+  </div>
+
+  <h2>
+    Confirm your handle
+  </h2>
+
+  <p>
+    Your spot is tied to your X profile.
+    Enter your handle to continue.
+  </p>
+
+  <div class="terminal">
+
+> spots remaining:
+<span
+  class="ready"
+  id="spots"
+>
+  100 / 100
+</span>
+
 <br>
-one person · one NFT · one wallet
-</div>
 
-<div class="field">
-<input id="handle" type="text" placeholder="@yourhandle" autocomplete="off" maxlength="50">
-<button class="cta accent" id="enterBtn" type="button">Enter</button>
-</div>
+> one person · one NFT · one wallet
 
-<div class="error" id="handleError">Enter your X handle to continue.</div>
+  </div>
 
-<div class="rule">
+  <div class="field">
+
+<input
+  id="handle"
+  type="text"
+  placeholder="@yourhandle"
+  autocomplete="off"
+  maxlength="50"
+>
+
+<button
+  class="cta accent"
+  id="enterBtn"
+  type="button"
+>
+  Enter
+</button>
+
+  </div>
+
+  <div
+    class="error"
+    id="handleError"
+  >
+    Enter your X handle to continue.
+  </div>
+
+  <div class="rule">
+
 <strong>Eligibility:</strong>
-The first 100 eligible $ROAD holders who remain holding through the qualification period will receive the corresponding NFT.
+The first 100 eligible $ROAD holders who remain holding
+through the qualification period will receive the corresponding NFT.
 One person · one wallet · one NFT.
-</div>
+
+  </div>
+
 </section>
 
-<section class="step" data-step="2">
-<div class="eyebrow">02 · SEAL THE SPOT</div>
-<h2>Reserve your number</h2>
-<p>Your spot will be assigned by the Roadman database.</p>
+<section
+  class="step"
+  data-step="2"
+>
 
-<div class="terminal">
-handle detected:
-<span class="ok" id="echo"></span>
+  <div class="eyebrow">
+    02 · SEAL THE SPOT
+  </div>
+
+  <h2>
+    Reserve your number
+  </h2>
+
+  <p>
+    Your spot will be assigned by the Roadman database.
+  </p>
+
+  <div class="terminal">
+
+> handle detected:
+<span
+  class="ok"
+  id="echo"
+></span>
+
 <br>
-wallet verification is next...
-</div>
 
-<div class="nav">
-<button class="cta ghost" data-back="1" type="button">Back</button>
-<button class="cta accent" id="sealBtn" type="button">Continue</button>
-</div>
+> route confirmed
+<br>
+
+> wallet verification is next...
+
+  </div>
+
+  <div class="nav">
+
+<button
+  class="cta ghost"
+  data-back="1"
+  type="button"
+>
+  Back
+</button>
+
+<button
+  class="cta accent"
+  id="sealBtn"
+  type="button"
+>
+  Continue
+</button>
+
+  </div>
+
 </section>
 
-<section class="step" data-step="3">
-<div class="eyebrow">03 · VERIFY WALLET</div>
-<h2>Connect the eligible wallet</h2>
-<p>Connect a Solana wallet. The wallet must sign a verification message to prove that you control it.</p>
+<section
+  class="step"
+  data-step="3"
+>
 
-<div class="wallets">
+  <div class="eyebrow">
+    03 · VERIFY WALLET
+  </div>
 
-<button class="wallet" data-wallet="Phantom" type="button">
-<img class="wallet-logo" src="images/phantom.png" alt="Phantom" draggable="false">
-<span class="wallet-name"><strong>Phantom</strong><span>Connect & sign</span></span>
+  <h2>
+    Connect the eligible wallet
+  </h2>
+
+  <p>
+    Connect Phantom or Solflare. The wallet must sign a
+    verification message to prove that you control it.
+  </p>
+
+  <div class="wallets">
+
+<button
+  class="wallet"
+  data-wallet="Phantom"
+  type="button"
+>
+
+  <img
+    class="wallet-logo"
+    src="images/phantom.png"
+    alt="Phantom"
+    draggable="false"
+  >
+
+  <span class="wallet-name">
+
+    <strong>
+      Phantom
+    </strong>
+
+    <span>
+      Connect & sign
+    </span>
+
+  </span>
+
 </button>
 
-<button class="wallet" data-wallet="Solflare" type="button">
-<img class="wallet-logo" src="images/solflare.png" alt="Solflare" draggable="false">
-<span class="wallet-name"><strong>Solflare</strong><span>Connect & sign</span></span>
+<button
+  class="wallet"
+  data-wallet="Solflare"
+  type="button"
+>
+
+  <img
+    class="wallet-logo"
+    src="images/solflare.png"
+    alt="Solflare"
+    draggable="false"
+  >
+
+  <span class="wallet-name">
+
+    <strong>
+      Solflare
+    </strong>
+
+    <span>
+      Connect & sign
+    </span>
+
+  </span>
+
 </button>
 
-<button class="wallet" data-wallet="MetaMask" type="button">
-<img class="wallet-logo" src="images/metamask.png" alt="MetaMask" draggable="false" onerror="this.style.display='none'">
-<span class="wallet-name"><strong>MetaMask</strong><span>Connect & sign</span></span>
+<button
+  class="wallet"
+  data-wallet="MetaMask"
+  type="button"
+>
+
+  <img
+    class="wallet-logo"
+    src="images/metamask.png"
+    alt="MetaMask"
+    draggable="false"
+  >
+
+  <span class="wallet-name">
+
+    <strong>
+      MetaMask
+    </strong>
+
+    <span>
+      Solana wallet
+    </span>
+
+  </span>
+
 </button>
 
+<button
+  class="wallet manual"
+  data-wallet="Manual"
+  type="button"
+>
+
+  <span class="manual-icon">
+    +
+  </span>
+
+  <span class="wallet-name">
+
+    <strong>
+      Enter wallet address
+    </strong>
+
+    <span>
+      Address only · signature required
+    </span>
+
+  </span>
+
+</button>
+
+  </div>
+
+  <div
+    id="walletBox"
+    style="display:none"
+  >
+
+<div
+  class="hint"
+  id="walletHint"
+>
+  Connect a wallet to sign the verification message.
 </div>
 
-<div id="walletBox" style="display:none">
-<div class="hint" id="walletHint">Connect a wallet to sign the verification message.</div>
-<input id="walletInput" placeholder="Solana wallet address" autocomplete="off" spellcheck="false" readonly>
-<div class="error" id="walletError"></div>
-</div>
+<input
+  id="walletInput"
+  placeholder="Solana wallet address"
+  autocomplete="off"
+  spellcheck="false"
+>
 
-<div class="wallet-state" id="walletState"></div>
+<div
+  class="error"
+  id="walletError"
+></div>
 
-<div class="terminal" id="verifyStatus" style="display:none;margin-top:8px;"></div>
+  </div>
 
-<div class="nav">
-<button class="cta ghost" data-back="2" type="button">Back</button>
-<button class="cta accent" id="verifyBtn" disabled type="button">Verify & continue</button>
-</div>
+  <div
+    class="wallet-state"
+    id="walletState"
+  ></div>
+
+  <div
+    class="terminal"
+    id="verifyStatus"
+    style="display:none;margin-top:8px;"
+  ></div>
+
+  <div
+    class="test-mode"
+    id="testMode"
+  >
+    TEST MODE · $ROAD verification simulated
+  </div>
+
+  <div class="nav">
+
+<button
+  class="cta ghost"
+  data-back="2"
+  type="button"
+>
+  Back
+</button>
+
+<button
+  class="cta accent"
+  id="verifyBtn"
+  disabled
+  type="button"
+>
+  Verify & continue
+</button>
+
+  </div>
+
 </section>
 
-<section class="step" data-step="4">
-<div class="eyebrow">04 · YOUR ROAD</div>
+<section
+  class="step"
+  data-step="4"
+>
 
-<div class="confirm">
-<div class="small">early access secured</div>
-<div class="spot" id="finalSpot">SPOT #001</div>
+  <div class="eyebrow">
+    04 · YOUR ROAD
+  </div>
+
+  <div class="confirm">
+
+<div class="small">
+  early access secured
+</div>
+
+<div
+  class="spot"
+  id="finalSpot"
+>
+  SPOT #001
+</div>
 
 <div class="rows">
-<div><span>handle</span><span id="finalHandle">—</span></div>
-<div><span>wallet</span><span id="finalWallet">—</span></div>
-<div><span>status</span><span class="green">ON THE ROAD · SEALED</span></div>
-</div>
+
+  <div>
+    <span>
+      handle
+    </span>
+
+    <span id="finalHandle">
+      —
+    </span>
+  </div>
+
+  <div>
+    <span>
+      wallet
+    </span>
+
+    <span id="finalWallet">
+      —
+    </span>
+  </div>
+
+  <div>
+    <span>
+      status
+    </span>
+
+    <span class="green">
+      ON THE ROAD · SEALED
+    </span>
+  </div>
+
 </div>
 
-<div class="final-message">
-<div class="final-symbol">✓</div>
-<div class="final-title">Your Road is Sealed</div>
-<div class="final-sub">
-Your early access spot has been secured.
-Your personal Roadmap is the next part of the journey.
-</div>
+  </div>
+
+  <div class="nft">
+
+<div
+  class="nft-frame"
+  id="nftFrame"
+  oncontextmenu="return false"
+>
+
+  <img
+    id="nftImg"
+    class="nft-img"
+    alt="Roadman NFT"
+    decoding="async"
+    draggable="false"
+    oncontextmenu="return false"
+  >
+
+  <div
+    class="nft-fallback"
+    id="nftFallback"
+  >
+    ROAD IMAGE UNAVAILABLE
+  </div>
+
 </div>
 
-<button class="cta accent bottom-action" id="roadmapBtn" type="button">
-ENTER YOUR ROADMAP →
+<div class="nft-title">
+  Your Road is Sealed
+</div>
+
+<div class="nft-sub">
+  Your reserved artwork is shown above.
+</div>
+
+  </div>
+
+<button
+class="cta accent bottom-action"
+id="galleryBtn"
+type="button"
+>
+View The First 100
 </button>
 
-<div class="rule">
-<strong>Important:</strong>
-The First 100 artwork remains unrevealed until the qualification and NFT distribution process is complete.
-</div>
 </section>
 
 </main>
 
 <footer>
-THE ROAD PROVIDES · 100 early access spots · 1 NFT per person
+  THE ROAD PROVIDES · 100 early access spots · 1 NFT per person
 </footer>
 
 </div>
 </div>
 
-<script type="module">
-
-/* =====================================================
-CONFIG
-===================================================== */
+<script>
 
 const TOTAL = 100;
 
@@ -409,21 +1709,7 @@ const API_SPOTS = "/api/spots";
 const API_NONCE = "/api/nonce";
 const API_CLAIM = "/api/claim";
 
-/*
-  Current MetaMask Connect Solana Mainnet scope.
-*/
-const METAMASK_SOLANA =
-  "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
-
-/*
-  MetaMask Connect client.
-*/
-let metamaskClient = null;
-let metamaskSession = null;
-
-/* =====================================================
-STATE
-===================================================== */
+const TEST_KEY = "ROADMAN_TEST_2026";
 
 let step = 1;
 let currentHandle = "";
@@ -431,11 +1717,22 @@ let selectedWallet = "";
 let connectedWallet = "";
 let connectedProvider = null;
 let claim = null;
-let participationToken = "";
-let participationExpiresAt = "";
+
+/*
+  SECURITY STATE
+
+  The wallet address alone is NOT enough.
+
+  We keep the nonce and signature in memory only.
+  They are never stored in localStorage/sessionStorage.
+*/
 let walletNonce = "";
 let walletSignature = "";
 let walletMessage = "";
+
+let metamaskSolanaClient = null;
+let metamaskWallet = null;
+let metamaskAccount = null;
 
 const $ = id => document.getElementById(id);
 
@@ -446,18 +1743,31 @@ const ROADMAN_SCENES = [
   "roadman-scenes/scene4.png"
 ];
 
-const ROADMAN_POSITIONS = [6,35,65,94];
+const ROADMAN_POSITIONS = [
+  6,
+  35,
+  65,
+  94
+];
 
 /* =====================================================
-ROADMAN
+ROADMAN JOURNEY
 ===================================================== */
 
-function updateRoadmanJourney(n,animate=true){
+function updateRoadmanJourney(n, animate = true){
 
   const scene = $("roadmanScene");
   const journey = $("roadmanJourney");
 
-  const index = Math.max(0,Math.min(3,n-1));
+  if(!scene){
+    return;
+  }
+
+  const index = Math.max(
+    0,
+    Math.min(3,n - 1)
+  );
+
   const position = ROADMAN_POSITIONS[index];
 
   if(journey){
@@ -470,8 +1780,9 @@ function updateRoadmanJourney(n,animate=true){
     );
 
     journey.classList.add(
-      "step-" + (index+1)
+      "step-" + (index + 1)
     );
+
   }
 
   scene.style.left = position + "%";
@@ -479,41 +1790,61 @@ function updateRoadmanJourney(n,animate=true){
   if(!animate){
 
     scene.src = ROADMAN_SCENES[index];
-    scene.alt = "The Roadman — Scene " + (index+1);
+
+    scene.alt =
+      "The Roadman — Scene " +
+      (index + 1);
+
     scene.style.opacity = "1";
 
     return;
+
   }
 
   scene.classList.add("moving");
+
   scene.style.opacity = ".35";
 
-  setTimeout(()=>{
+  window.setTimeout(function(){
 
     scene.src = ROADMAN_SCENES[index];
-    scene.alt = "The Roadman — Scene " + (index+1);
+
+    scene.alt =
+      "The Roadman — Scene " +
+      (index + 1);
+
     scene.style.opacity = "1";
 
   },180);
 
-  setTimeout(()=>{
+  window.setTimeout(function(){
+
     scene.classList.remove("moving");
+
   },700);
+
 }
 
 function animateRoadStage(){
 
   const stage = $("pageStage");
 
-  if(!stage) return;
+  if(!stage){
+    return;
+  }
 
   stage.classList.remove("road-transition");
+
   void stage.offsetWidth;
+
   stage.classList.add("road-transition");
 
-  setTimeout(()=>{
+  setTimeout(function(){
+
     stage.classList.remove("road-transition");
+
   },450);
+
 }
 
 /* =====================================================
@@ -524,41 +1855,65 @@ function normalizeHandle(value){
 
   let v = String(value || "").trim();
 
-  if(!v) return "";
+  if(!v){
+    return "";
+  }
 
-  if(!v.startsWith("@")) v = "@" + v;
+  if(!v.startsWith("@")){
+    v = "@" + v;
+  }
 
   return v;
+
 }
 
 function maskWallet(wallet){
 
-  if(!wallet || wallet.length <= 10) return wallet;
+  if(!wallet || wallet.length <= 10){
+    return wallet;
+  }
 
-  return wallet.slice(0,5) + "..." + wallet.slice(-5);
+  return (
+    wallet.slice(0,5) +
+    "..." +
+    wallet.slice(-5)
+  );
+
 }
 
 function isValidSolanaAddress(address){
 
-  const value = String(address || "").trim();
+  const value =
+    String(address || "").trim();
 
-  if(value.length < 32 || value.length > 44){
+  if(
+    value.length < 32 ||
+    value.length > 44
+  ){
     return false;
   }
 
   return /^[1-9A-HJ-NP-Za-km-z]+$/.test(value);
+
 }
 
 function showWalletError(message){
 
-  const box = $("walletError");
+  const errorBox =
+    $("walletError");
 
-  box.textContent = message || "";
-  box.style.display = message ? "block" : "none";
+  errorBox.textContent =
+    message || "";
+
+  errorBox.style.display =
+    message ? "block" : "none";
+
 }
 
 function clearWalletError(){
+
   showWalletError("");
+
 }
 
 /* =====================================================
@@ -572,81 +1927,74 @@ function bytesToBase58(bytes){
 
   let digits = [0];
 
-  for(let i=0;i<bytes.length;i++){
+  for(
+    let i = 0;
+    i < bytes.length;
+    i++
+  ){
 
-    let carry = bytes[i];
+    let carry =
+      bytes[i];
 
-    for(let j=0;j<digits.length;j++){
+    for(
+      let j = 0;
+      j < digits.length;
+      j++
+    ){
 
-      const value = digits[j] * 256 + carry;
+      const value =
+        digits[j] * 256 +
+        carry;
 
-      digits[j] = value % 58;
-      carry = Math.floor(value / 58);
+      digits[j] =
+        value % 58;
+
+      carry =
+        Math.floor(value / 58);
+
     }
 
     while(carry > 0){
 
-      digits.push(carry % 58);
-      carry = Math.floor(carry / 58);
+      digits.push(
+        carry % 58
+      );
+
+      carry =
+        Math.floor(carry / 58);
+
     }
+
   }
 
   let result = "";
 
   for(
-    let i=0;
-    i<bytes.length && bytes[i]===0;
+    let i = 0;
+    i < bytes.length &&
+    bytes[i] === 0;
     i++
   ){
+
     result += "1";
+
   }
 
-  for(let i=digits.length-1;i>=0;i--){
-    result += BASE58_ALPHABET[digits[i]];
+  for(
+    let i = digits.length - 1;
+    i >= 0;
+    i--
+  ){
+
+    result +=
+      BASE58_ALPHABET[
+        digits[i]
+      ];
+
   }
 
   return result;
-}
 
-function base64ToBytes(value){
-
-  const binary = atob(value);
-  const bytes = new Uint8Array(binary.length);
-
-  for(let i=0;i<binary.length;i++){
-    bytes[i] = binary.charCodeAt(i);
-  }
-
-  return bytes;
-}
-
-function utf8ToBase64(value){
-
-  const bytes =
-    new TextEncoder().encode(value);
-
-  let binary = "";
-
-  const chunkSize = 0x8000;
-
-  for(
-    let i=0;
-    i<bytes.length;
-    i+=chunkSize
-  ){
-
-    binary += String.fromCharCode(
-      ...bytes.subarray(
-        i,
-        Math.min(
-          i + chunkSize,
-          bytes.length
-        )
-      )
-    );
-  }
-
-  return btoa(binary);
 }
 
 /* =====================================================
@@ -655,7 +2003,8 @@ WALLET ADDRESS
 
 function setWalletAddress(address){
 
-  const wallet = String(address || "").trim();
+  const wallet =
+    String(address || "").trim();
 
   if(!isValidSolanaAddress(wallet)){
 
@@ -664,14 +2013,19 @@ function setWalletAddress(address){
     );
 
     return false;
+
   }
 
-  $("walletInput").value = wallet;
-  connectedWallet = wallet;
+  $("walletInput").value =
+    wallet;
+
+  connectedWallet =
+    wallet;
 
   clearWalletError();
 
   return true;
+
 }
 
 /* =====================================================
@@ -681,30 +2035,43 @@ STEP
 function setStep(n){
 
   const previousStep = step;
+
   step = n;
 
   document
     .querySelectorAll(".step")
-    .forEach(el=>{
+    .forEach(el => {
+
       el.classList.toggle(
         "active",
         Number(el.dataset.step) === n
       );
+
     });
 
   document
     .querySelectorAll(".marker")
-    .forEach(el=>{
+    .forEach(el => {
 
       const s = Number(el.dataset.step);
 
-      el.classList.toggle("active",s===n);
-      el.classList.toggle("done",s<n);
+      el.classList.toggle(
+        "active",
+        s === n
+      );
+
+      el.classList.toggle(
+        "done",
+        s < n
+      );
 
     });
 
   $("fill").style.width =
-    (((n-1)/3)*91 + 8.33) + "%";
+    (
+      (((n - 1) / 3) * 91) +
+      8.33
+    ) + "%";
 
   updateRoadmanJourney(
     n,
@@ -714,6 +2081,7 @@ function setStep(n){
   if(previousStep !== n){
     animateRoadStage();
   }
+
 }
 
 /* =====================================================
@@ -724,21 +2092,29 @@ async function updateSpots(){
 
   try{
 
-    const response = await fetch(
-      API_SPOTS,
-      {
-        method:"GET",
-        cache:"no-store"
-      }
-    );
+    const response =
+      await fetch(
+        API_SPOTS,
+        {
+          method:"GET",
+          cache:"no-store"
+        }
+      );
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
-    if(!response.ok || !data.success){
-      throw new Error("Unable to read spots.");
+    if(
+      !response.ok ||
+      !data.success
+    ){
+      throw new Error(
+        "Unable to read spots."
+      );
     }
 
-    const remaining = Number(data.remaining);
+    const remaining =
+      Number(data.remaining);
 
     $("spots").textContent =
       remaining + " / " + TOTAL;
@@ -748,15 +2124,26 @@ async function updateSpots(){
 
     if(remaining <= 0){
 
-      $("enterBtn").disabled = true;
-      $("handle").disabled = true;
-      $("handle").placeholder = "No spots remaining";
+      $("enterBtn").disabled =
+        true;
+
+      $("handle").disabled =
+        true;
+
+      $("handle").placeholder =
+        "No spots remaining";
+
     }
 
   }catch(error){
 
-    console.error("SPOTS:",error);
+    console.error(
+      "SPOTS:",
+      error
+    );
+
   }
+
 }
 
 /* =====================================================
@@ -765,8 +2152,11 @@ HANDLE
 
 function validHandle(){
 
-  const input = $("handle");
-  const value = normalizeHandle(input.value);
+  const input =
+    $("handle");
+
+  const value =
+    normalizeHandle(input.value);
 
   if(!value){
 
@@ -775,71 +2165,97 @@ function validHandle(){
     $("handleError").textContent =
       "Enter your X handle to continue.";
 
-    $("handleError").style.display = "block";
+    $("handleError").style.display =
+      "block";
 
     input.focus();
 
-    setTimeout(()=>{
-      input.classList.remove("invalid");
-    },350);
+    setTimeout(
+      () =>
+        input.classList.remove("invalid"),
+      350
+    );
 
     return false;
+
   }
 
-  input.value = value;
-  currentHandle = value;
+  input.value =
+    value;
 
-  $("echo").textContent = value;
-  $("handleError").style.display = "none";
+  currentHandle =
+    value;
+
+  $("echo").textContent =
+    value;
+
+  $("handleError").style.display =
+    "none";
 
   return true;
+
 }
 
-$("enterBtn").onclick = function(){
+$("enterBtn").onclick =
+  function(){
 
-  if(validHandle()){
-    setStep(2);
+    if(validHandle()){
+      setStep(2);
+    }
+
+  };
+
+$("handle").addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key === "Enter"){
+
+      event.preventDefault();
+
+      $("enterBtn").click();
+
+    }
+
   }
-};
+);
 
-$("handle").addEventListener("keydown",function(event){
+$("sealBtn").onclick =
+  function(){
 
-  if(event.key === "Enter"){
+    if(!currentHandle){
 
-    event.preventDefault();
-    $("enterBtn").click();
-  }
-});
+      setStep(1);
 
-$("sealBtn").onclick = function(){
+      return;
 
-  if(!currentHandle){
-    setStep(1);
-    return;
-  }
+    }
 
-  setStep(3);
-};
+    setStep(3);
+
+  };
 
 /* =====================================================
-BACK
+BACK BUTTONS
 ===================================================== */
 
 document
   .querySelectorAll("[data-back]")
-  .forEach(button=>{
+  .forEach(button => {
 
-    button.onclick = function(){
+    button.onclick =
+      function(){
 
-      setStep(
-        Number(button.dataset.back)
-      );
-    };
+        setStep(
+          Number(button.dataset.back)
+        );
+
+      };
 
   });
 
 /* =====================================================
-RESET
+RESET SIGNATURE STATE
 ===================================================== */
 
 function resetWalletProof(){
@@ -847,37 +2263,50 @@ function resetWalletProof(){
   walletNonce = "";
   walletSignature = "";
   walletMessage = "";
+
 }
 
 /* =====================================================
-NONCE
+GET NONCE
 ===================================================== */
 
 async function requestNonce(wallet){
 
-  const response = await fetch(
-    API_NONCE,
-    {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      cache:"no-store",
-      body:JSON.stringify({wallet})
-    }
-  );
+  const response =
+    await fetch(
+      API_NONCE,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":
+            "application/json"
+        },
+        cache:"no-store",
+        body:JSON.stringify({
+          wallet:wallet
+        })
+      }
+    );
 
   let data;
 
   try{
-    data = await response.json();
+
+    data =
+      await response.json();
+
   }catch{
+
     throw new Error(
       "The Roadman server returned an invalid nonce response."
     );
+
   }
 
-  if(!response.ok || !data.success){
+  if(
+    !response.ok ||
+    !data.success
+  ){
 
     throw new Error(
       data.error ||
@@ -887,23 +2316,32 @@ async function requestNonce(wallet){
         response.status
       )
     );
+
   }
 
-  if(!data.nonce || !data.message){
+  if(
+    !data.nonce ||
+    !data.message
+  ){
 
     throw new Error(
       "The server did not return a valid wallet verification message."
     );
+
   }
 
-  walletNonce = String(data.nonce);
-  walletMessage = String(data.message);
+  walletNonce =
+    String(data.nonce);
+
+  walletMessage =
+    String(data.message);
 
   return data;
+
 }
 
 /* =====================================================
-STANDARD SOLANA SIGNING
+SIGN MESSAGE
 ===================================================== */
 
 async function signWalletMessage(){
@@ -913,6 +2351,7 @@ async function signWalletMessage(){
     throw new Error(
       "No wallet provider is connected."
     );
+
   }
 
   if(!walletMessage){
@@ -920,26 +2359,36 @@ async function signWalletMessage(){
     throw new Error(
       "No verification message was received from the server."
     );
+
   }
 
   const encodedMessage =
-    new TextEncoder().encode(walletMessage);
+    new TextEncoder().encode(
+      walletMessage
+    );
 
-  if(typeof connectedProvider.signMessage !== "function"){
+  let signed;
+
+  if(
+    typeof connectedProvider.signMessage !==
+    "function"
+  ){
 
     throw new Error(
-      "This wallet does not support Solana message signing in this browser."
+      "This wallet does not support message signing in this browser."
     );
+
   }
 
-  const signed =
+  signed =
     await connectedProvider.signMessage(
       encodedMessage,
       "utf8"
     );
 
   const signatureBytes =
-    signed?.signature || signed;
+    signed?.signature ||
+    signed;
 
   if(
     !signatureBytes ||
@@ -949,11 +2398,14 @@ async function signWalletMessage(){
     throw new Error(
       "The wallet did not return a valid signature."
     );
+
   }
 
   walletSignature =
     bytesToBase58(
-      new Uint8Array(signatureBytes)
+      new Uint8Array(
+        signatureBytes
+      )
     );
 
   if(!walletSignature){
@@ -961,45 +2413,11 @@ async function signWalletMessage(){
     throw new Error(
       "Unable to encode the wallet signature."
     );
+
   }
 
   return walletSignature;
-}
 
-/* =====================================================
-WALLET UI
-===================================================== */
-
-function prepareWalletUI(name){
-
-  clearWalletError();
-
-  $("walletBox").style.display = "block";
-  $("walletState").style.display = "none";
-  $("verifyStatus").style.display = "block";
-
-  $("verifyBtn").disabled = true;
-  $("verifyBtn").textContent = "Verify & continue";
-
-  connectedProvider = null;
-  connectedWallet = "";
-
-  resetWalletProof();
-
-  document
-    .querySelectorAll(".wallet")
-    .forEach(button=>{
-      button.classList.remove(
-        "selected",
-        "connected"
-      );
-    });
-
-  document
-    .querySelector(
-      '[data-wallet="' + name + '"]'
-    )
-    ?.classList.add("selected");
 }
 
 /* =====================================================
@@ -1008,11 +2426,19 @@ PHANTOM
 
 async function connectPhantom(){
 
-  prepareWalletUI("Phantom");
+  clearWalletError();
 
-  const status = $("verifyStatus");
+  const status =
+    $("verifyStatus");
 
-  status.textContent = "> opening Phantom...";
+  status.style.display =
+    "block";
+
+  status.className =
+    "terminal";
+
+  status.textContent =
+    "> opening Phantom...";
 
   try{
 
@@ -1027,11 +2453,13 @@ async function connectPhantom(){
     if(!provider){
 
       throw new Error(
-        "Phantom was not detected. Unlock Phantom and reload this page."
+        "Phantom was not detected. Unlock the Phantom extension and reload this page."
       );
+
     }
 
-    connectedProvider = provider;
+    connectedProvider =
+      provider;
 
     const response =
       await provider.connect();
@@ -1046,11 +2474,15 @@ async function connectPhantom(){
 
     if(!setWalletAddress(address)){
 
-      connectedProvider = null;
+      connectedProvider =
+        null;
+
       return false;
+
     }
 
-    selectedWallet = "Phantom";
+    selectedWallet =
+      "Phantom";
 
     document
       .querySelector('[data-wallet="Phantom"]')
@@ -1059,7 +2491,11 @@ async function connectPhantom(){
     $("walletHint").textContent =
       "Phantom connected. Requesting secure verification...";
 
-    $("walletState").style.display = "block";
+    $("walletBox").style.display =
+      "block";
+
+    $("walletState").style.display =
+      "block";
 
     $("walletState").innerHTML =
       "<strong>PHANTOM CONNECTED</strong><br>" +
@@ -1067,6 +2503,8 @@ async function connectPhantom(){
 
     status.textContent =
       "> requesting secure verification...";
+
+    resetWalletProof();
 
     await requestNonce(address);
 
@@ -1078,7 +2516,11 @@ async function connectPhantom(){
     status.textContent =
       "> wallet signature received. Ready to verify.";
 
-    $("verifyBtn").disabled = false;
+    $("verifyBtn").disabled =
+      false;
+
+    $("verifyBtn").textContent =
+      "Verify & continue";
 
     $("walletHint").textContent =
       "Wallet control verified by signature.";
@@ -1087,14 +2529,20 @@ async function connectPhantom(){
 
   }catch(error){
 
-    console.error("PHANTOM:",error);
+    console.error(
+      "PHANTOM:",
+      error
+    );
 
-    connectedProvider = null;
+    connectedProvider =
+      null;
+
     resetWalletProof();
 
-    $("verifyBtn").disabled = true;
+    $("verifyBtn").disabled =
+      true;
 
-    status.textContent =
+    $("verifyStatus").textContent =
       "> " +
       (
         error?.message ||
@@ -1107,7 +2555,9 @@ async function connectPhantom(){
     );
 
     return false;
+
   }
+
 }
 
 /* =====================================================
@@ -1116,16 +2566,24 @@ SOLFLARE
 
 async function connectSolflare(){
 
-  prepareWalletUI("Solflare");
+  clearWalletError();
 
-  const status = $("verifyStatus");
+  const status =
+    $("verifyStatus");
+
+  status.style.display =
+    "block";
+
+  status.className =
+    "terminal";
 
   status.textContent =
     "> opening Solflare...";
 
   try{
 
-    const provider = window.solflare;
+    const provider =
+      window.solflare;
 
     if(
       !provider ||
@@ -1133,15 +2591,18 @@ async function connectSolflare(){
     ){
 
       throw new Error(
-        "Solflare was not detected. Unlock Solflare and reload this page."
+        "Solflare was not detected. Unlock the Solflare extension and reload this page."
       );
+
     }
 
-    connectedProvider = provider;
+    connectedProvider =
+      provider;
 
     await provider.connect();
 
-    const publicKey = provider.publicKey;
+    const publicKey =
+      provider.publicKey;
 
     const address =
       publicKey?.toString?.() ||
@@ -1149,11 +2610,15 @@ async function connectSolflare(){
 
     if(!setWalletAddress(address)){
 
-      connectedProvider = null;
+      connectedProvider =
+        null;
+
       return false;
+
     }
 
-    selectedWallet = "Solflare";
+    selectedWallet =
+      "Solflare";
 
     document
       .querySelector('[data-wallet="Solflare"]')
@@ -1162,7 +2627,11 @@ async function connectSolflare(){
     $("walletHint").textContent =
       "Solflare connected. Requesting secure verification...";
 
-    $("walletState").style.display = "block";
+    $("walletBox").style.display =
+      "block";
+
+    $("walletState").style.display =
+      "block";
 
     $("walletState").innerHTML =
       "<strong>SOLFLARE CONNECTED</strong><br>" +
@@ -1170,6 +2639,8 @@ async function connectSolflare(){
 
     status.textContent =
       "> requesting secure verification...";
+
+    resetWalletProof();
 
     await requestNonce(address);
 
@@ -1181,7 +2652,11 @@ async function connectSolflare(){
     status.textContent =
       "> wallet signature received. Ready to verify.";
 
-    $("verifyBtn").disabled = false;
+    $("verifyBtn").disabled =
+      false;
+
+    $("verifyBtn").textContent =
+      "Verify & continue";
 
     $("walletHint").textContent =
       "Wallet control verified by signature.";
@@ -1190,14 +2665,20 @@ async function connectSolflare(){
 
   }catch(error){
 
-    console.error("SOLFLARE:",error);
+    console.error(
+      "SOLFLARE:",
+      error
+    );
 
-    connectedProvider = null;
+    connectedProvider =
+      null;
+
     resetWalletProof();
 
-    $("verifyBtn").disabled = true;
+    $("verifyBtn").disabled =
+      true;
 
-    status.textContent =
+    $("verifyStatus").textContent =
       "> " +
       (
         error?.message ||
@@ -1210,25 +2691,39 @@ async function connectSolflare(){
     );
 
     return false;
+
   }
+
 }
 
 /* =====================================================
-METAMASK CONNECT
+METAMASK SOLANA
 ===================================================== */
 
-async function initMetaMask(){
+async function connectMetaMask(){
 
-  if(metamaskClient){
-    return metamaskClient;
-  }
+  clearWalletError();
+
+  const status =
+    $("verifyStatus");
+
+  status.style.display =
+    "block";
+
+  status.className =
+    "terminal";
+
+  status.textContent =
+    "> opening MetaMask Solana...";
 
   try{
 
     /*
-      Official MetaMask Connect Solana client.
-      This client exposes the multichain core underneath.
+      MetaMask's current browser integration for Solana
+      is Wallet Standard based. We intentionally do NOT
+      use window.ethereum because that is the EVM provider.
     */
+
     const module =
       await import(
         "https://cdn.jsdelivr.net/npm/@metamask/connect-solana/+esm"
@@ -1238,276 +2733,161 @@ async function initMetaMask(){
       module.createSolanaClient;
 
     if(
-      typeof createSolanaClient !== "function"
+      typeof createSolanaClient !==
+      "function"
     ){
-
       throw new Error(
-        "createSolanaClient was not found."
+        "MetaMask Solana integration could not be loaded."
       );
     }
 
-    metamaskClient =
-      await createSolanaClient({
+    if(!metamaskSolanaClient){
 
-        dapp:{
-          name:"THE ROAD PROVIDES",
-          url:window.location.origin
-        },
+      status.textContent =
+        "> initializing MetaMask Solana...";
 
-        api:{
-          supportedNetworks:{
-            mainnet:
-              "https://api.mainnet-beta.solana.com"
-          }
-        }
-
-      });
-
-    /*
-      The Solana client uses MetaMask Connect's
-      multichain core internally.
-    */
-    if(
-      metamaskClient.core &&
-      typeof metamaskClient.core.on === "function"
-    ){
-
-      metamaskClient.core.on(
-        "wallet_sessionChanged",
-        session=>{
-
-          metamaskSession = session;
-
-        }
-      );
-    }
-
-    return metamaskClient;
-
-  }catch(error){
-
-    console.error(
-      "METAMASK CONNECT LOAD:",
-      error
-    );
-
-    metamaskClient = null;
-
-    throw new Error(
-      "MetaMask Connect could not be loaded. Check your internet connection and reload the page."
-    );
-  }
-}
-
-/* =====================================================
-METAMASK PROVIDER ADAPTER
-===================================================== */
-
-function createMetaMaskProvider(address){
-
-  return {
-
-    signMessage: async function(messageBytes){
-
-      const bytes =
-        messageBytes instanceof Uint8Array
-          ? messageBytes
-          : new Uint8Array(messageBytes);
-
-      const message =
-        utf8ToBase64(
-          new TextDecoder().decode(bytes)
-        );
-
-      /*
-        IMPORTANT:
-        Current @metamask/connect-multichain API
-        exposes invokeMethod directly on the client.
-      */
-      const result =
-        await metamaskClient.invokeMethod({
-
-          scope:METAMASK_SOLANA,
-
-          request:{
-            method:"signMessage",
-
-            params:{
-              account:{
-                address
-              },
-
-              message
+      metamaskSolanaClient =
+        await createSolanaClient({
+          dapp:{
+            name:"THE ROAD PROVIDES",
+            url:window.location.href
+          },
+          api:{
+            supportedNetworks:{
+              mainnet:
+                "https://api.mainnet-beta.solana.com"
             }
           }
-
         });
 
-      const signatureBase64 =
-        typeof result === "string"
-          ? result
-          : result?.signature;
-
-      if(!signatureBase64){
-
-        throw new Error(
-          "MetaMask did not return a message signature."
-        );
-      }
-
-      return {
-        signature:
-          base64ToBytes(
-            signatureBase64
-          )
-      };
     }
 
-  };
-}
+    metamaskWallet =
+      metamaskSolanaClient.getWallet();
 
-/* =====================================================
-METAMASK
-===================================================== */
+    if(!metamaskWallet){
+      throw new Error(
+        "MetaMask Solana wallet was not initialized."
+      );
+    }
 
-async function connectMetaMask(){
-
-  prepareWalletUI("MetaMask");
-
-  const status = $("verifyStatus");
-
-  status.textContent =
-    "> loading MetaMask Connect...";
-
-  try{
-
-    const client =
-      await initMetaMask();
+    const connectFeature =
+      metamaskWallet.features[
+        "standard:connect"
+      ];
 
     if(
-      !client ||
-      typeof client.connect !== "function"
+      !connectFeature ||
+      typeof connectFeature.connect !==
+      "function"
     ){
-
       throw new Error(
-        "MetaMask Connect initialized without a valid connect method."
+        "MetaMask Solana connection is not available in this browser."
       );
     }
 
     status.textContent =
-      "> requesting Solana Mainnet access...";
+      "> waiting for MetaMask approval...";
 
-    /*
-      Capture the session before connecting.
-    */
-    metamaskSession = null;
-
-    /*
-      IMPORTANT:
-      Current MetaMask Connect Multichain API:
-      client.connect(...)
-      NOT client.core.connect(...)
-    */
-    await client.connect(
-      [METAMASK_SOLANA],
-      []
-    );
-
-    /*
-      Give the wallet session event a short moment
-      to update the local session variable.
-    */
-    if(!metamaskSession){
-
-      await new Promise(resolve=>{
-        setTimeout(resolve,250);
-      });
-
-    }
-
-    /*
-      Some environments may already have a session
-      available through the core session getter.
-    */
-    if(
-      !metamaskSession &&
-      client.core &&
-      typeof client.core.getSession === "function"
-    ){
-
-      try{
-
-        metamaskSession =
-          await client.core.getSession();
-
-      }catch(error){
-
-        console.warn(
-          "MetaMask session lookup:",
-          error
-        );
-      }
-    }
+    const result =
+      await connectFeature.connect();
 
     const accounts =
-      metamaskSession
-        ?.sessionScopes
-        ?.[METAMASK_SOLANA]
-        ?.accounts || [];
+      result?.accounts || [];
 
     if(!accounts.length){
-
       throw new Error(
-        "MetaMask connected, but no Solana Mainnet account was returned."
+        "MetaMask did not return a Solana account."
       );
     }
 
-    /*
-      MetaMask returns a CAIP-10 account:
-      solana:<chain-id>:<address>
-    */
-    const rawAccount =
+    metamaskAccount =
       accounts[0];
 
     const address =
-      String(rawAccount)
-        .split(":")
-        .pop();
+      String(
+        metamaskAccount?.address ||
+        ""
+      ).trim();
 
-    if(
-      !isValidSolanaAddress(address)
-    ){
-
+    if(!isValidSolanaAddress(address)){
       throw new Error(
         "MetaMask returned an invalid Solana wallet address."
       );
     }
+
+    const signMessageFeature =
+      metamaskWallet.features[
+        "solana:signMessage"
+      ];
+
+    if(
+      !signMessageFeature ||
+      typeof signMessageFeature.signMessage !==
+      "function"
+    ){
+      throw new Error(
+        "This MetaMask version does not support Solana message signing."
+      );
+    }
+
+    connectedProvider = {
+
+      signMessage: async function(messageBytes){
+
+        if(!metamaskAccount){
+          throw new Error(
+            "MetaMask Solana account is no longer connected."
+          );
+        }
+
+        const responses =
+          await signMessageFeature.signMessage({
+            account:metamaskAccount,
+            message:new Uint8Array(messageBytes)
+          });
+
+        const signature =
+          responses?.[0]?.signature;
+
+        if(
+          !signature ||
+          typeof signature.length !== "number"
+        ){
+          throw new Error(
+            "MetaMask did not return a valid message signature."
+          );
+        }
+
+        return {
+          signature:new Uint8Array(signature)
+        };
+
+      }
+
+    };
 
     if(!setWalletAddress(address)){
 
-      throw new Error(
-        "MetaMask returned an invalid Solana wallet address."
-      );
-    }
+      connectedProvider =
+        null;
 
-    /*
-      Adapt MetaMask Connect to the same
-      signMessage interface used by Phantom/Solflare.
-    */
-    connectedProvider =
-      createMetaMaskProvider(address);
+      metamaskAccount =
+        null;
+
+      return false;
+
+    }
 
     selectedWallet =
       "MetaMask";
 
     document
-      .querySelector(
-        '[data-wallet="MetaMask"]'
-      )
+      .querySelector('[data-wallet="MetaMask"]')
       ?.classList.add("connected");
 
-    $("walletHint").textContent =
-      "MetaMask connected. Requesting secure verification...";
+    $("walletBox").style.display =
+      "block";
 
     $("walletState").style.display =
       "block";
@@ -1516,8 +2896,13 @@ async function connectMetaMask(){
       "<strong>METAMASK CONNECTED</strong><br>" +
       maskWallet(address);
 
+    $("walletHint").textContent =
+      "MetaMask connected. Requesting secure verification...";
+
     status.textContent =
       "> requesting secure verification...";
+
+    resetWalletProof();
 
     await requestNonce(address);
 
@@ -1529,7 +2914,11 @@ async function connectMetaMask(){
     status.textContent =
       "> wallet signature received. Ready to verify.";
 
-    $("verifyBtn").disabled = false;
+    $("verifyBtn").disabled =
+      false;
+
+    $("verifyBtn").textContent =
+      "Verify & continue";
 
     $("walletHint").textContent =
       "Wallet control verified by signature.";
@@ -1543,15 +2932,18 @@ async function connectMetaMask(){
       error
     );
 
-    connectedProvider = null;
-    connectedWallet = "";
-    metamaskSession = null;
+    connectedProvider =
+      null;
+
+    metamaskAccount =
+      null;
 
     resetWalletProof();
 
-    $("verifyBtn").disabled = true;
+    $("verifyBtn").disabled =
+      true;
 
-    status.textContent =
+    $("verifyStatus").textContent =
       "> " +
       (
         error?.message ||
@@ -1564,40 +2956,158 @@ async function connectMetaMask(){
     );
 
     return false;
+
   }
+
 }
 
 /* =====================================================
-WALLET BUTTONS
+WALLET SELECTION
 ===================================================== */
 
 document
   .querySelectorAll(".wallet")
-  .forEach(button=>{
+  .forEach(button => {
 
     button.onclick =
       async function(){
 
-        const wallet =
+        selectedWallet =
           button.dataset.wallet;
 
-        if(wallet === "Phantom"){
+        document
+          .querySelectorAll(".wallet")
+          .forEach(b =>
+            b.classList.remove(
+              "selected",
+              "connected"
+            )
+          );
+
+        button.classList.add(
+          "selected"
+        );
+
+        $("walletBox").style.display =
+          "block";
+
+        $("walletState").style.display =
+          "none";
+
+        clearWalletError();
+
+        $("verifyStatus").style.display =
+          "none";
+
+        connectedProvider =
+          null;
+
+        resetWalletProof();
+
+        $("verifyBtn").disabled =
+          true;
+
+        $("verifyBtn").textContent =
+          "Verify & continue";
+
+        if(selectedWallet === "Manual"){
+
+          $("walletHint").textContent =
+            "Address entry is for reference only. A wallet signature is required to prove ownership.";
+
+          $("walletInput").value =
+            "";
+
+          $("walletInput").focus();
+
+          $("verifyStatus").style.display =
+            "block";
+
+          $("verifyStatus").textContent =
+            "> manual address entered — wallet signature still required.";
+
+          return;
+
+        }
+
+        $("walletHint").textContent =
+          "Connecting to " +
+          selectedWallet +
+          "...";
+
+        if(selectedWallet === "Phantom"){
+
           await connectPhantom();
-          return;
+
         }
 
-        if(wallet === "Solflare"){
+        if(selectedWallet === "Solflare"){
+
           await connectSolflare();
-          return;
+
         }
 
-        if(wallet === "MetaMask"){
+        if(selectedWallet === "MetaMask"){
+
           await connectMetaMask();
-          return;
+
         }
+
       };
 
   });
+
+/* =====================================================
+MANUAL WALLET INPUT
+===================================================== */
+
+$("walletInput").addEventListener(
+  "input",
+  function(){
+
+    const wallet =
+      this.value.trim();
+
+    /*
+      Manual input NEVER creates a valid authentication proof.
+
+      It is only allowed to display an address.
+      A signature from a real wallet provider is mandatory.
+    */
+
+    connectedWallet =
+      "";
+
+    connectedProvider =
+      null;
+
+    metamaskAccount =
+      null;
+
+    resetWalletProof();
+
+    $("verifyBtn").disabled =
+      true;
+
+    clearWalletError();
+
+    $("verifyStatus").style.display =
+      "block";
+
+    if(isValidSolanaAddress(wallet)){
+
+      $("verifyStatus").textContent =
+        "> address detected. Connect Phantom or Solflare to sign ownership.";
+
+    }else{
+
+      $("verifyStatus").textContent =
+        "> waiting for a valid Solana address.";
+
+    }
+
+  }
+);
 
 /* =====================================================
 CLAIM
@@ -1610,36 +3120,57 @@ async function submitClaim(
   signature
 ){
 
-  const status = $("verifyStatus");
-  const errorBox = $("walletError");
+  const status =
+    $("verifyStatus");
 
-  status.style.display = "block";
-  status.className = "terminal";
+  const errorBox =
+    $("walletError");
+
+  status.style.display =
+    "block";
+
+  status.className =
+    "terminal";
 
   status.textContent =
     "> connecting to Roadman database...";
 
-  errorBox.style.display = "none";
+  errorBox.style.display =
+    "none";
 
   try{
 
     if(!nonce){
+
       throw new Error(
         "Wallet verification nonce is missing."
       );
+
     }
 
     if(!signature){
+
       throw new Error(
         "Wallet signature is missing."
       );
+
     }
 
     if(!connectedProvider){
+
       throw new Error(
-        "Connect a Solana wallet before claiming."
+        "Connect Phantom or Solflare before claiming."
       );
+
     }
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          250
+        )
+    );
 
     status.textContent =
       "> verifying wallet signature...";
@@ -1655,12 +3186,11 @@ async function submitClaim(
           },
           cache:"no-store",
           body:JSON.stringify({
-
             x_handle:handle,
             wallet:wallet,
             nonce:nonce,
-            signature:signature
-
+            signature:signature,
+            test_key:TEST_KEY
           })
         }
       );
@@ -1668,12 +3198,16 @@ async function submitClaim(
     let data;
 
     try{
-      data = await response.json();
+
+      data =
+        await response.json();
+
     }catch{
 
       throw new Error(
         "The Roadman server returned an invalid response."
       );
+
     }
 
     console.log(
@@ -1694,6 +3228,7 @@ async function submitClaim(
           response.status
         )
       );
+
     }
 
     status.textContent =
@@ -1722,11 +3257,13 @@ async function submitClaim(
       "> " + message;
 
     return null;
+
   }
+
 }
 
 /* =====================================================
-VERIFY
+VERIFY + CLAIM
 ===================================================== */
 
 $("verifyBtn").onclick =
@@ -1737,20 +3274,32 @@ $("verifyBtn").onclick =
         .value
         .trim();
 
-    if(!isValidSolanaAddress(wallet)){
+    if(
+      !isValidSolanaAddress(wallet)
+    ){
 
       showWalletError(
         "Connect a valid Solana wallet."
       );
 
       return;
+
     }
 
     if(!currentHandle){
 
       setStep(1);
+
       return;
+
     }
+
+    /*
+      SECURITY CHECK
+
+      A pasted address is NOT enough.
+      The wallet must have produced a signature.
+    */
 
     if(
       !connectedProvider ||
@@ -1760,16 +3309,21 @@ $("verifyBtn").onclick =
     ){
 
       showWalletError(
-        "Connect your wallet and sign the verification message before continuing."
+        "Connect Phantom or Solflare and sign the verification message before continuing."
       );
 
-      $("verifyBtn").disabled = true;
+      $("verifyBtn").disabled =
+        true;
 
       return;
+
     }
 
-    $("verifyBtn").disabled = true;
-    $("verifyBtn").textContent = "Checking...";
+    $("verifyBtn").disabled =
+      true;
+
+    $("verifyBtn").textContent =
+      "Checking...";
 
     const result =
       await submitClaim(
@@ -1781,38 +3335,31 @@ $("verifyBtn").onclick =
 
     if(!result){
 
-      $("verifyBtn").disabled = false;
+      /*
+        The nonce may have been consumed if the server
+        accepted the signature but failed later.
+
+        Never automatically retry the same proof.
+      */
+
+      $("verifyBtn").disabled =
+        false;
+
       $("verifyBtn").textContent =
         "Verify & continue";
 
       return;
+
     }
+
+    /*
+      Proof is no longer needed after a successful claim.
+    */
 
     resetWalletProof();
 
-    claim = result.claim;
-
-    if(
-      !result.participation ||
-      !result.participation.token
-    ){
-
-      showWalletError(
-        "The server confirmed the claim but did not return a secure participation token."
-      );
-
-      $("verifyBtn").disabled = false;
-      $("verifyBtn").textContent =
-        "Verify & continue";
-
-      return;
-    }
-
-    participationToken =
-      result.participation.token;
-
-    participationExpiresAt =
-      result.participation.expires_at || "";
+    claim =
+      result.claim;
 
     if(!claim){
 
@@ -1820,11 +3367,21 @@ $("verifyBtn").onclick =
         "The server confirmed the request but returned no claim."
       );
 
-      $("verifyBtn").disabled = false;
+      $("verifyBtn").disabled =
+        false;
+
       $("verifyBtn").textContent =
         "Verify & continue";
 
       return;
+
+    }
+
+    if(result.test_mode){
+
+      $("testMode").style.display =
+        "block";
+
     }
 
     $("finalSpot").textContent =
@@ -1838,26 +3395,220 @@ $("verifyBtn").onclick =
     $("finalWallet").textContent =
       maskWallet(claim.wallet);
 
+    loadNFT(
+      claim.spot
+    );
+
     await updateSpots();
 
     setStep(4);
+
   };
 
 /* =====================================================
-ROADMAP
+NFT
 ===================================================== */
 
-$("roadmapBtn").onclick =
+function loadNFT(n){
+
+  const img =
+    $("nftImg");
+
+  const fallback =
+    $("nftFallback");
+
+  const number =
+    String(n).padStart(3,"0");
+
+  img.style.display =
+    "none";
+
+  fallback.style.display =
+    "none";
+
+  img.removeAttribute("src");
+
+  const formats = [
+    "png",
+    "webp",
+    "jpg",
+    "jpeg"
+  ];
+
+  let index = 0;
+
+  function tryNext(){
+
+    if(index >= formats.length){
+
+      img.style.display =
+        "none";
+
+      fallback.style.display =
+        "grid";
+
+      return;
+
+    }
+
+    const src =
+      "images/" +
+      number +
+      "." +
+      formats[index++];
+
+    img.onload =
+      function(){
+
+        img.style.display =
+          "block";
+
+        fallback.style.display =
+          "none";
+
+      };
+
+    img.onerror =
+      tryNext;
+
+    img.src =
+      src;
+
+  }
+
+  tryNext();
+
+}
+
+/* =====================================================
+NFT PROTECTION
+===================================================== */
+
+const nftFrame =
+  $("nftFrame");
+
+const nftImg =
+  $("nftImg");
+
+if(nftFrame){
+
+  nftFrame.addEventListener(
+    "contextmenu",
+    function(event){
+      event.preventDefault();
+    }
+  );
+
+  nftFrame.addEventListener(
+    "dragstart",
+    function(event){
+      event.preventDefault();
+    }
+  );
+
+  nftFrame.addEventListener(
+    "selectstart",
+    function(event){
+      event.preventDefault();
+    }
+  );
+
+  nftFrame.addEventListener(
+    "copy",
+    function(event){
+      event.preventDefault();
+    }
+  );
+
+  nftFrame.addEventListener(
+    "cut",
+    function(event){
+      event.preventDefault();
+    }
+  );
+
+  nftFrame.addEventListener(
+    "touchstart",
+    function(event){
+
+      if(
+        event.touches &&
+        event.touches.length === 1
+      ){
+
+        event.preventDefault();
+
+      }
+
+    },
+    {
+      passive:false
+    }
+  );
+
+}
+
+if(nftImg){
+
+  nftImg.addEventListener(
+    "contextmenu",
+    function(event){
+      event.preventDefault();
+    }
+  );
+
+  nftImg.addEventListener(
+    "dragstart",
+    function(event){
+      event.preventDefault();
+    }
+  );
+
+}
+
+document.addEventListener(
+  "dragstart",
+  function(event){
+
+    if(
+      event.target === nftImg ||
+      event.target.closest?.("#nftFrame")
+    ){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
+
+document.addEventListener(
+  "contextmenu",
+  function(event){
+
+    if(
+      event.target === nftImg ||
+      event.target.closest?.("#nftFrame")
+    ){
+
+      event.preventDefault();
+
+    }
+
+  }
+);
+
+/* =====================================================
+GALLERY
+===================================================== */
+
+$("galleryBtn").onclick =
   function(){
 
-    /*
-      Token intentionally remains in memory.
-      It is NOT placed in the URL.
-    */
-
     window.location.assign(
-      "roadmap.html"
+      "roadman-gallery.html"
     );
+
   };
 
 /* =====================================================
@@ -1866,7 +3617,7 @@ MARKERS
 
 document
   .querySelectorAll(".marker")
-  .forEach(marker=>{
+  .forEach(marker => {
 
     marker.onclick =
       function(){
@@ -1877,14 +3628,17 @@ document
           );
 
         if(n <= step){
+
           setStep(n);
+
         }
+
       };
 
   });
 
 /* =====================================================
-INIT
+INITIALIZE
 ===================================================== */
 
 updateRoadmanJourney(
@@ -1893,6 +3647,7 @@ updateRoadmanJourney(
 );
 
 setStep(1);
+
 updateSpots();
 
 </script>
