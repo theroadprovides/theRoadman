@@ -8,7 +8,8 @@ const TOTAL_SPOTS = 100;
 
 // Quantidade mínima de $ROAD necessária.
 //
-// PODE ALTERAR AQUI FUTURAMENTE.
+// Durante os testes: 30
+// Antes do lançamento, você poderá alterar aqui.
 //
 const MIN_ROAD_REQUIRED = 30;
 
@@ -24,6 +25,7 @@ const SOLANA_RPC =
 // =====================================================
 
 function json(res, statusCode, data) {
+
   res.status(statusCode);
 
   res.setHeader(
@@ -61,46 +63,51 @@ function json(res, statusCode, data) {
 
 async function getRoadBalance(wallet) {
 
-  const response = await fetch(
-    SOLANA_RPC,
-    {
-      method: "POST",
+  const response =
+    await fetch(
+      SOLANA_RPC,
+      {
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
 
-      body: JSON.stringify({
+        body:
+          JSON.stringify({
 
-        jsonrpc: "2.0",
+            jsonrpc:
+              "2.0",
 
-        id: 1,
+            id:
+              1,
 
-        method:
-          "getTokenAccountsByOwner",
+            method:
+              "getTokenAccountsByOwner",
 
-        params: [
+            params: [
 
-          wallet,
+              wallet,
 
-          {
-            mint:
-              TOKEN_MINT
-          },
+              {
+                mint:
+                  TOKEN_MINT
+              },
 
-          {
-            encoding:
-              "jsonParsed",
+              {
+                encoding:
+                  "jsonParsed",
 
-            commitment:
-              "finalized"
-          }
+                commitment:
+                  "finalized"
+              }
 
-        ]
+            ]
 
-      })
-    }
-  );
+          })
+      }
+    );
 
 
   if (!response.ok) {
@@ -164,7 +171,7 @@ async function getRoadBalance(wallet) {
 // MAIN
 // =====================================================
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
 
   // ===================================================
   // OPTIONS
@@ -416,6 +423,9 @@ module.exports = async function handler(req, res) {
               final_balance =
                 ${balance},
 
+              final_usd_value =
+                NULL,
+
               holding_status =
                 'HOLDING'
 
@@ -488,6 +498,9 @@ module.exports = async function handler(req, res) {
             final_balance =
               ${balance},
 
+            final_usd_value =
+              NULL,
+
             holding_status =
               'DISQUALIFIED',
 
@@ -552,7 +565,8 @@ module.exports = async function handler(req, res) {
     const availableSpots =
       Math.max(
         0,
-        TOTAL_SPOTS - holding
+        TOTAL_SPOTS -
+        holding
       );
 
 
@@ -621,4 +635,4 @@ module.exports = async function handler(req, res) {
 
   }
 
-};
+}
