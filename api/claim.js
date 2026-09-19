@@ -246,6 +246,11 @@ async function getRoadPrice() {
         "https://api.dexscreener.com/latest/dex/tokens/" +
         TOKEN_MINT,
         {
+          headers: {
+            "Accept":
+              "application/json"
+          },
+
           cache:
             "no-store"
         }
@@ -272,19 +277,66 @@ async function getRoadPrice() {
 
 
     // ===============================================
-    // ONLY VALID ROAD PAIRS
+    // VALID ROAD PAIRS
     // ===============================================
 
     const validPairs =
       pairs
         .filter(
-          pair =>
-            pair?.chainId === "solana" &&
-            pair?.baseToken?.address === TOKEN_MINT &&
-            Number.isFinite(
-              Number(pair?.priceUsd)
-            ) &&
-            Number(pair?.priceUsd) > 0
+          pair => {
+
+            if (
+              pair?.chainId !==
+              "solana"
+            ) {
+              return false;
+            }
+
+
+            const baseAddress =
+              String(
+                pair?.baseToken?.address || ""
+              ).trim();
+
+
+            const quoteAddress =
+              String(
+                pair?.quoteToken?.address || ""
+              ).trim();
+
+
+            const roadIsBase =
+              baseAddress ===
+              TOKEN_MINT;
+
+
+            const roadIsQuote =
+              quoteAddress ===
+              TOKEN_MINT;
+
+
+            if (
+              !roadIsBase &&
+              !roadIsQuote
+            ) {
+              return false;
+            }
+
+
+            const price =
+              Number(
+                pair?.priceUsd
+              );
+
+
+            return (
+              Number.isFinite(
+                price
+              ) &&
+              price > 0
+            );
+
+          }
         )
         .sort(
           (a, b) =>
