@@ -416,8 +416,7 @@ const METAMASK_SOLANA =
   "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
 
 /*
-  MetaMask Connect is loaded dynamically.
-  This replaces the old @metamask/sdk package.
+  MetaMask Connect client.
 */
 let metamaskClient = null;
 let metamaskSession = null;
@@ -609,9 +608,6 @@ function bytesToBase58(bytes){
   return result;
 }
 
-/*
-  MetaMask Connect returns the Solana signature as base64.
-*/
 function base64ToBytes(value){
 
   const binary = atob(value);
@@ -622,6 +618,35 @@ function base64ToBytes(value){
   }
 
   return bytes;
+}
+
+function utf8ToBase64(value){
+
+  const bytes =
+    new TextEncoder().encode(value);
+
+  let binary = "";
+
+  const chunkSize = 0x8000;
+
+  for(
+    let i=0;
+    i<bytes.length;
+    i+=chunkSize
+  ){
+
+    binary += String.fromCharCode(
+      ...bytes.subarray(
+        i,
+        Math.min(
+          i + chunkSize,
+          bytes.length
+        )
+      )
+    );
+  }
+
+  return btoa(binary);
 }
 
 /* =====================================================
@@ -1201,33 +1226,32 @@ async function initMetaMask(){
   try{
 
     /*
-      Official current MetaMask Connect package.
-      We use the multichain client directly because this
-      page is vanilla HTML/JavaScript.
+      Official MetaMask Connect Solana client.
+      This client exposes the multichain core underneath.
     */
     const module =
       await import(
-        "https://cdn.jsdelivr.net/npm/@metamask/connect-multichain/+esm"
+        "https://cdn.jsdelivr.net/npm/@metamask/connect-solana/+esm"
       );
 
-    const createMultichainClient =
-      module.createMultichainClient;
+    const createSolanaClient =
+      module.createSolanaClient;
 
     if(
-      typeof createMultichainClient !== "function"
+      typeof createSolanaClient !== "function"
     ){
 
       throw new Error(
-        "createMultichainClient was not found."
+        "createSolanaClient was not found."
       );
     }
 
     metamaskClient =
-      await createMultichainClient({
+      await createSolanaClient({
 
         dapp:{
           name:"THE ROAD PROVIDES",
-          url:window.location.href
+          url:window.location.origin
         },
 
         api:{
@@ -1239,12 +1263,24 @@ async function initMetaMask(){
 
       });
 
-    metamaskClient.core.on(
-      "wallet_sessionChanged",
-      session=>{
-        metamaskSession = session;
-      }
-    );
+    /*
+      The Solana client uses MetaMask Connect's
+      multichain core internally.
+    */
+    if(
+      metamaskClient.core &&
+      typeof metamaskClient.core.on === "function"
+    ){
+
+      metamaskClient.core.on(
+        "wallet_sessionChanged",
+        session=>{
+
+          metamaskSession = session;
+
+        }
+      );
+    }
 
     return metamaskClient;
 
@@ -1255,6 +1291,8 @@ async function initMetaMask(){
       error
     );
 
+    metamaskClient = null;
+
     throw new Error(
       "MetaMask Connect could not be loaded. Check your internet connection and reload the page."
     );
@@ -1262,7 +1300,7 @@ async function initMetaMask(){
 }
 
 /* =====================================================
-METAMASK SIGNING
+METAMASK PROVIDER ADAPTER
 ===================================================== */
 
 function createMetaMaskProvider(address){
@@ -1276,30 +1314,16 @@ function createMetaMaskProvider(address){
           ? messageBytes
           : new Uint8Array(messageBytes);
 
-      let binary = "";
-
-      const chunkSize = 0x8000;
-
-      for(
-        let i=0;
-        i<bytes.length;
-        i+=chunkSize
-      ){
-
-        binary += String.fromCharCode(
-          ...bytes.subarray(
-            i,
-            Math.min(
-              i + chunkSize,
-              bytes.length
-            )
-          )
-        );
-      }
-
       const message =
-        btoa(binary);
+        utf8ToBase64(
+          new TextDecoder().decode(bytes)
+        );
 
+      /*
+        IMPORTANT:
+        Current @metamask/connect-multichain API
+        exposes invokeMethod directly on the client.
+      */
       const result =
         await metamaskClient.invokeMethod({
 
@@ -1319,7 +1343,12 @@ function createMetaMaskProvider(address){
 
         });
 
-      if(!result?.signature){
+      const signatureBase64 =
+        typeof result === "string"
+          ? result
+          : result?.signature;
+
+      if(!signatureBase64){
 
         throw new Error(
           "MetaMask did not return a message signature."
@@ -1329,10 +1358,11 @@ function createMetaMaskProvider(address){
       return {
         signature:
           base64ToBytes(
-            result.signature
+            signatureBase64
           )
       };
     }
+
   };
 }
 
@@ -1351,33 +1381,72 @@ async function connectMetaMask(){
 
   try{
 
-    await initMetaMask();
+    const client =
+      await initMetaMask();
+
+    if(
+      !client ||
+      typeof client.connect !== "function"
+    ){
+
+      throw new Error(
+        "MetaMask Connect initialized without a valid connect method."
+      );
+    }
 
     status.textContent =
       "> requesting Solana Mainnet access...";
 
     /*
-      Capture the session before connect.
+      Capture the session before connecting.
     */
     metamaskSession = null;
 
-    await metamaskClient.core.connect(
+    /*
+      IMPORTANT:
+      Current MetaMask Connect Multichain API:
+      client.connect(...)
+      NOT client.core.connect(...)
+    */
+    await client.connect(
       [METAMASK_SOLANA],
       []
     );
 
     /*
-      If the event is asynchronous, give it a moment.
+      Give the wallet session event a short moment
+      to update the local session variable.
     */
     if(!metamaskSession){
+
+      await new Promise(resolve=>{
+        setTimeout(resolve,250);
+      });
+
+    }
+
+    /*
+      Some environments may already have a session
+      available through the core session getter.
+    */
+    if(
+      !metamaskSession &&
+      client.core &&
+      typeof client.core.getSession === "function"
+    ){
 
       try{
 
         metamaskSession =
-          await metamaskClient.core.getSession();
+          await client.core.getSession();
 
-      }catch{}
+      }catch(error){
 
+        console.warn(
+          "MetaMask session lookup:",
+          error
+        );
+      }
     }
 
     const accounts =
@@ -1395,7 +1464,7 @@ async function connectMetaMask(){
 
     /*
       MetaMask returns a CAIP-10 account:
-      solana:<chain>:<address>
+      solana:<chain-id>:<address>
     */
     const rawAccount =
       accounts[0];
