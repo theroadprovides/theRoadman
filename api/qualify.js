@@ -12,7 +12,7 @@ const TOTAL_SPOTS = 100;
 // Exemplo:
 // 3_000_000 = 3 milhões de $ROAD
 //
-const MIN_ROAD_REQUIRED = 3_000_000;
+const MIN_ROAD_REQUIRED = 30;
 
 const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
