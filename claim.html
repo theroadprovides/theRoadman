@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1409,8 +1408,8 @@ One person · one wallet · one NFT.
   </h2>
 
   <p>
-    Connect Phantom or Solflare, or enter the Solana address
-    that will participate in the Roadman qualification.
+    Connect Phantom or Solflare. The wallet must sign a
+    verification message to prove that you control it.
   </p>
 
   <div class="wallets">
@@ -1435,7 +1434,7 @@ One person · one wallet · one NFT.
     </strong>
 
     <span>
-      Connect wallet
+      Connect & sign
     </span>
 
   </span>
@@ -1462,7 +1461,7 @@ One person · one wallet · one NFT.
     </strong>
 
     <span>
-      Connect wallet
+      Connect & sign
     </span>
 
   </span>
@@ -1486,7 +1485,7 @@ One person · one wallet · one NFT.
     </strong>
 
     <span>
-      Paste manually
+      Address only · signature required
     </span>
 
   </span>
@@ -1504,7 +1503,7 @@ One person · one wallet · one NFT.
   class="hint"
   id="walletHint"
 >
-  Paste your Solana wallet address below.
+  Connect a wallet to sign the verification message.
 </div>
 
 <input
@@ -1680,6 +1679,7 @@ View The First 100
 const TOTAL = 100;
 
 const API_SPOTS = "/api/spots";
+const API_NONCE = "/api/nonce";
 const API_CLAIM = "/api/claim";
 
 const TEST_KEY = "ROADMAN_TEST_2026";
@@ -1688,7 +1688,20 @@ let step = 1;
 let currentHandle = "";
 let selectedWallet = "";
 let connectedWallet = "";
+let connectedProvider = null;
 let claim = null;
+
+/*
+  SECURITY STATE
+
+  The wallet address alone is NOT enough.
+
+  We keep the nonce and signature in memory only.
+  They are never stored in localStorage/sessionStorage.
+*/
+let walletNonce = "";
+let walletSignature = "";
+let walletMessage = "";
 
 const $ = id => document.getElementById(id);
 
@@ -1872,6 +1885,91 @@ function clearWalletError(){
 
 }
 
+/* =====================================================
+BASE58
+===================================================== */
+
+const BASE58_ALPHABET =
+  "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
+function bytesToBase58(bytes){
+
+  let digits = [0];
+
+  for(
+    let i = 0;
+    i < bytes.length;
+    i++
+  ){
+
+    let carry =
+      bytes[i];
+
+    for(
+      let j = 0;
+      j < digits.length;
+      j++
+    ){
+
+      const value =
+        digits[j] * 256 +
+        carry;
+
+      digits[j] =
+        value % 58;
+
+      carry =
+        Math.floor(value / 58);
+
+    }
+
+    while(carry > 0){
+
+      digits.push(
+        carry % 58
+      );
+
+      carry =
+        Math.floor(carry / 58);
+
+    }
+
+  }
+
+  let result = "";
+
+  for(
+    let i = 0;
+    i < bytes.length &&
+    bytes[i] === 0;
+    i++
+  ){
+
+    result += "1";
+
+  }
+
+  for(
+    let i = digits.length - 1;
+    i >= 0;
+    i--
+  ){
+
+    result +=
+      BASE58_ALPHABET[
+        digits[i]
+      ];
+
+  }
+
+  return result;
+
+}
+
+/* =====================================================
+WALLET ADDRESS
+===================================================== */
+
 function setWalletAddress(address){
 
   const wallet =
@@ -1892,9 +1990,6 @@ function setWalletAddress(address){
 
   connectedWallet =
     wallet;
-
-  $("verifyBtn").disabled =
-    false;
 
   clearWalletError();
 
@@ -1966,13 +2061,14 @@ async function updateSpots(){
 
   try{
 
-    const response = await fetch(
-      API_SPOTS,
-      {
-        method:"GET",
-        cache:"no-store"
-      }
-    );
+    const response =
+      await fetch(
+        API_SPOTS,
+        {
+          method:"GET",
+          cache:"no-store"
+        }
+      );
 
     const data =
       await response.json();
@@ -2128,6 +2224,172 @@ document
   });
 
 /* =====================================================
+RESET SIGNATURE STATE
+===================================================== */
+
+function resetWalletProof(){
+
+  walletNonce = "";
+  walletSignature = "";
+  walletMessage = "";
+
+}
+
+/* =====================================================
+GET NONCE
+===================================================== */
+
+async function requestNonce(wallet){
+
+  const response =
+    await fetch(
+      API_NONCE,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":
+            "application/json"
+        },
+        cache:"no-store",
+        body:JSON.stringify({
+          wallet:wallet
+        })
+      }
+    );
+
+  let data;
+
+  try{
+
+    data =
+      await response.json();
+
+  }catch{
+
+    throw new Error(
+      "The Roadman server returned an invalid nonce response."
+    );
+
+  }
+
+  if(
+    !response.ok ||
+    !data.success
+  ){
+
+    throw new Error(
+      data.error ||
+      data.message ||
+      (
+        "Unable to create wallet verification request. Server status: " +
+        response.status
+      )
+    );
+
+  }
+
+  if(
+    !data.nonce ||
+    !data.message
+  ){
+
+    throw new Error(
+      "The server did not return a valid wallet verification message."
+    );
+
+  }
+
+  walletNonce =
+    String(data.nonce);
+
+  walletMessage =
+    String(data.message);
+
+  return data;
+
+}
+
+/* =====================================================
+SIGN MESSAGE
+===================================================== */
+
+async function signWalletMessage(){
+
+  if(!connectedProvider){
+
+    throw new Error(
+      "No wallet provider is connected."
+    );
+
+  }
+
+  if(!walletMessage){
+
+    throw new Error(
+      "No verification message was received from the server."
+    );
+
+  }
+
+  const encodedMessage =
+    new TextEncoder().encode(
+      walletMessage
+    );
+
+  let signed;
+
+  if(
+    typeof connectedProvider.signMessage !==
+    "function"
+  ){
+
+    throw new Error(
+      "This wallet does not support message signing in this browser."
+    );
+
+  }
+
+  signed =
+    await connectedProvider.signMessage(
+      encodedMessage,
+      "utf8"
+    );
+
+  const signatureBytes =
+    signed?.signature ||
+    signed;
+
+  if(
+    !signatureBytes ||
+    typeof signatureBytes.length !== "number"
+  ){
+
+    throw new Error(
+      "The wallet did not return a valid signature."
+    );
+
+  }
+
+  walletSignature =
+    bytesToBase58(
+      new Uint8Array(
+        signatureBytes
+      )
+    );
+
+  if(!walletSignature){
+
+    throw new Error(
+      "Unable to encode the wallet signature."
+    );
+
+  }
+
+  return walletSignature;
+
+}
+
+/* =====================================================
 PHANTOM
 ===================================================== */
 
@@ -2165,6 +2427,9 @@ async function connectPhantom(){
 
     }
 
+    connectedProvider =
+      provider;
+
     const response =
       await provider.connect();
 
@@ -2177,14 +2442,26 @@ async function connectPhantom(){
       String(publicKey || "");
 
     if(!setWalletAddress(address)){
+
+      connectedProvider =
+        null;
+
       return false;
+
     }
 
     selectedWallet =
       "Phantom";
 
+    document
+      .querySelector('[data-wallet="Phantom"]')
+      ?.classList.add("connected");
+
     $("walletHint").textContent =
-      "Phantom connected.";
+      "Phantom connected. Requesting secure verification...";
+
+    $("walletBox").style.display =
+      "block";
 
     $("walletState").style.display =
       "block";
@@ -2193,8 +2470,29 @@ async function connectPhantom(){
       "<strong>PHANTOM CONNECTED</strong><br>" +
       maskWallet(address);
 
-    $("verifyStatus").textContent =
-      "> Phantom connected.";
+    status.textContent =
+      "> requesting secure verification...";
+
+    resetWalletProof();
+
+    await requestNonce(address);
+
+    status.textContent =
+      "> sign the verification message in Phantom...";
+
+    await signWalletMessage();
+
+    status.textContent =
+      "> wallet signature received. Ready to verify.";
+
+    $("verifyBtn").disabled =
+      false;
+
+    $("verifyBtn").textContent =
+      "Verify & continue";
+
+    $("walletHint").textContent =
+      "Wallet control verified by signature.";
 
     return true;
 
@@ -2205,16 +2503,24 @@ async function connectPhantom(){
       error
     );
 
+    connectedProvider =
+      null;
+
+    resetWalletProof();
+
+    $("verifyBtn").disabled =
+      true;
+
     $("verifyStatus").textContent =
       "> " +
       (
         error?.message ||
-        "Phantom connection cancelled."
+        "Phantom connection or signature was cancelled."
       );
 
     showWalletError(
       error?.message ||
-      "Unable to connect Phantom."
+      "Unable to verify Phantom."
     );
 
     return false;
@@ -2259,6 +2565,9 @@ async function connectSolflare(){
 
     }
 
+    connectedProvider =
+      provider;
+
     await provider.connect();
 
     const publicKey =
@@ -2269,14 +2578,26 @@ async function connectSolflare(){
       String(publicKey || "");
 
     if(!setWalletAddress(address)){
+
+      connectedProvider =
+        null;
+
       return false;
+
     }
 
     selectedWallet =
       "Solflare";
 
+    document
+      .querySelector('[data-wallet="Solflare"]')
+      ?.classList.add("connected");
+
     $("walletHint").textContent =
-      "Solflare connected.";
+      "Solflare connected. Requesting secure verification...";
+
+    $("walletBox").style.display =
+      "block";
 
     $("walletState").style.display =
       "block";
@@ -2285,8 +2606,29 @@ async function connectSolflare(){
       "<strong>SOLFLARE CONNECTED</strong><br>" +
       maskWallet(address);
 
-    $("verifyStatus").textContent =
-      "> Solflare connected.";
+    status.textContent =
+      "> requesting secure verification...";
+
+    resetWalletProof();
+
+    await requestNonce(address);
+
+    status.textContent =
+      "> sign the verification message in Solflare...";
+
+    await signWalletMessage();
+
+    status.textContent =
+      "> wallet signature received. Ready to verify.";
+
+    $("verifyBtn").disabled =
+      false;
+
+    $("verifyBtn").textContent =
+      "Verify & continue";
+
+    $("walletHint").textContent =
+      "Wallet control verified by signature.";
 
     return true;
 
@@ -2297,16 +2639,24 @@ async function connectSolflare(){
       error
     );
 
+    connectedProvider =
+      null;
+
+    resetWalletProof();
+
+    $("verifyBtn").disabled =
+      true;
+
     $("verifyStatus").textContent =
       "> " +
       (
         error?.message ||
-        "Solflare connection cancelled."
+        "Solflare connection or signature was cancelled."
       );
 
     showWalletError(
       error?.message ||
-      "Unable to connect Solflare."
+      "Unable to verify Solflare."
     );
 
     return false;
@@ -2353,17 +2703,32 @@ document
         $("verifyStatus").style.display =
           "none";
 
+        connectedProvider =
+          null;
+
+        resetWalletProof();
+
+        $("verifyBtn").disabled =
+          true;
+
+        $("verifyBtn").textContent =
+          "Verify & continue";
+
         if(selectedWallet === "Manual"){
 
           $("walletHint").textContent =
-            "Paste the Solana wallet address below.";
+            "Address entry is for reference only. A wallet signature is required to prove ownership.";
+
+          $("walletInput").value =
+            "";
 
           $("walletInput").focus();
 
-          $("verifyBtn").disabled =
-            !isValidSolanaAddress(
-              $("walletInput").value
-            );
+          $("verifyStatus").style.display =
+            "block";
+
+          $("verifyStatus").textContent =
+            "> manual address entered — wallet signature still required.";
 
           return;
 
@@ -2373,9 +2738,6 @@ document
           "Connecting to " +
           selectedWallet +
           "...";
-
-        $("verifyBtn").disabled =
-          true;
 
         if(selectedWallet === "Phantom"){
 
@@ -2404,16 +2766,40 @@ $("walletInput").addEventListener(
     const wallet =
       this.value.trim();
 
+    /*
+      Manual input NEVER creates a valid authentication proof.
+
+      It is only allowed to display an address.
+      A signature from a real wallet provider is mandatory.
+    */
+
     connectedWallet =
       "";
 
+    connectedProvider =
+      null;
+
+    resetWalletProof();
+
     $("verifyBtn").disabled =
-      !isValidSolanaAddress(wallet);
+      true;
 
     clearWalletError();
 
     $("verifyStatus").style.display =
-      "none";
+      "block";
+
+    if(isValidSolanaAddress(wallet)){
+
+      $("verifyStatus").textContent =
+        "> address detected. Connect Phantom or Solflare to sign ownership.";
+
+    }else{
+
+      $("verifyStatus").textContent =
+        "> waiting for a valid Solana address.";
+
+    }
 
   }
 );
@@ -2424,7 +2810,9 @@ CLAIM
 
 async function submitClaim(
   handle,
-  wallet
+  wallet,
+  nonce,
+  signature
 ){
 
   const status =
@@ -2447,6 +2835,30 @@ async function submitClaim(
 
   try{
 
+    if(!nonce){
+
+      throw new Error(
+        "Wallet verification nonce is missing."
+      );
+
+    }
+
+    if(!signature){
+
+      throw new Error(
+        "Wallet signature is missing."
+      );
+
+    }
+
+    if(!connectedProvider){
+
+      throw new Error(
+        "Connect Phantom or Solflare before claiming."
+      );
+
+    }
+
     await new Promise(
       resolve =>
         setTimeout(
@@ -2456,7 +2868,7 @@ async function submitClaim(
     );
 
     status.textContent =
-      "> verifying wallet...";
+      "> verifying wallet signature...";
 
     const response =
       await fetch(
@@ -2467,9 +2879,12 @@ async function submitClaim(
             "Content-Type":
               "application/json"
           },
+          cache:"no-store",
           body:JSON.stringify({
             x_handle:handle,
             wallet:wallet,
+            nonce:nonce,
+            signature:signature,
             test_key:TEST_KEY
           })
         }
@@ -2559,7 +2974,7 @@ $("verifyBtn").onclick =
     ){
 
       showWalletError(
-        "Enter a valid Solana wallet address."
+        "Connect a valid Solana wallet."
       );
 
       return;
@@ -2574,6 +2989,31 @@ $("verifyBtn").onclick =
 
     }
 
+    /*
+      SECURITY CHECK
+
+      A pasted address is NOT enough.
+      The wallet must have produced a signature.
+    */
+
+    if(
+      !connectedProvider ||
+      !walletNonce ||
+      !walletSignature ||
+      !walletMessage
+    ){
+
+      showWalletError(
+        "Connect Phantom or Solflare and sign the verification message before continuing."
+      );
+
+      $("verifyBtn").disabled =
+        true;
+
+      return;
+
+    }
+
     $("verifyBtn").disabled =
       true;
 
@@ -2583,10 +3023,19 @@ $("verifyBtn").onclick =
     const result =
       await submitClaim(
         currentHandle,
-        wallet
+        wallet,
+        walletNonce,
+        walletSignature
       );
 
     if(!result){
+
+      /*
+        The nonce may have been consumed if the server
+        accepted the signature but failed later.
+
+        Never automatically retry the same proof.
+      */
 
       $("verifyBtn").disabled =
         false;
@@ -2597,6 +3046,12 @@ $("verifyBtn").onclick =
       return;
 
     }
+
+    /*
+      Proof is no longer needed after a successful claim.
+    */
+
+    resetWalletProof();
 
     claim =
       result.claim;
