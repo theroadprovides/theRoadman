@@ -3,14 +3,6 @@ const crypto = require("crypto");
 
 const TOTAL_SPOTS = 100;
 
-// =====================================================
-// CONFIG
-// =====================================================
-
-const TEST_MODE = false;
-
-const TEST_KEY = "ROADMAN_TEST_2026";
-
 const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
 
@@ -20,6 +12,13 @@ const MIN_ROAD_REQUIRED = 30;
 
 const SOLANA_RPC =
   "https://api.mainnet-beta.solana.com";
+
+// Token de participação válido por 24 horas.
+// Ele NÃO substitui a posse da wallet/$ROAD.
+// Serve apenas para identificar com segurança
+// a participação já registrada no backend.
+const PARTICIPATION_TOKEN_TTL_SECONDS =
+  60 * 60 * 24;
 
 // =====================================================
 // RESPONSE
@@ -61,7 +60,9 @@ function json(res, statusCode, data) {
 // =====================================================
 
 function isValidSolanaAddress(wallet) {
-  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(wallet);
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(
+    wallet
+  );
 }
 
 function normalizeHandle(value) {
@@ -85,7 +86,9 @@ const BASE58_ALPHABET =
 
 function base58Decode(value) {
   if (!value || typeof value !== "string") {
-    throw new Error("Invalid Base58 value.");
+    throw new Error(
+      "Invalid Base58 value."
+    );
   }
 
   let num = 0n;
@@ -327,6 +330,21 @@ function buildVerificationMessage(
 }
 
 // =====================================================
+// PARTICIPATION TOKEN
+// =====================================================
+
+function createParticipationToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
+function hashParticipationToken(token) {
+  return crypto
+    .createHash("sha256")
+    .update(token, "utf8")
+    .digest("hex");
+}
+
+// =====================================================
 // HANDLER
 // =====================================================
 
@@ -380,11 +398,6 @@ module.exports = async function handler(
         body.signature || ""
       ).trim();
 
-    const testKey =
-      String(
-        body.test_key || ""
-      ).trim();
-
     // =================================================
     // BASIC VALIDATION
     // =================================================
@@ -405,44 +418,23 @@ module.exports = async function handler(
       });
     }
 
-    // =================================================
-    // TEST MODE
-    // =================================================
-
     if (
-      TEST_MODE &&
-      testKey !== TEST_KEY
+      !nonce ||
+      nonce.length !== 64
     ) {
-      return json(res, 403, {
+      return json(res, 401, {
         success: false,
         error:
-          "Invalid test authorization."
+          "Wallet verification is required."
       });
     }
 
-    // =================================================
-    // WALLET SIGNATURE
-    // =================================================
-
-    if (!TEST_MODE) {
-      if (
-        !nonce ||
-        nonce.length !== 64
-      ) {
-        return json(res, 401, {
-          success: false,
-          error:
-            "Wallet verification is required."
-        });
-      }
-
-      if (!signature) {
-        return json(res, 401, {
-          success: false,
-          error:
-            "Wallet signature is required."
-        });
-      }
+    if (!signature) {
+      return json(res, 401, {
+        success: false,
+        error:
+          "Wallet signature is required."
+      });
     }
 
     const sql =
@@ -454,103 +446,101 @@ module.exports = async function handler(
     // VERIFY NONCE
     // =================================================
 
-    if (!TEST_MODE) {
-      const nonceRows =
-        await sql`
-          SELECT
-            id,
-            wallet,
-            nonce,
-            created_at,
-            expires_at,
-            used_at
-          FROM wallet_nonces
-          WHERE wallet = ${wallet}
-            AND nonce = ${nonce}
-          LIMIT 1
-        `;
-
-      if (!nonceRows.length) {
-        return json(res, 401, {
-          success: false,
-          error:
-            "Verification challenge not found."
-        });
-      }
-
-      const challenge =
-        nonceRows[0];
-
-      if (challenge.used_at) {
-        return json(res, 401, {
-          success: false,
-          error:
-            "Verification challenge already used."
-        });
-      }
-
-      const expiresAt =
-        new Date(
-          challenge.expires_at
-        );
-
-      if (
-        Number.isNaN(
-          expiresAt.getTime()
-        ) ||
-        expiresAt.getTime() <=
-          Date.now()
-      ) {
-        return json(res, 401, {
-          success: false,
-          error:
-            "Verification challenge expired."
-        });
-      }
-
-      const message =
-        buildVerificationMessage(
+    const nonceRows =
+      await sql`
+        SELECT
+          id,
           wallet,
           nonce,
-          expiresAt
-        );
+          created_at,
+          expires_at,
+          used_at
+        FROM wallet_nonces
+        WHERE wallet = ${wallet}
+          AND nonce = ${nonce}
+        LIMIT 1
+      `;
 
-      const validSignature =
-        verifyWalletSignature(
-          wallet,
-          message,
-          signature
-        );
+    if (!nonceRows.length) {
+      return json(res, 401, {
+        success: false,
+        error:
+          "Verification challenge not found."
+      });
+    }
 
-      if (!validSignature) {
-        return json(res, 401, {
-          success: false,
-          error:
-            "Invalid wallet signature."
-        });
-      }
+    const challenge =
+      nonceRows[0];
 
-      // =================================================
-      // CONSUME NONCE
-      // =================================================
+    if (challenge.used_at) {
+      return json(res, 401, {
+        success: false,
+        error:
+          "Verification challenge already used."
+      });
+    }
 
-      const consumed =
-        await sql`
-          UPDATE wallet_nonces
-          SET used_at = NOW()
-          WHERE id = ${challenge.id}
-            AND used_at IS NULL
-            AND expires_at > NOW()
-          RETURNING id
-        `;
+    const expiresAt =
+      new Date(
+        challenge.expires_at
+      );
 
-      if (!consumed.length) {
-        return json(res, 409, {
-          success: false,
-          error:
-            "Verification challenge was already consumed."
-        });
-      }
+    if (
+      Number.isNaN(
+        expiresAt.getTime()
+      ) ||
+      expiresAt.getTime() <=
+        Date.now()
+    ) {
+      return json(res, 401, {
+        success: false,
+        error:
+          "Verification challenge expired."
+      });
+    }
+
+    const message =
+      buildVerificationMessage(
+        wallet,
+        nonce,
+        expiresAt
+      );
+
+    const validSignature =
+      verifyWalletSignature(
+        wallet,
+        message,
+        signature
+      );
+
+    if (!validSignature) {
+      return json(res, 401, {
+        success: false,
+        error:
+          "Invalid wallet signature."
+      });
+    }
+
+    // =================================================
+    // CONSUME NONCE
+    // =================================================
+
+    const consumed =
+      await sql`
+        UPDATE wallet_nonces
+        SET used_at = NOW()
+        WHERE id = ${challenge.id}
+          AND used_at IS NULL
+          AND expires_at > NOW()
+        RETURNING id
+      `;
+
+    if (!consumed.length) {
+      return json(res, 409, {
+        success: false,
+        error:
+          "Verification challenge was already consumed."
+      });
     }
 
     // =================================================
@@ -641,7 +631,6 @@ module.exports = async function handler(
     // =================================================
 
     if (
-      !TEST_MODE &&
       roadBalance < MIN_ROAD_REQUIRED
     ) {
       return json(res, 403, {
@@ -732,8 +721,50 @@ module.exports = async function handler(
           nft_status
       `;
 
+    if (!inserted.length) {
+      return json(res, 500, {
+        success: false,
+        error:
+          "Unable to create Roadman claim."
+      });
+    }
+
     const claim =
       inserted[0];
+
+    // =================================================
+    // CREATE PARTICIPATION TOKEN
+    // =================================================
+
+    const participationToken =
+      createParticipationToken();
+
+    const participationTokenHash =
+      hashParticipationToken(
+        participationToken
+      );
+
+    const participationExpiresAt =
+      new Date(
+        Date.now() +
+        PARTICIPATION_TOKEN_TTL_SECONDS *
+          1000
+      );
+
+    await sql`
+      INSERT INTO participation_tokens (
+        claim_id,
+        token_hash,
+        created_at,
+        expires_at
+      )
+      VALUES (
+        ${claim.id},
+        ${participationTokenHash},
+        NOW(),
+        ${participationExpiresAt}
+      )
+    `;
 
     // =================================================
     // SUCCESS
@@ -778,6 +809,14 @@ module.exports = async function handler(
 
         nft_status:
           claim.nft_status
+      },
+
+      participation: {
+        token:
+          participationToken,
+
+        expires_at:
+          participationExpiresAt
       },
 
       token: {
