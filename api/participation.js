@@ -1,47 +1,63 @@
-```javascript
 // ============================================================
-// THE ROAD PROVIDES — PARTICIPATION API
+// THE ROAD PROVIDES
+// PARTICIPATION API
+//
+// File:
 // /api/participation.js
 //
 // PURPOSE
 // ------------------------------------------------------------
-// Authenticates a participant session and returns the
-// authoritative First 100 participation data.
+// Authenticates the participant after a successful claim.
 //
-// IMPORTANT
+// REAL DATABASE ARCHITECTURE
 // ------------------------------------------------------------
-// The browser must NEVER be trusted for:
-//   - spot
-//   - wallet
-//   - X handle
-//   - holding status
-//   - NFT status
-//   - claim status
 //
-// Those values must come from Neon.
+// participation_tokens
+//   ├── claim_id
+//   ├── token_hash
+//   ├── created_at
+//   ├── expires_at
+//   └── revoked_at
 //
-// Expected client request:
+//        ↓
+//
+// roadman_claims
+//   ├── id
+//   ├── spot
+//   ├── x_handle
+//   ├── wallet
+//   ├── status
+//   ├── claimed_at
+//   ├── initial_balance
+//   ├── holding_status
+//   ├── qualified_at
+//   ├── disqualified_at
+//   ├── nft_number
+//   ├── nft_status
+//   ├── delivery_tx
+//   ├── delivered_at
+//   └── nft_assigned_at
+//
+// ------------------------------------------------------------
+// CLIENT REQUEST
 //
 // GET /api/participation
-// Authorization: Bearer <participation_token>
 //
-// Expected response:
+// Header:
 //
-// {
-//   "ok": true,
-//   "participant": {
-//      "spot": 19,
-//      "x_handle": "@example",
-//      "wallet": "...",
-//      "status": "ON THE ROAD",
-//      "holding_status": "HOLDING",
-//      "nft_status": "PENDING",
-//      "claimed_at": "...",
-//      "claimed_count": 19,
-//      "total_spots": 100,
-//      "phase": "FIRST 100"
-//   }
-// }
+// Authorization: Bearer <raw participation token>
+//
+// ------------------------------------------------------------
+// IMPORTANT
+//
+// The client does NOT send:
+//
+//   spot
+//   wallet
+//   x_handle
+//   claim_id
+//
+// The token identifies the participation record.
 //
 // ============================================================
 
@@ -54,13 +70,9 @@ const { neon } = require("@neondatabase/serverless");
 
 const TOTAL_SPOTS = 100;
 
-// Token lifetime.
-// 6 hours is intentionally short because this is a participation
-// session, not a permanent credential.
-const TOKEN_TTL_SECONDS = 60 * 60 * 6;
-
-// Database
-const sql = neon(process.env.DATABASE_URL);
+const sql = neon(
+  process.env.DATABASE_URL
+);
 
 // ============================================================
 // SECURITY HEADERS
@@ -68,63 +80,50 @@ const sql = neon(process.env.DATABASE_URL);
 
 function securityHeaders() {
   return {
-    "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+    "Content-Type":
+      "application/json; charset=utf-8",
+
+    "Cache-Control":
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+
     Pragma: "no-cache",
+
     Expires: "0",
 
-    // Prevent the response from being interpreted in another way.
-    "X-Content-Type-Options": "nosniff",
+    "X-Content-Type-Options":
+      "nosniff",
 
-    // Prevent this API from being embedded.
-    "X-Frame-Options": "DENY",
+    "X-Frame-Options":
+      "DENY",
 
-    // Referrer protection.
-    "Referrer-Policy": "no-referrer",
+    "Referrer-Policy":
+      "no-referrer",
 
-    // Restrict browser capabilities.
     "Permissions-Policy":
       "camera=(), microphone=(), geolocation=(), payment=()",
+
+    "Content-Security-Policy":
+      "default-src 'none'; frame-ancestors 'none';"
   };
 }
 
 // ============================================================
-// RESPONSE HELPERS
+// RESPONSE
 // ============================================================
 
-function response(statusCode, body) {
-  return {
-    statusCode,
-    headers: securityHeaders(),
-    body: JSON.stringify(body),
-  };
-}
-
-function success(participant) {
-  return response(200, {
-    ok: true,
-    participant,
-  });
-}
-
-function error(statusCode, code, message) {
-  return response(statusCode, {
-    ok: false,
-    error: code,
-    message,
-  });
+function json(
+  res,
+  statusCode,
+  payload
+) {
+  return res
+    .status(statusCode)
+    .set(securityHeaders())
+    .json(payload);
 }
 
 // ============================================================
-// METHOD
-// ============================================================
-
-function methodAllowed(method) {
-  return method === "GET";
-}
-
-// ============================================================
-// TOKEN HELPERS
+// TOKEN EXTRACTION
 // ============================================================
 
 function getBearerToken(req) {
@@ -133,17 +132,24 @@ function getBearerToken(req) {
     req.headers?.Authorization ||
     "";
 
-  if (!authorization) {
+  if (
+    typeof authorization !==
+      "string"
+  ) {
     return null;
   }
 
-  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  const match =
+    authorization.match(
+      /^Bearer\s+(.+)$/i
+    );
 
   if (!match) {
     return null;
   }
 
-  const token = match[1].trim();
+  const token =
+    match[1].trim();
 
   if (!token) {
     return null;
@@ -153,25 +159,47 @@ function getBearerToken(req) {
 }
 
 // ============================================================
-// TOKEN HASH
+// TOKEN VALIDATION
 // ============================================================
 //
-// We NEVER store the raw participation token in Neon.
+// claim.js generates:
 //
-// The browser receives:
+// crypto.randomBytes(32).toString("hex")
 //
-//     raw random token
+// Therefore:
 //
-// Neon stores:
-//
-//     SHA-256(raw token)
-//
-// If the database is exposed, the raw session credential is
-// therefore not immediately exposed.
+// 32 bytes = 64 hexadecimal characters
 //
 // ============================================================
 
-function hashToken(token) {
+function isValidTokenFormat(
+  token
+) {
+  return (
+    typeof token ===
+      "string" &&
+    /^[a-f0-9]{64}$/i.test(
+      token
+    )
+  );
+}
+
+// ============================================================
+// TOKEN HASH
+// ============================================================
+//
+// claim.js stores:
+//
+// SHA256(rawToken)
+//
+// Therefore participation.js must reproduce exactly the same
+// hash before querying participation_tokens.
+//
+// ============================================================
+
+function hashToken(
+  token
+) {
   return crypto
     .createHash("sha256")
     .update(token, "utf8")
@@ -179,454 +207,613 @@ function hashToken(token) {
 }
 
 // ============================================================
-// CONSTANT-TIME STRING COMPARISON
+// NORMALIZATION
 // ============================================================
 
-function safeEqual(a, b) {
+function normalizeString(
+  value
+) {
   if (
-    typeof a !== "string" ||
-    typeof b !== "string"
+    value === null ||
+    value === undefined
   ) {
-    return false;
+    return "";
   }
 
-  const aBuffer = Buffer.from(a);
-  const bBuffer = Buffer.from(b);
-
-  if (aBuffer.length !== bBuffer.length) {
-    return false;
-  }
-
-  return crypto.timingSafeEqual(aBuffer, bBuffer);
+  return String(value).trim();
 }
 
-// ============================================================
-// VALIDATE TOKEN FORMAT
-// ============================================================
-//
-// Participation tokens generated by the claim flow should be
-// cryptographically random.
-//
-// We accept 32-byte hex tokens:
-//
-//     64 hexadecimal characters
-//
-// ============================================================
-
-function isValidTokenFormat(token) {
-  return (
-    typeof token === "string" &&
-    /^[a-f0-9]{64}$/i.test(token)
-  );
-}
-
-// ============================================================
-// DATABASE COMPATIBILITY
-// ============================================================
-//
-// This file expects the following participation/session fields:
-//
-// roadman_participations
-//
-//   id
-//   claim_id
-//   token_hash
-//   created_at
-//   expires_at
-//   revoked
-//
-// And the existing:
-//
-// roadman_claims
-//
-//   id
-//   spot
-//   x_handle / x
-//   wallet
-//   status
-//   holding_status
-//   nft_status
-//   claimed_at
-//
-// If your current database uses different column names,
-// adjust ONLY the SQL mapping section below.
-// ============================================================
-
-// ============================================================
-// FIND PARTICIPATION SESSION
-// ============================================================
-
-async function findParticipation(tokenHash) {
-  const rows = await sql`
-    SELECT
-      p.id AS participation_id,
-      p.claim_id,
-      p.created_at AS session_created_at,
-      p.expires_at,
-      p.revoked,
-
-      c.id AS claim_id_db,
-      c.spot,
-      c.x_handle,
-      c.x,
-      c.wallet,
-      c.status,
-      c.holding_status,
-      c.nft_status,
-      c.claimed_at
-
-    FROM roadman_participations p
-
-    INNER JOIN roadman_claims c
-      ON c.id = p.claim_id
-
-    WHERE p.token_hash = ${tokenHash}
-
-    LIMIT 1
-  `;
-
-  return rows[0] || null;
-}
-
-// ============================================================
-// OPTIONAL FALLBACK FOR DIFFERENT X COLUMN
-// ============================================================
-
-function getXHandle(row) {
-  if (row.x_handle) {
-    return row.x_handle;
-  }
-
-  if (row.x) {
-    return row.x;
-  }
-
-  return "";
-}
-
-// ============================================================
-// NORMALIZE STATUS
-// ============================================================
-
-function normalizeHoldingStatus(value) {
-  if (!value) {
-    return "UNKNOWN";
-  }
-
-  return String(value).toUpperCase();
-}
-
-function normalizeNFTStatus(value) {
-  if (!value) {
-    return "PENDING";
-  }
-
-  return String(value).toUpperCase();
-}
-
-// ============================================================
-// PARTICIPATION STATUS
-// ============================================================
-//
-// This is intentionally descriptive.
-//
-// The frontend should display the result but should NOT decide
-// eligibility itself.
-//
-// ============================================================
-
-function getParticipationStatus(row) {
-  const holding = normalizeHoldingStatus(
-    row.holding_status
-  );
-
-  const nft = normalizeNFTStatus(
-    row.nft_status
-  );
-
-  const claimStatus = String(
-    row.status || ""
+function normalizeUpper(
+  value
+) {
+  return normalizeString(
+    value
   ).toUpperCase();
+}
+
+// ============================================================
+// PARTICIPANT STATUS
+// ============================================================
+//
+// This status is descriptive.
+//
+// The frontend does not decide eligibility.
+//
+// The backend returns the current database state.
+//
+// ============================================================
+
+function getParticipantStatus(
+  claim
+) {
+  const claimStatus =
+    normalizeUpper(
+      claim.status
+    );
+
+  const holdingStatus =
+    normalizeUpper(
+      claim.holding_status
+    );
+
+  const nftStatus =
+    normalizeUpper(
+      claim.nft_status
+    );
+
+  // ----------------------------------------------------------
+  // Explicitly revoked / cancelled
+  // ----------------------------------------------------------
 
   if (
-    claimStatus === "REVOKED" ||
-    claimStatus === "CANCELLED"
+    claimStatus ===
+      "REVOKED" ||
+    claimStatus ===
+      "CANCELLED"
   ) {
     return "STATUS CHANGED";
   }
 
+  // ----------------------------------------------------------
+  // No longer holding the required token
+  // ----------------------------------------------------------
+
   if (
-    holding === "NOT_HOLDING" ||
-    holding === "NOT HOLDING" ||
-    holding === "FAILED" ||
-    holding === "INELIGIBLE"
+    holdingStatus ===
+      "NOT_HOLDING" ||
+    holdingStatus ===
+      "NOT HOLDING" ||
+    holdingStatus ===
+      "DISQUALIFIED" ||
+    holdingStatus ===
+      "INELIGIBLE" ||
+    holdingStatus ===
+      "FAILED"
   ) {
     return "ELIGIBILITY CHANGED";
   }
 
+  // ----------------------------------------------------------
+  // NFT delivered
+  // ----------------------------------------------------------
+
   if (
-    nft === "MINTED" ||
-    nft === "CLAIMED"
+    nftStatus ===
+      "DELIVERED"
+  ) {
+    return "ROADMAN DELIVERED";
+  }
+
+  // ----------------------------------------------------------
+  // NFT minted / assigned
+  // ----------------------------------------------------------
+
+  if (
+    nftStatus ===
+      "MINTED" ||
+    nftStatus ===
+      "ASSIGNED"
   ) {
     return "ROADMAN READY";
+  }
+
+  // ----------------------------------------------------------
+  // Normal active participation
+  // ----------------------------------------------------------
+
+  if (
+    holdingStatus ===
+      "HOLDING"
+  ) {
+    return "ON THE ROAD";
   }
 
   return "ON THE ROAD";
 }
 
 // ============================================================
-// CLAIMED COUNT
+// FIND PARTICIPATION
 // ============================================================
 //
-// We count actual claims instead of trusting the participant's
-// spot number.
+// IMPORTANT:
 //
-// This means:
+// We validate:
 //
-// spot 19
+//   token_hash
+//   revoked_at
+//   expires_at
 //
-// does NOT automatically mean:
+// inside SQL.
 //
-// 19 / 100
-//
-// unless the database really contains 19 claimed records.
+// The browser cannot choose claim_id.
 //
 // ============================================================
 
-async function getClaimedCount() {
-  const rows = await sql`
-    SELECT COUNT(*)::int AS count
-    FROM roadman_claims
-    WHERE status IS NOT NULL
-  `;
+async function findParticipation(
+  tokenHash
+) {
+  const rows =
+    await sql`
+      SELECT
 
-  return Number(rows[0]?.count || 0);
+        p.claim_id,
+
+        p.created_at AS
+          participation_created_at,
+
+        p.expires_at AS
+          participation_expires_at,
+
+        p.revoked_at,
+
+        c.spot,
+
+        c.x_handle,
+
+        c.wallet,
+
+        c.status,
+
+        c.claimed_at,
+
+        c.initial_balance,
+
+        c.holding_status,
+
+        c.qualified_at,
+
+        c.disqualified_at,
+
+        c.nft_number,
+
+        c.nft_status,
+
+        c.delivery_tx,
+
+        c.delivered_at,
+
+        c.nft_assigned_at
+
+      FROM participation_tokens p
+
+      INNER JOIN roadman_claims c
+        ON c.id = p.claim_id
+
+      WHERE
+        p.token_hash = ${tokenHash}
+
+        AND p.revoked_at IS NULL
+
+        AND p.expires_at > NOW()
+
+      LIMIT 1
+    `;
+
+  return rows[0] || null;
 }
 
 // ============================================================
-// BUILD PUBLIC PARTICIPANT OBJECT
+// ACTIVE SPOTS
+// ============================================================
+//
+// This represents currently occupied First 100 positions.
+//
+// It follows the same rule currently used by claim.js:
+//
+// holding_status = HOLDING
+//
+// Historical claims are not counted here.
+//
+// ============================================================
+
+async function getActiveSpotCount() {
+  const rows =
+    await sql`
+      SELECT
+        COUNT(*)::int AS count
+
+      FROM roadman_claims
+
+      WHERE
+        holding_status =
+          'HOLDING'
+    `;
+
+  return Number(
+    rows[0]?.count || 0
+  );
+}
+
+// ============================================================
+// TOTAL HISTORICAL CLAIMS
+// ============================================================
+//
+// This is different from active spots.
+//
+// Example:
+//
+// 100 total claims historically
+// 97 currently holding
+//
+// historical_claim_count = 100
+// active_spot_count       = 97
+//
+// ============================================================
+
+async function getHistoricalClaimCount() {
+  const rows =
+    await sql`
+      SELECT
+        COUNT(*)::int AS count
+
+      FROM roadman_claims
+    `;
+
+  return Number(
+    rows[0]?.count || 0
+  );
+}
+
+// ============================================================
+// BUILD PUBLIC PARTICIPANT
 // ============================================================
 //
 // Never return:
-//   - token
-//   - token_hash
-//   - database IDs
-//   - internal session IDs
-//   - private verification data
-//   - database credentials
+//
+//   token
+//   token_hash
+//   participation ID
+//   database internals
+//   nonce
+//   signature
+//   database credentials
 //
 // ============================================================
 
-async function buildParticipant(row) {
-  const claimedCount = await getClaimedCount();
+async function buildParticipant(
+  claim
+) {
+  const activeSpotCount =
+    await getActiveSpotCount();
 
-  const holdingStatus = normalizeHoldingStatus(
-    row.holding_status
-  );
+  const historicalClaimCount =
+    await getHistoricalClaimCount();
 
-  const nftStatus = normalizeNFTStatus(
-    row.nft_status
-  );
+  const holdingStatus =
+    normalizeUpper(
+      claim.holding_status
+    );
 
-  const participantStatus =
-    getParticipationStatus(row);
+  const nftStatus =
+    normalizeUpper(
+      claim.nft_status
+    );
 
   return {
+    // --------------------------------------------------------
+    // FIRST 100 POSITION
+    // --------------------------------------------------------
+
     spot:
-      row.spot !== null &&
-      row.spot !== undefined
-        ? Number(row.spot)
+      claim.spot !==
+        null &&
+      claim.spot !==
+        undefined
+        ? Number(claim.spot)
         : null,
 
-    x_handle: getXHandle(row),
+    total_spots:
+      TOTAL_SPOTS,
 
-    wallet: row.wallet || "",
+    // --------------------------------------------------------
+    // IDENTITY
+    // --------------------------------------------------------
 
-    status: participantStatus,
+    x_handle:
+      normalizeString(
+        claim.x_handle
+      ),
 
-    holding_status: holdingStatus,
+    wallet:
+      normalizeString(
+        claim.wallet
+      ),
 
-    nft_status: nftStatus,
+    // --------------------------------------------------------
+    // CURRENT STATE
+    // --------------------------------------------------------
+
+    status:
+      getParticipantStatus(
+        claim
+      ),
+
+    holding_status:
+      holdingStatus,
+
+    nft_status:
+      nftStatus,
+
+    // --------------------------------------------------------
+    // CLAIM HISTORY
+    // --------------------------------------------------------
 
     claimed_at:
-      row.claimed_at ||
-      row.session_created_at ||
+      claim.claimed_at ||
+      claim.participation_created_at ||
       null,
 
-    claimed_count: claimedCount,
+    qualified_at:
+      claim.qualified_at ||
+      null,
 
-    total_spots: TOTAL_SPOTS,
+    disqualified_at:
+      claim.disqualified_at ||
+      null,
 
-    phase: "FIRST 100",
+    // --------------------------------------------------------
+    // NFT
+    // --------------------------------------------------------
+
+    nft_number:
+      claim.nft_number !==
+        null &&
+      claim.nft_number !==
+        undefined
+        ? Number(
+            claim.nft_number
+          )
+        : null,
+
+    delivery_tx:
+      normalizeString(
+        claim.delivery_tx
+      ) || null,
+
+    delivered_at:
+      claim.delivered_at ||
+      null,
+
+    nft_assigned_at:
+      claim.nft_assigned_at ||
+      null,
+
+    // --------------------------------------------------------
+    // FIRST 100 COUNTERS
+    // --------------------------------------------------------
+
+    active_spot_count:
+      activeSpotCount,
+
+    historical_claim_count:
+      historicalClaimCount,
+
+    // --------------------------------------------------------
+    // PROJECT PHASE
+    // --------------------------------------------------------
+
+    phase:
+      "FIRST 100"
   };
 }
 
 // ============================================================
-// TOKEN EXPIRATION
+// METHOD
 // ============================================================
 
-function isExpired(expiresAt) {
-  if (!expiresAt) {
-    return true;
-  }
-
-  const expiration =
-    new Date(expiresAt).getTime();
-
-  if (!Number.isFinite(expiration)) {
-    return true;
-  }
-
-  return Date.now() >= expiration;
+function methodAllowed(
+  method
+) {
+  return method === "GET";
 }
 
 // ============================================================
-// MAIN HANDLER
+// HANDLER
 // ============================================================
 
-module.exports = async function handler(req, res) {
-  // ----------------------------------------------------------
-  // METHOD
-  // ----------------------------------------------------------
+module.exports =
+  async function handler(
+    req,
+    res
+  ) {
 
-  if (!methodAllowed(req.method)) {
-    return res
-      .status(405)
-      .set(securityHeaders())
-      .json({
-        ok: false,
-        error: "METHOD_NOT_ALLOWED",
-        message: "Method not allowed.",
-      });
-  }
-
-  // ----------------------------------------------------------
-  // TOKEN
-  // ----------------------------------------------------------
-
-  const token = getBearerToken(req);
-
-  if (!token) {
-    return res
-      .status(401)
-      .set(securityHeaders())
-      .json({
-        ok: false,
-        error: "AUTH_REQUIRED",
-        message: "Participation session required.",
-      });
-  }
-
-  // ----------------------------------------------------------
-  // TOKEN FORMAT
-  // ----------------------------------------------------------
-
-  if (!isValidTokenFormat(token)) {
-    return res
-      .status(401)
-      .set(securityHeaders())
-      .json({
-        ok: false,
-        error: "INVALID_SESSION",
-        message: "Invalid participation session.",
-      });
-  }
-
-  // ----------------------------------------------------------
-  // HASH
-  // ----------------------------------------------------------
-
-  const tokenHash = hashToken(token);
-
-  // ----------------------------------------------------------
-  // DATABASE
-  // ----------------------------------------------------------
-
-  try {
-    const participation =
-      await findParticipation(tokenHash);
-
-    if (!participation) {
-      return res
-        .status(401)
-        .set(securityHeaders())
-        .json({
-          ok: false,
-          error: "SESSION_NOT_FOUND",
-          message: "Participation session not found.",
-        });
-    }
-
-    // --------------------------------------------------------
-    // REVOKED
-    // --------------------------------------------------------
-
-    if (participation.revoked === true) {
-      return res
-        .status(401)
-        .set(securityHeaders())
-        .json({
-          ok: false,
-          error: "SESSION_REVOKED",
-          message: "This participation session is no longer active.",
-        });
-    }
-
-    // --------------------------------------------------------
-    // EXPIRATION
-    // --------------------------------------------------------
+    // ========================================================
+    // METHOD
+    // ========================================================
 
     if (
-      isExpired(
-        participation.expires_at
+      !methodAllowed(
+        req.method
       )
     ) {
-      return res
-        .status(401)
-        .set(securityHeaders())
-        .json({
-          ok: false,
-          error: "SESSION_EXPIRED",
-          message: "Participation session expired.",
-        });
+      return json(
+        res,
+        405,
+        {
+          success: false,
+
+          error:
+            "METHOD_NOT_ALLOWED"
+        }
+      );
     }
 
-    // --------------------------------------------------------
-    // PARTICIPANT
-    // --------------------------------------------------------
+    // ========================================================
+    // DATABASE CONFIG
+    // ========================================================
 
-    const participant =
-      await buildParticipant(
-        participation
+    if (
+      !process.env
+        .DATABASE_URL
+    ) {
+      console.error(
+        "PARTICIPATION_DATABASE_URL_MISSING"
       );
 
-    return res
-      .status(200)
-      .set(securityHeaders())
-      .json({
-        ok: true,
-        participant,
-      });
-  } catch (err) {
-    // --------------------------------------------------------
-    // SERVER ERROR
-    // --------------------------------------------------------
-    //
-    // Never expose the database error to the participant.
-    //
-    console.error(
-      "PARTICIPATION_API_ERROR",
-      err
-    );
+      return json(
+        res,
+        500,
+        {
+          success: false,
 
-    return res
-      .status(500)
-      .set(securityHeaders())
-      .json({
-        ok: false,
-        error: "SERVER_ERROR",
-        message: "Unable to load participation data.",
-      });
-  }
-};
-```
+          error:
+            "SERVER_CONFIGURATION_ERROR"
+        }
+      );
+    }
+
+    // ========================================================
+    // TOKEN
+    // ========================================================
+
+    const token =
+      getBearerToken(req);
+
+    if (!token) {
+      return json(
+        res,
+        401,
+        {
+          success: false,
+
+          error:
+            "PARTICIPATION_REQUIRED",
+
+          message:
+            "A valid participation session is required."
+        }
+      );
+    }
+
+    // ========================================================
+    // TOKEN FORMAT
+    // ========================================================
+
+    if (
+      !isValidTokenFormat(
+        token
+      )
+    ) {
+      return json(
+        res,
+        401,
+        {
+          success: false,
+
+          error:
+            "INVALID_PARTICIPATION_TOKEN",
+
+          message:
+            "Invalid participation session."
+        }
+      );
+    }
+
+    // ========================================================
+    // HASH
+    // ========================================================
+
+    const tokenHash =
+      hashToken(token);
+
+    // ========================================================
+    // DATABASE
+    // ========================================================
+
+    try {
+
+      const participation =
+        await findParticipation(
+          tokenHash
+        );
+
+      // ------------------------------------------------------
+      // NOT FOUND / EXPIRED / REVOKED
+      // ------------------------------------------------------
+
+      if (!participation) {
+
+        return json(
+          res,
+          401,
+          {
+            success: false,
+
+            error:
+              "PARTICIPATION_SESSION_INVALID",
+
+            message:
+              "This participation session is invalid, expired, or revoked."
+          }
+        );
+      }
+
+      // ------------------------------------------------------
+      // BUILD PARTICIPANT
+      // ------------------------------------------------------
+
+      const participant =
+        await buildParticipant(
+          participation
+        );
+
+      // ------------------------------------------------------
+      // RESPONSE
+      // ------------------------------------------------------
+
+      return json(
+        res,
+        200,
+        {
+          success: true,
+
+          participant
+        }
+      );
+
+    } catch (error) {
+
+      // ------------------------------------------------------
+      // SERVER ERROR
+      // ------------------------------------------------------
+
+      console.error(
+        "PARTICIPATION_API_ERROR",
+        error
+      );
+
+      return json(
+        res,
+        500,
+        {
+          success: false,
+
+          error:
+            "INTERNAL_SERVER_ERROR",
+
+          message:
+            "Unable to load participation data."
+        }
+      );
+    }
+  };
