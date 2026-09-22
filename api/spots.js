@@ -9,13 +9,34 @@ const TOTAL_SPOTS = 100;
 function json(res, statusCode, data) {
   res.status(statusCode);
 
-  res.setHeader("Content-Type", "application/json");
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
+  // Security headers
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=()"
+  );
+
+  // Same-origin only.
+  // The claim.html is served by the same Vercel deployment.
+  const origin = process.env.ROADMAN_ORIGIN;
+
+  if (origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type"
   );
+
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, OPTIONS"
@@ -35,7 +56,30 @@ module.exports = async function handler(req, res) {
   // ---------------------------------------------------
 
   if (req.method === "OPTIONS") {
+    const origin = process.env.ROADMAN_ORIGIN;
+
     res.status(204);
+
+    if (origin) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Vary", "Origin");
+    }
+
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type"
+    );
+
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, OPTIONS"
+    );
+
+    res.setHeader(
+      "Access-Control-Max-Age",
+      "600"
+    );
+
     return res.end();
   }
 
@@ -62,17 +106,16 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const sql = neon(
-      process.env.DATABASE_URL
-    );
+    const sql = neon(process.env.DATABASE_URL);
 
     // =================================================
     // COUNT ACTIVE SPOTS
     //
-    // ONLY HOLDING PARTICIPANTS OCCUPY A SPOT.
+    // ONLY CURRENT HOLDING PARTICIPANTS OCCUPY A SPOT.
     //
-    // DISQUALIFIED records remain in the database
-    // as history, but their Spot becomes available.
+    // DISQUALIFIED / NON-HOLDING records remain in the
+    // database as historical records, but do not occupy
+    // one of the 100 active spots.
     // =================================================
 
     const result = await sql`
@@ -81,18 +124,18 @@ module.exports = async function handler(req, res) {
       WHERE holding_status = 'HOLDING'
     `;
 
-    const claimed = Math.max(
-      0,
-      Math.min(
-        TOTAL_SPOTS,
-        Number(
-          result?.[0]?.claimed || 0
-        )
-      )
+    const rawClaimed = Number(
+      result?.[0]?.claimed || 0
     );
 
-    const remaining =
-      TOTAL_SPOTS - claimed;
+    const claimed = Number.isFinite(rawClaimed)
+      ? Math.max(
+          0,
+          Math.min(TOTAL_SPOTS, rawClaimed)
+        )
+      : 0;
+
+    const remaining = TOTAL_SPOTS - claimed;
 
     // =================================================
     // RESPONSE
@@ -107,9 +150,10 @@ module.exports = async function handler(req, res) {
 
   } catch (error) {
 
+    // Do not expose database details to the client.
     console.error(
       "ROADMAN SPOTS ERROR:",
-      error
+      error?.message || error
     );
 
     return json(res, 500, {
