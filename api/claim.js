@@ -6,13 +6,40 @@ const TOTAL_SPOTS = 100;
 // =====================================================
 // CONFIG
 // =====================================================
-
-// TESTE:
-// 30 = mínimo atual para testar.
+//
+// O modo de teste NÃO é controlado pelo frontend.
+//
+// VERCEL / ENV:
+// ROADMAN_TEST_MODE=true
+// ROADMAN_TEST_MIN_ROAD=30
 //
 // PRODUÇÃO:
-// 3_000_000 = mínimo definitivo.
-const MIN_ROAD_REQUIRED = 30;
+// ROADMAN_TEST_MODE=false (ou ausente)
+// ROADMAN_MIN_ROAD=3000000
+//
+// Nunca coloque nenhuma dessas variáveis no HTML.
+// =====================================================
+
+const TEST_MODE =
+  String(process.env.ROADMAN_TEST_MODE || "")
+    .toLowerCase() === "true";
+
+const TEST_MIN_ROAD =
+  parsePositiveNumber(
+    process.env.ROADMAN_TEST_MIN_ROAD,
+    30
+  );
+
+const PRODUCTION_MIN_ROAD =
+  parsePositiveNumber(
+    process.env.ROADMAN_MIN_ROAD,
+    3_000_000
+  );
+
+const MIN_ROAD_REQUIRED =
+  TEST_MODE
+    ? TEST_MIN_ROAD
+    : PRODUCTION_MIN_ROAD;
 
 const TOKEN_MINT =
   "BgVkpGKLuiUGwj4GzaYyoKbWNMBUeem8rpuvEuRApump";
@@ -22,6 +49,34 @@ const SOLANA_RPC =
 
 const PARTICIPATION_TOKEN_SECRET =
   process.env.PARTICIPATION_TOKEN_SECRET;
+
+// Mesmo lock usado para serializar o First 100.
+const ROADMAN_ADVISORY_LOCK = 784321001;
+
+// =====================================================
+// HELPERS
+// =====================================================
+
+function parsePositiveNumber(value, fallback) {
+  if (
+    value === undefined ||
+    value === null ||
+    value === ""
+  ) {
+    return fallback;
+  }
+
+  const parsed = Number(value);
+
+  if (
+    !Number.isFinite(parsed) ||
+    parsed < 0
+  ) {
+    return fallback;
+  }
+
+  return parsed;
+}
 
 // =====================================================
 // RESPONSE
@@ -117,12 +172,7 @@ function isValidSignature(signature) {
 // SHA256(raw token)
 //
 // The raw token is returned once to the browser.
-// It is NOT stored in the database.
-//
-// IMPORTANT:
-// PARTICIPATION_TOKEN_SECRET must remain unchanged
-// after launch, otherwise existing participation
-// tokens can no longer be reproduced.
+// It is never stored directly in the database.
 // =====================================================
 
 function createParticipationToken(wallet) {
@@ -374,6 +424,12 @@ async function solanaRpc(
 // =====================================================
 // $ROAD BALANCE
 // =====================================================
+//
+// Uses raw integer token amounts rather than Number()
+// for eligibility decisions.
+//
+// This avoids floating-point precision problems.
+// =====================================================
 
 async function getRoadBalance(
   wallet
@@ -393,51 +449,179 @@ async function getRoadBalance(
       ]
     );
 
-  let total = 0;
+  let totalRaw = 0n;
+  let decimals = null;
 
   for (
     const account of
     result?.value || []
   ) {
-    const amount =
+    const tokenAmount =
       account
         ?.account
         ?.data
         ?.parsed
         ?.info
-        ?.tokenAmount
-        ?.uiAmountString;
+        ?.tokenAmount;
+
+    if (!tokenAmount) {
+      continue;
+    }
+
+    const rawAmount =
+      tokenAmount.amount;
+
+    const accountDecimals =
+      Number(
+        tokenAmount.decimals
+      );
 
     if (
-      amount !== undefined &&
-      amount !== null
+      typeof rawAmount !== "string" ||
+      !/^\d+$/.test(rawAmount)
     ) {
-      const numericAmount =
-        Number(amount);
-
-      if (
-        !Number.isFinite(
-          numericAmount
-        )
-      ) {
-        throw new Error(
-          "INVALID_ROAD_BALANCE"
-        );
-      }
-
-      total += numericAmount;
+      throw new Error(
+        "INVALID_ROAD_RAW_BALANCE"
+      );
     }
+
+    if (
+      !Number.isInteger(
+        accountDecimals
+      ) ||
+      accountDecimals < 0 ||
+      accountDecimals > 18
+    ) {
+      throw new Error(
+        "INVALID_ROAD_DECIMALS"
+      );
+    }
+
+    if (
+      decimals === null
+    ) {
+      decimals =
+        accountDecimals;
+    }
+
+    if (
+      decimals !==
+      accountDecimals
+    ) {
+      throw new Error(
+        "INCONSISTENT_ROAD_DECIMALS"
+      );
+    }
+
+    totalRaw +=
+      BigInt(rawAmount);
   }
 
   if (
-    !Number.isFinite(total)
+    decimals === null
+  ) {
+    // No token account = zero balance.
+    decimals = 0;
+  }
+
+  return {
+    raw: totalRaw,
+    decimals,
+  };
+}
+
+// =====================================================
+// THRESHOLD COMPARISON
+// =====================================================
+
+function decimalNumberToScaledBigInt(
+  value,
+  decimals
+) {
+  if (
+    !Number.isFinite(value) ||
+    value < 0
   ) {
     throw new Error(
-      "INVALID_ROAD_BALANCE"
+      "INVALID_ROAD_THRESHOLD"
     );
   }
 
-  return total;
+  const stringValue =
+    String(value);
+
+  const [
+    integerPart,
+    fractionPart = "",
+  ] =
+    stringValue.split(".");
+
+  const fraction =
+    fractionPart
+      .replace(/[^0-9]/g, "")
+      .slice(0, decimals)
+      .padEnd(decimals, "0");
+
+  const integer =
+    integerPart || "0";
+
+  return (
+    BigInt(integer) *
+      10n ** BigInt(decimals) +
+    BigInt(fraction || "0")
+  );
+}
+
+function hasEnoughRoad(
+  balance,
+  required
+) {
+  const requiredRaw =
+    decimalNumberToScaledBigInt(
+      required,
+      balance.decimals
+    );
+
+  return (
+    balance.raw >=
+    requiredRaw
+  );
+}
+
+// =====================================================
+// BALANCE FOR RESPONSE / DATABASE
+// =====================================================
+
+function rawBalanceToNumber(
+  raw,
+  decimals
+) {
+  if (
+    decimals === 0
+  ) {
+    const asNumber =
+      Number(raw);
+
+    return Number.isSafeInteger(
+      asNumber
+    )
+      ? asNumber
+      : Number.MAX_SAFE_INTEGER;
+  }
+
+  const divisor =
+    10 ** decimals;
+
+  const value =
+    Number(raw) / divisor;
+
+  if (
+    !Number.isFinite(value)
+  ) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
+  return value;
 }
 
 // =====================================================
@@ -448,7 +632,8 @@ function publicClaim(
   claim
 ) {
   return {
-    id: claim.id,
+    id:
+      claim.id,
 
     spot:
       claim.spot,
@@ -548,19 +733,30 @@ async function ensureParticipationToken(
     const stored =
       existingToken[0];
 
+    // A revoked token must not silently become valid again.
+    if (
+      stored.revoked_at
+    ) {
+      return {
+        token: null,
+        expires_at:
+          stored.expires_at || null,
+        revoked: true,
+      };
+    }
+
     if (
       stored.token_hash !==
       tokenHash ||
-      stored.expires_at !== null ||
-      stored.revoked_at !== null
+      stored.expires_at !== null
     ) {
       await sql`
         UPDATE participation_tokens
         SET
           token_hash = ${tokenHash},
-          expires_at = NULL,
-          revoked_at = NULL
+          expires_at = NULL
         WHERE id = ${stored.id}
+          AND revoked_at IS NULL
       `;
     }
   }
@@ -568,6 +764,7 @@ async function ensureParticipationToken(
   return {
     token: rawToken,
     expires_at: null,
+    revoked: false,
   };
 }
 
@@ -585,6 +782,15 @@ async function returnExistingClaim(
       sql,
       claim
     );
+
+  if (
+    participation.revoked
+  ) {
+    return {
+      success: false,
+      revoked: true,
+    };
+  }
 
   return {
     success: true,
@@ -604,7 +810,10 @@ async function returnExistingClaim(
         MIN_ROAD_REQUIRED,
 
       verified_balance:
-        currentBalance,
+        rawBalanceToNumber(
+          currentBalance.raw,
+          currentBalance.decimals
+        ),
     },
   };
 }
@@ -615,11 +824,9 @@ async function returnExistingClaim(
 //
 // Historical record remains.
 //
+// The Spot becomes available because
 // holding_status changes from HOLDING
 // to DISQUALIFIED.
-//
-// Therefore the Spot becomes available again
-// to future participants.
 // =====================================================
 
 async function markDisqualified(
@@ -638,6 +845,7 @@ async function markDisqualified(
             NOW()
           )
       WHERE id = ${claim.id}
+        AND holding_status = 'HOLDING'
       RETURNING
         id,
         spot,
@@ -949,6 +1157,23 @@ module.exports =
         );
       }
 
+      // Ensure the nonce belongs to the submitted wallet.
+      if (
+        String(
+          challenge.wallet
+        ) !== wallet
+      ) {
+        return json(
+          res,
+          401,
+          {
+            success: false,
+            error:
+              "NONCE_WALLET_MISMATCH",
+          }
+        );
+      }
+
       // =================================================
       // VERIFY WALLET SIGNATURE
       // =================================================
@@ -1022,8 +1247,7 @@ module.exports =
           );
       } catch (error) {
         console.error(
-          "SOLANA_BALANCE_ERROR",
-          error
+          "SOLANA_BALANCE_ERROR"
         );
 
         return json(
@@ -1037,8 +1261,19 @@ module.exports =
         );
       }
 
+      const roadBalanceNumber =
+        rawBalanceToNumber(
+          roadBalance.raw,
+          roadBalance.decimals
+        );
+
       // =================================================
       // EXISTING WALLET
+      // =================================================
+      //
+      // Existing identity checks happen before allocation.
+      // Active claims can be revalidated.
+      // Historical identities remain registered.
       // =================================================
 
       const existingWallet =
@@ -1099,11 +1334,11 @@ module.exports =
             );
           }
 
-          // Participant no longer meets
-          // the current holding requirement.
           if (
-            roadBalance <
-            MIN_ROAD_REQUIRED
+            !hasEnoughRoad(
+              roadBalance,
+              MIN_ROAD_REQUIRED
+            )
           ) {
             const disqualified =
               await markDisqualified(
@@ -1124,7 +1359,7 @@ module.exports =
                   MIN_ROAD_REQUIRED,
 
                 balance:
-                  roadBalance,
+                  roadBalanceNumber,
 
                 status:
                   "DISQUALIFIED",
@@ -1139,14 +1374,31 @@ module.exports =
             );
           }
 
-          return json(
-            res,
-            200,
+          const existingResponse =
             await returnExistingClaim(
               sql,
               existing,
               roadBalance
-            )
+            );
+
+          if (
+            existingResponse.revoked
+          ) {
+            return json(
+              res,
+              403,
+              {
+                success: false,
+                error:
+                  "PARTICIPATION_REVOKED",
+              }
+            );
+          }
+
+          return json(
+            res,
+            200,
+            existingResponse
           );
         }
 
@@ -1241,8 +1493,10 @@ module.exports =
       // =================================================
 
       if (
-        roadBalance <
-        MIN_ROAD_REQUIRED
+        !hasEnoughRoad(
+          roadBalance,
+          MIN_ROAD_REQUIRED
+        )
       ) {
         return json(
           res,
@@ -1257,7 +1511,7 @@ module.exports =
               MIN_ROAD_REQUIRED,
 
             balance:
-              roadBalance,
+              roadBalanceNumber,
           }
         );
       }
@@ -1280,143 +1534,251 @@ module.exports =
       // ATOMIC FIRST-100 ALLOCATION
       // =================================================
       //
-      // The advisory lock serializes allocation attempts
-      // using this endpoint.
+      // IMPORTANT:
       //
-      // Claim + token are created in one SQL statement.
+      // The advisory lock protects the complete allocation
+      // operation inside one SQL transaction.
+      //
+      // This prevents two simultaneous requests from
+      // allocating the same logical First-100 capacity.
+      //
+      // Identity checks are repeated inside the locked
+      // transaction because requests can arrive concurrently.
+      // =================================================
+
+      const transaction =
+        await sql.transaction([
+          sql`
+            SELECT
+              pg_advisory_xact_lock(
+                ${ROADMAN_ADVISORY_LOCK}
+              )
+          `,
+
+          sql`
+            SELECT
+              id
+            FROM roadman_claims
+            WHERE wallet = ${wallet}
+            LIMIT 1
+          `,
+
+          sql`
+            SELECT
+              id
+            FROM roadman_claims
+            WHERE LOWER(x_handle) =
+                  LOWER(${xHandle})
+            LIMIT 1
+          `,
+        ]);
+
+      const walletAlreadyInserted =
+        transaction?.[1] || [];
+
+      const handleAlreadyInserted =
+        transaction?.[2] || [];
+
+      // =================================================
+      // CONCURRENT WALLET CHECK
+      // =================================================
+
+      if (
+        walletAlreadyInserted.length > 0
+      ) {
+        return json(
+          res,
+          409,
+          {
+            success: false,
+            error:
+              "WALLET_ALREADY_REGISTERED",
+          }
+        );
+      }
+
+      // =================================================
+      // CONCURRENT X HANDLE CHECK
+      // =================================================
+
+      if (
+        handleAlreadyInserted.length > 0
+      ) {
+        return json(
+          res,
+          409,
+          {
+            success: false,
+            error:
+              "X_HANDLE_ALREADY_REGISTERED",
+          }
+        );
+      }
+
+      // =================================================
+      // FINAL ATOMIC ALLOCATION
+      // =================================================
+      //
+      // We now perform the actual INSERT in its own
+      // transaction with the same advisory lock.
+      //
+      // This is kept separate from the identity transaction
+      // above because Neon transaction arrays execute as
+      // one transaction per call.
+      //
+      // The database-level unique constraints recommended
+      // below provide the final duplicate protection.
       // =================================================
 
       const claimRows =
-        await sql`
-          WITH roadman_lock AS (
+        await sql.transaction([
+          sql`
             SELECT
               pg_advisory_xact_lock(
-                784321001
-              ) AS locked
-          ),
+                ${ROADMAN_ADVISORY_LOCK}
+              )
+          `,
 
-          available_spot AS (
-            SELECT
-              s.spot
+          sql`
+            WITH available_spot AS (
+              SELECT
+                s.spot
 
-            FROM generate_series(
-              1,
-              ${TOTAL_SPOTS}
-            ) AS s(spot)
+              FROM generate_series(
+                1,
+                ${TOTAL_SPOTS}
+              ) AS s(spot)
 
-            CROSS JOIN roadman_lock
+              WHERE NOT EXISTS (
+                SELECT 1
+                FROM roadman_claims r
+                WHERE
+                  r.spot = s.spot
+                  AND r.holding_status =
+                    'HOLDING'
+              )
 
-            WHERE NOT EXISTS (
-              SELECT 1
-              FROM roadman_claims r
-              WHERE
-                r.spot = s.spot
-                AND r.holding_status =
-                  'HOLDING'
+              ORDER BY RANDOM()
+
+              LIMIT 1
+            ),
+
+            inserted_claim AS (
+              INSERT INTO roadman_claims (
+                spot,
+                x_handle,
+                wallet,
+                status,
+                claimed_at,
+                initial_balance,
+                initial_usd_value,
+                holding_status,
+                nft_status
+              )
+
+              SELECT
+                a.spot,
+                ${xHandle},
+                ${wallet},
+                'claimed',
+                NOW(),
+                ${roadBalanceNumber},
+                NULL,
+                'HOLDING',
+                'PENDING'
+
+              FROM available_spot a
+
+              WHERE NOT EXISTS (
+                SELECT 1
+                FROM roadman_claims r
+                WHERE
+                  r.wallet = ${wallet}
+              )
+
+              AND NOT EXISTS (
+                SELECT 1
+                FROM roadman_claims r
+                WHERE
+                  LOWER(r.x_handle) =
+                  LOWER(${xHandle})
+              )
+
+              RETURNING
+                id,
+                spot,
+                x_handle,
+                wallet,
+                status,
+                created_at,
+                claimed_at,
+                initial_balance,
+                holding_status,
+                qualified_at,
+                disqualified_at,
+                nft_number,
+                nft_status,
+                delivery_tx,
+                delivered_at,
+                nft_assigned_at
+            ),
+
+            inserted_token AS (
+              INSERT INTO participation_tokens (
+                claim_id,
+                token_hash,
+                created_at,
+                expires_at,
+                revoked_at
+              )
+
+              SELECT
+                id,
+                ${tokenHash},
+                NOW(),
+                NULL,
+                NULL
+
+              FROM inserted_claim
+
+              RETURNING
+                claim_id
             )
 
-            ORDER BY RANDOM()
-
-            LIMIT 1
-          ),
-
-          inserted_claim AS (
-            INSERT INTO roadman_claims (
-              spot,
-              x_handle,
-              wallet,
-              status,
-              claimed_at,
-              initial_balance,
-              initial_usd_value,
-              holding_status,
-              nft_status
-            )
-
             SELECT
-              a.spot,
-              ${xHandle},
-              ${wallet},
-              'claimed',
-              NOW(),
-              ${roadBalance},
-              NULL,
-              'HOLDING',
-              'PENDING'
+              c.id,
+              c.spot,
+              c.x_handle,
+              c.wallet,
+              c.status,
+              c.created_at,
+              c.claimed_at,
+              c.initial_balance,
+              c.holding_status,
+              c.qualified_at,
+              c.disqualified_at,
+              c.nft_number,
+              c.nft_status,
+              c.delivery_tx,
+              c.delivered_at,
+              c.nft_assigned_at
 
-            FROM available_spot a
+            FROM inserted_claim c
 
-            RETURNING
-              id,
-              spot,
-              x_handle,
-              wallet,
-              status,
-              created_at,
-              claimed_at,
-              initial_balance,
-              holding_status,
-              qualified_at,
-              disqualified_at,
-              nft_number,
-              nft_status,
-              delivery_tx,
-              delivered_at,
-              nft_assigned_at
-          ),
+            INNER JOIN inserted_token t
+              ON t.claim_id = c.id
+          `,
+        ]);
 
-          inserted_token AS (
-            INSERT INTO participation_tokens (
-              claim_id,
-              token_hash,
-              created_at,
-              expires_at,
-              revoked_at
-            )
-
-            SELECT
-              id,
-              ${tokenHash},
-              NOW(),
-              NULL,
-              NULL
-
-            FROM inserted_claim
-
-            RETURNING
-              claim_id
-          )
-
-          SELECT
-            c.id,
-            c.spot,
-            c.x_handle,
-            c.wallet,
-            c.status,
-            c.created_at,
-            c.claimed_at,
-            c.initial_balance,
-            c.holding_status,
-            c.qualified_at,
-            c.disqualified_at,
-            c.nft_number,
-            c.nft_status,
-            c.delivery_tx,
-            c.delivered_at,
-            c.nft_assigned_at
-
-          FROM inserted_claim c
-
-          INNER JOIN inserted_token t
-            ON t.claim_id = c.id
-        `;
+      const claimRowsFinal =
+        claimRows?.[1] || [];
 
       // =================================================
       // NO AVAILABLE SPOT
       // =================================================
 
       if (
-        claimRows.length === 0
+        claimRowsFinal.length === 0
       ) {
         return json(
           res,
@@ -1430,7 +1792,7 @@ module.exports =
       }
 
       const claim =
-        claimRows[0];
+        claimRowsFinal[0];
 
       // =================================================
       // SUCCESS
@@ -1463,14 +1825,19 @@ module.exports =
               MIN_ROAD_REQUIRED,
 
             verified_balance:
-              roadBalance,
+              roadBalanceNumber,
           },
+
+          mode:
+            TEST_MODE
+              ? "TEST"
+              : "PRODUCTION",
         }
       );
     } catch (error) {
       console.error(
         "CLAIM_API_ERROR",
-        error
+        error?.message || "UNKNOWN_ERROR"
       );
 
       return json(
