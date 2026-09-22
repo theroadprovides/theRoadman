@@ -7,17 +7,15 @@ const TOTAL_SPOTS = 100;
 // CONFIG
 // =====================================================
 //
-// O modo de teste NÃO é controlado pelo frontend.
-//
-// VERCEL / ENV:
+// TESTE:
 // ROADMAN_TEST_MODE=true
 // ROADMAN_TEST_MIN_ROAD=30
 //
 // PRODUÇÃO:
-// ROADMAN_TEST_MODE=false (ou ausente)
+// ROADMAN_TEST_MODE=false
 // ROADMAN_MIN_ROAD=3000000
 //
-// Nunca coloque nenhuma dessas variáveis no HTML.
+// O frontend NÃO controla essas regras.
 // =====================================================
 
 const TEST_MODE =
@@ -50,7 +48,8 @@ const SOLANA_RPC =
 const PARTICIPATION_TOKEN_SECRET =
   process.env.PARTICIPATION_TOKEN_SECRET;
 
-// Mesmo lock usado para serializar o First 100.
+// Advisory lock exclusivo do Roadman.
+// Deve ser mantido estável.
 const ROADMAN_ADVISORY_LOCK = 784321001;
 
 // =====================================================
@@ -118,6 +117,38 @@ function json(res, status, data) {
     "camera=(), microphone=(), geolocation=(), payment=()"
   );
 
+  // Same-origin.
+  // Defina no Vercel:
+  //
+  // ROADMAN_ORIGIN=https://theroadman.vercel.app
+  //
+  // Se estiver ausente, nenhuma origem explícita
+  // será autorizada.
+  const origin =
+    process.env.ROADMAN_ORIGIN;
+
+  if (origin) {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      origin
+    );
+
+    res.setHeader(
+      "Vary",
+      "Origin"
+    );
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "POST, OPTIONS"
+  );
+
   return res.json(data);
 }
 
@@ -126,7 +157,8 @@ function json(res, status, data) {
 // =====================================================
 
 function normalizeHandle(value) {
-  let handle = String(value || "").trim();
+  let handle =
+    String(value || "").trim();
 
   if (!handle) {
     return null;
@@ -171,8 +203,7 @@ function isValidSignature(signature) {
 // Database:
 // SHA256(raw token)
 //
-// The raw token is returned once to the browser.
-// It is never stored directly in the database.
+// O token bruto nunca é armazenado no banco.
 // =====================================================
 
 function createParticipationToken(wallet) {
@@ -287,11 +318,11 @@ function walletPublicKeyFromRaw(
     );
   }
 
-  // Ed25519 SubjectPublicKeyInfo prefix.
-  const prefix = Buffer.from(
-    "302a300506032b6570032100",
-    "hex"
-  );
+  const prefix =
+    Buffer.from(
+      "302a300506032b6570032100",
+      "hex"
+    );
 
   return crypto.createPublicKey({
     key: Buffer.concat([
@@ -425,10 +456,8 @@ async function solanaRpc(
 // $ROAD BALANCE
 // =====================================================
 //
-// Uses raw integer token amounts rather than Number()
-// for eligibility decisions.
-//
-// This avoids floating-point precision problems.
+// Usa valores inteiros brutos do token.
+// Não utiliza Number() para decidir elegibilidade.
 // =====================================================
 
 async function getRoadBalance(
@@ -520,7 +549,6 @@ async function getRoadBalance(
   if (
     decimals === null
   ) {
-    // No token account = zero balance.
     decimals = 0;
   }
 
@@ -733,7 +761,7 @@ async function ensureParticipationToken(
     const stored =
       existingToken[0];
 
-    // A revoked token must not silently become valid again.
+    // Nunca reativa token revogado.
     if (
       stored.revoked_at
     ) {
@@ -821,13 +849,6 @@ async function returnExistingClaim(
 // =====================================================
 // DISQUALIFY
 // =====================================================
-//
-// Historical record remains.
-//
-// The Spot becomes available because
-// holding_status changes from HOLDING
-// to DISQUALIFIED.
-// =====================================================
 
 async function markDisqualified(
   sql,
@@ -852,6 +873,7 @@ async function markDisqualified(
         x_handle,
         wallet,
         status,
+        created_at,
         claimed_at,
         initial_balance,
         holding_status,
@@ -876,6 +898,7 @@ module.exports =
     req,
     res
   ) {
+
     // ---------------------------------------------------
     // OPTIONS
     // ---------------------------------------------------
@@ -966,8 +989,29 @@ module.exports =
       );
 
     try {
-      const body =
-        req.body || {};
+
+      // =================================================
+      // BODY
+      // =================================================
+
+      let body;
+
+      try {
+        body =
+          typeof req.body === "string"
+            ? JSON.parse(req.body)
+            : req.body || {};
+      } catch {
+        return json(
+          res,
+          400,
+          {
+            success: false,
+            error:
+              "INVALID_JSON",
+          }
+        );
+      }
 
       const xHandle =
         normalizeHandle(
@@ -1157,7 +1201,6 @@ module.exports =
         );
       }
 
-      // Ensure the nonce belongs to the submitted wallet.
       if (
         String(
           challenge.wallet
@@ -1235,7 +1278,7 @@ module.exports =
       }
 
       // =================================================
-      // CHECK CURRENT $ROAD BALANCE
+      // CURRENT $ROAD BALANCE
       // =================================================
 
       let roadBalance;
@@ -1247,7 +1290,9 @@ module.exports =
           );
       } catch (error) {
         console.error(
-          "SOLANA_BALANCE_ERROR"
+          "SOLANA_BALANCE_ERROR:",
+          error?.message ||
+            "UNKNOWN"
         );
 
         return json(
@@ -1269,11 +1314,6 @@ module.exports =
 
       // =================================================
       // EXISTING WALLET
-      // =================================================
-      //
-      // Existing identity checks happen before allocation.
-      // Active claims can be revalidated.
-      // Historical identities remain registered.
       // =================================================
 
       const existingWallet =
@@ -1307,14 +1347,15 @@ module.exports =
         const existing =
           existingWallet[0];
 
-        // -------------------------------------------------
-        // EXISTING ACTIVE PARTICIPANT
-        // -------------------------------------------------
+        // -----------------------------------------------
+        // ACTIVE PARTICIPANT
+        // -----------------------------------------------
 
         if (
           existing.holding_status ===
           "HOLDING"
         ) {
+
           if (
             String(
               existing.x_handle
@@ -1340,6 +1381,7 @@ module.exports =
               MIN_ROAD_REQUIRED
             )
           ) {
+
             const disqualified =
               await markDisqualified(
                 sql,
@@ -1402,9 +1444,9 @@ module.exports =
           );
         }
 
-        // -------------------------------------------------
-        // EXISTING BUT NOT ACTIVE
-        // -------------------------------------------------
+        // -----------------------------------------------
+        // HISTORICAL / INACTIVE
+        // -----------------------------------------------
 
         return json(
           res,
@@ -1536,18 +1578,26 @@ module.exports =
       //
       // IMPORTANT:
       //
-      // The advisory lock protects the complete allocation
-      // operation inside one SQL transaction.
+      // Tudo abaixo acontece dentro de UMA ÚNICA
+      // transação protegida pelo advisory lock:
       //
-      // This prevents two simultaneous requests from
-      // allocating the same logical First-100 capacity.
+      // 1. LOCK
+      // 2. RECHECK WALLET
+      // 3. RECHECK X HANDLE
+      // 4. FIND AVAILABLE SPOT
+      // 5. INSERT CLAIM
+      // 6. INSERT PARTICIPATION TOKEN
       //
-      // Identity checks are repeated inside the locked
-      // transaction because requests can arrive concurrently.
+      // O lock NÃO é liberado entre essas etapas.
       // =================================================
 
       const transaction =
         await sql.transaction([
+
+          // ------------------------------------------------
+          // 1. LOCK
+          // ------------------------------------------------
+
           sql`
             SELECT
               pg_advisory_xact_lock(
@@ -1555,92 +1605,48 @@ module.exports =
               )
           `,
 
-          sql`
-            SELECT
-              id
-            FROM roadman_claims
-            WHERE wallet = ${wallet}
-            LIMIT 1
-          `,
+          // ------------------------------------------------
+          // 2. RECHECK WALLET
+          // ------------------------------------------------
 
           sql`
             SELECT
-              id
+              id,
+              spot,
+              status,
+              holding_status
+            FROM roadman_claims
+            WHERE wallet = ${wallet}
+            ORDER BY id DESC
+            LIMIT 1
+          `,
+
+          // ------------------------------------------------
+          // 3. RECHECK X HANDLE
+          // ------------------------------------------------
+
+          sql`
+            SELECT
+              id,
+              spot,
+              status,
+              holding_status
             FROM roadman_claims
             WHERE LOWER(x_handle) =
                   LOWER(${xHandle})
+            ORDER BY id DESC
             LIMIT 1
           `,
-        ]);
 
-      const walletAlreadyInserted =
-        transaction?.[1] || [];
-
-      const handleAlreadyInserted =
-        transaction?.[2] || [];
-
-      // =================================================
-      // CONCURRENT WALLET CHECK
-      // =================================================
-
-      if (
-        walletAlreadyInserted.length > 0
-      ) {
-        return json(
-          res,
-          409,
-          {
-            success: false,
-            error:
-              "WALLET_ALREADY_REGISTERED",
-          }
-        );
-      }
-
-      // =================================================
-      // CONCURRENT X HANDLE CHECK
-      // =================================================
-
-      if (
-        handleAlreadyInserted.length > 0
-      ) {
-        return json(
-          res,
-          409,
-          {
-            success: false,
-            error:
-              "X_HANDLE_ALREADY_REGISTERED",
-          }
-        );
-      }
-
-      // =================================================
-      // FINAL ATOMIC ALLOCATION
-      // =================================================
-      //
-      // We now perform the actual INSERT in its own
-      // transaction with the same advisory lock.
-      //
-      // This is kept separate from the identity transaction
-      // above because Neon transaction arrays execute as
-      // one transaction per call.
-      //
-      // The database-level unique constraints recommended
-      // below provide the final duplicate protection.
-      // =================================================
-
-      const claimRows =
-        await sql.transaction([
-          sql`
-            SELECT
-              pg_advisory_xact_lock(
-                ${ROADMAN_ADVISORY_LOCK}
-              )
-          `,
+          // ------------------------------------------------
+          // 4 + 5 + 6
+          //
+          // FIND SPOT + INSERT CLAIM + INSERT TOKEN
+          // ------------------------------------------------
 
           sql`
             WITH available_spot AS (
+
               SELECT
                 s.spot
 
@@ -1658,12 +1664,13 @@ module.exports =
                     'HOLDING'
               )
 
-              ORDER BY RANDOM()
+              ORDER BY s.spot
 
               LIMIT 1
             ),
 
             inserted_claim AS (
+
               INSERT INTO roadman_claims (
                 spot,
                 x_handle,
@@ -1689,21 +1696,6 @@ module.exports =
 
               FROM available_spot a
 
-              WHERE NOT EXISTS (
-                SELECT 1
-                FROM roadman_claims r
-                WHERE
-                  r.wallet = ${wallet}
-              )
-
-              AND NOT EXISTS (
-                SELECT 1
-                FROM roadman_claims r
-                WHERE
-                  LOWER(r.x_handle) =
-                  LOWER(${xHandle})
-              )
-
               RETURNING
                 id,
                 spot,
@@ -1724,6 +1716,7 @@ module.exports =
             ),
 
             inserted_token AS (
+
               INSERT INTO participation_tokens (
                 claim_id,
                 token_hash,
@@ -1770,15 +1763,57 @@ module.exports =
           `,
         ]);
 
-      const claimRowsFinal =
-        claimRows?.[1] || [];
+      const walletAlreadyInserted =
+        transaction?.[1] || [];
+
+      const handleAlreadyInserted =
+        transaction?.[2] || [];
+
+      const claimRows =
+        transaction?.[3] || [];
+
+      // =================================================
+      // CONCURRENT WALLET
+      // =================================================
+
+      if (
+        walletAlreadyInserted.length > 0
+      ) {
+        return json(
+          res,
+          409,
+          {
+            success: false,
+            error:
+              "WALLET_ALREADY_REGISTERED",
+          }
+        );
+      }
+
+      // =================================================
+      // CONCURRENT X HANDLE
+      // =================================================
+
+      if (
+        handleAlreadyInserted.length > 0
+      ) {
+        return json(
+          res,
+          409,
+          {
+            success: false,
+            error:
+              "X_HANDLE_ALREADY_REGISTERED",
+          }
+        );
+      }
 
       // =================================================
       // NO AVAILABLE SPOT
       // =================================================
 
       if (
-        claimRowsFinal.length === 0
+        claimRows.length === 0
       ) {
         return json(
           res,
@@ -1792,7 +1827,7 @@ module.exports =
       }
 
       const claim =
-        claimRowsFinal[0];
+        claimRows[0];
 
       // =================================================
       // SUCCESS
@@ -1834,10 +1869,13 @@ module.exports =
               : "PRODUCTION",
         }
       );
+
     } catch (error) {
+
       console.error(
-        "CLAIM_API_ERROR",
-        error?.message || "UNKNOWN_ERROR"
+        "CLAIM_API_ERROR:",
+        error?.message ||
+          "UNKNOWN_ERROR"
       );
 
       return json(
