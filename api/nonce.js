@@ -3,84 +3,224 @@ const crypto = require("crypto");
 
 const NONCE_TTL_SECONDS = 300;
 
+// =====================================================
+// RESPONSE
+// =====================================================
+
 function json(res, statusCode, data) {
   res.status(statusCode);
-  res.setHeader("Content-Type", "application/json");
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("Access-Control-Allow-Origin", "*");
+
   res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type"
+    "Content-Type",
+    "application/json; charset=utf-8"
   );
+
   res.setHeader(
-    "Access-Control-Allow-Methods",
-    "POST, OPTIONS"
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate"
+  );
+
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
+  res.setHeader(
+    "X-Content-Type-Options",
+    "nosniff"
+  );
+
+  res.setHeader(
+    "X-Frame-Options",
+    "DENY"
+  );
+
+  res.setHeader(
+    "Referrer-Policy",
+    "no-referrer"
+  );
+
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=(), payment=()"
   );
 
   return res.json(data);
 }
 
+// =====================================================
+// VALIDATION
+// =====================================================
+
 function isValidSolanaAddress(wallet) {
-  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(wallet);
+  return (
+    typeof wallet === "string" &&
+    /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(
+      wallet
+    )
+  );
 }
+
+// =====================================================
+// NONCE
+// =====================================================
 
 function generateNonce() {
-  return crypto.randomBytes(32).toString("hex");
+  return crypto
+    .randomBytes(32)
+    .toString("hex");
 }
 
-function generateMessage(wallet, nonce, expiresAt) {
-  return [
-    "THE ROAD PROVIDES",
-    "",
-    "ROADMAN WALLET VERIFICATION",
-    "",
-    `Wallet: ${wallet}`,
-    `Nonce: ${nonce}`,
-    `Expires: ${expiresAt.toISOString()}`,
-    "",
-    "Sign this message to prove control of this wallet.",
-    "This signature does not authorize any transaction."
-  ].join("\n");
+// =====================================================
+// VERIFICATION MESSAGE
+// =====================================================
+//
+// THIS MUST MATCH api/claim.js EXACTLY.
+// =====================================================
+
+function generateMessage(
+  wallet,
+  nonce,
+  expiresAt
+) {
+  return `THE ROAD PROVIDES
+
+ROADMAN WALLET VERIFICATION
+
+Wallet: ${wallet}
+Nonce: ${nonce}
+Expires: ${expiresAt.toISOString()}
+
+Sign this message to prove control of this wallet.
+This signature does not authorize any transaction.`;
 }
 
-module.exports = async function handler(req, res) {
+// =====================================================
+// MAIN
+// =====================================================
+
+module.exports = async function handler(
+  req,
+  res
+) {
+  // ---------------------------------------------------
+  // OPTIONS
+  // ---------------------------------------------------
+
   if (req.method === "OPTIONS") {
-    res.status(204);
-    return res.end();
+    res.setHeader(
+      "Allow",
+      "POST, OPTIONS"
+    );
+
+    return json(
+      res,
+      204,
+      {}
+    );
   }
+
+  // ---------------------------------------------------
+  // METHOD
+  // ---------------------------------------------------
 
   if (req.method !== "POST") {
-    return json(res, 405, {
-      success: false,
-      error: "Method not allowed."
-    });
+    res.setHeader(
+      "Allow",
+      "POST, OPTIONS"
+    );
+
+    return json(
+      res,
+      405,
+      {
+        success: false,
+        error:
+          "METHOD_NOT_ALLOWED",
+      }
+    );
   }
 
+  // ---------------------------------------------------
+  // ENVIRONMENT
+  // ---------------------------------------------------
+
   if (!process.env.DATABASE_URL) {
-    return json(res, 500, {
-      success: false,
-      error: "DATABASE_URL is not configured."
-    });
+    console.error(
+      "DATABASE_URL_NOT_CONFIGURED"
+    );
+
+    return json(
+      res,
+      500,
+      {
+        success: false,
+        error:
+          "DATABASE_NOT_CONFIGURED",
+      }
+    );
   }
 
   try {
-    const body =
-      typeof req.body === "string"
-        ? JSON.parse(req.body)
-        : req.body || {};
+    // =================================================
+    // BODY
+    // =================================================
 
-    const wallet = String(body.wallet || "").trim();
+    let body;
 
-    if (!isValidSolanaAddress(wallet)) {
-      return json(res, 400, {
-        success: false,
-        error: "Invalid Solana wallet address."
-      });
+    try {
+      body =
+        typeof req.body === "string"
+          ? JSON.parse(req.body)
+          : req.body || {};
+    } catch {
+      return json(
+        res,
+        400,
+        {
+          success: false,
+          error:
+            "INVALID_JSON",
+        }
+      );
     }
 
-    const sql = neon(process.env.DATABASE_URL);
+    // =================================================
+    // WALLET
+    // =================================================
 
-    // Remove expired unused nonces for this wallet.
+    const wallet =
+      String(
+        body.wallet || ""
+      ).trim();
+
+    if (
+      !isValidSolanaAddress(
+        wallet
+      )
+    ) {
+      return json(
+        res,
+        400,
+        {
+          success: false,
+          error:
+            "INVALID_WALLET",
+        }
+      );
+    }
+
+    // =================================================
+    // DATABASE
+    // =================================================
+
+    const sql =
+      neon(
+        process.env.DATABASE_URL
+      );
+
+    // =================================================
+    // REMOVE EXPIRED UNUSED NONCES
+    // =================================================
+
     await sql`
       DELETE FROM wallet_nonces
       WHERE wallet = ${wallet}
@@ -88,7 +228,14 @@ module.exports = async function handler(req, res) {
         AND expires_at < NOW()
     `;
 
-    // Invalidate any previous unused nonce for this wallet.
+    // =================================================
+    // INVALIDATE PREVIOUS NONCES
+    // =================================================
+    //
+    // Only one active challenge should exist for a
+    // wallet at a time.
+    // =================================================
+
     await sql`
       UPDATE wallet_nonces
       SET used_at = NOW()
@@ -97,17 +244,30 @@ module.exports = async function handler(req, res) {
         AND expires_at >= NOW()
     `;
 
-    const nonce = generateNonce();
+    // =================================================
+    // CREATE NEW NONCE
+    // =================================================
 
-    const expiresAt = new Date(
-      Date.now() + NONCE_TTL_SECONDS * 1000
-    );
+    const nonce =
+      generateNonce();
 
-    const message = generateMessage(
-      wallet,
-      nonce,
-      expiresAt
-    );
+    const expiresAt =
+      new Date(
+        Date.now() +
+          NONCE_TTL_SECONDS *
+            1000
+      );
+
+    const message =
+      generateMessage(
+        wallet,
+        nonce,
+        expiresAt
+      );
+
+    // =================================================
+    // STORE NONCE
+    // =================================================
 
     await sql`
       INSERT INTO wallet_nonces (
@@ -124,20 +284,41 @@ module.exports = async function handler(req, res) {
       )
     `;
 
-    return json(res, 200, {
-      success: true,
-      wallet,
-      nonce,
-      message,
-      expires_at: expiresAt.toISOString()
-    });
+    // =================================================
+    // RESPONSE
+    // =================================================
 
+    return json(
+      res,
+      200,
+      {
+        success: true,
+
+        wallet,
+
+        nonce,
+
+        message,
+
+        expires_at:
+          expiresAt.toISOString(),
+      }
+    );
   } catch (error) {
-    console.error("ROADMAN NONCE ERROR:", error);
+    console.error(
+      "ROADMAN_NONCE_ERROR",
+      error?.message ||
+        "UNKNOWN_ERROR"
+    );
 
-    return json(res, 500, {
-      success: false,
-      error: "Unable to create wallet verification challenge."
-    });
+    return json(
+      res,
+      500,
+      {
+        success: false,
+        error:
+          "NONCE_CREATION_FAILED",
+      }
+    );
   }
 };
