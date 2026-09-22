@@ -1,71 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
   <meta
     name="description"
-    content="The Road Provides — First 100 Roadman participants."
-  />
+    content="THE ROAD PROVIDES — First 100 participants."
+  >
 
   <meta
     name="referrer"
     content="no-referrer"
-  />
+  >
 
-  <title>The Road Provides — Enter the Road</title>
+  <title>THE ROAD PROVIDES — Early Access</title>
 
   <!-- =========================================================
        FONTS
   ========================================================== -->
 
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
 
   <link
     rel="preconnect"
     href="https://fonts.gstatic.com"
     crossorigin
-  />
+  >
 
   <link
     href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
     rel="stylesheet"
-  />
+  >
 
   <!-- =========================================================
-       STYLES
+       STYLE
   ========================================================== -->
 
   <style>
     :root {
       --black: #050505;
-      --black-soft: #0b0b0b;
-      --black-card: #101010;
-      --orange: #ff6a00;
-      --orange-dark: #cc5200;
-      --white: #f5f5f5;
-      --gray: #8d8d8d;
-      --gray-dark: #202020;
-      --green: #35d07f;
-      --red: #ff4d4d;
+      --black-2: #090909;
+      --black-3: #101010;
 
-      --mono: "IBM Plex Mono", monospace;
-      --sans: "Inter", sans-serif;
+      --orange: #ff6a00;
+      --orange-light: #ff8126;
+
+      --white: #f4f4f4;
+      --gray: #8b8b8b;
+      --gray-2: #5f5f5f;
+      --line: #222222;
+
+      --green: #36d98b;
+      --red: #ff5050;
+
       --display: "Anton", sans-serif;
+      --sans: "Inter", sans-serif;
+      --mono: "IBM Plex Mono", monospace;
     }
 
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     html {
@@ -75,12 +74,14 @@
     }
 
     body {
+      margin: 0;
       min-height: 100vh;
+
       background:
         radial-gradient(
           circle at 50% 0%,
           rgba(255, 106, 0, 0.08),
-          transparent 35%
+          transparent 38%
         ),
         var(--black);
 
@@ -102,23 +103,29 @@
       text-decoration: none;
     }
 
+    img {
+      max-width: 100%;
+    }
+
     /* =========================================================
-       HEADER
+       TOP BAR
     ========================================================== */
 
-    .top-banner {
+    .topbar {
       width: 100%;
-      padding: 14px 20px;
 
-      border-bottom: 1px solid var(--gray-dark);
+      padding: 13px 18px;
 
-      background: #080808;
+      border-bottom: 1px solid var(--line);
+
+      background: #070707;
 
       text-align: center;
 
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
+
       letter-spacing: 0.18em;
       text-transform: uppercase;
 
@@ -126,106 +133,129 @@
     }
 
     /* =========================================================
-       MAIN
+       PAGE
     ========================================================== */
 
     .page {
-      width: min(100%, 900px);
+      width: min(100%, 920px);
+
       margin: 0 auto;
-      padding: 40px 20px 80px;
+
+      padding:
+        34px 18px
+        70px;
     }
 
     /* =========================================================
-       ROADMAN HERO
+       BRAND
     ========================================================== */
 
-    .hero {
+    .brand {
       text-align: center;
-      margin-bottom: 36px;
+
+      margin-bottom: 35px;
     }
 
-    .hero-title {
+    .brand-title {
+      margin: 0;
+
       font-family: var(--display);
-      font-size: clamp(54px, 12vw, 110px);
-      line-height: 0.9;
+
+      font-size:
+        clamp(58px, 13vw, 112px);
+
+      line-height: 0.88;
+
       letter-spacing: 0.01em;
+
       text-transform: uppercase;
     }
 
-    .hero-subtitle {
-      margin-top: 12px;
+    .brand-subtitle {
+      margin: 12px 0 0;
 
       font-family: var(--mono);
-      font-size: 12px;
-      letter-spacing: 0.2em;
+
+      font-size: 11px;
+
+      letter-spacing: 0.18em;
+
       text-transform: uppercase;
 
       color: var(--gray);
     }
 
     /* =========================================================
-       JOURNEY
+       ROADMAN JOURNEY
     ========================================================== */
 
     .journey {
       position: relative;
-      margin: 40px 0;
-      padding: 20px 0;
+
+      margin: 36px 0 55px;
+
+      padding: 10px 0;
     }
 
     .journey-line {
       position: absolute;
+
       top: 50%;
-      left: 5%;
-      right: 5%;
+      left: 6%;
+      right: 6%;
 
       height: 1px;
 
-      background: var(--gray-dark);
+      background: var(--line);
     }
 
     .journey-scenes {
       position: relative;
 
       display: flex;
-      justify-content: space-between;
+
       align-items: center;
+      justify-content: space-between;
     }
 
-    .journey-scene {
+    .scene {
       position: relative;
 
       width: 58px;
       height: 58px;
 
-      border: 1px solid var(--gray-dark);
+      border: 1px solid var(--line);
       border-radius: 50%;
 
-      overflow: hidden;
+      background: var(--black-3);
 
-      background: var(--black-card);
+      overflow: visible;
     }
 
-    .journey-scene img {
+    .scene img {
       width: 100%;
       height: 100%;
 
       display: block;
 
       object-fit: cover;
+
+      border-radius: 50%;
     }
 
-    .journey-number {
+    .scene-number {
       position: absolute;
-      bottom: -22px;
+
       left: 50%;
+      bottom: -20px;
 
       transform: translateX(-50%);
 
       font-family: var(--mono);
-      font-size: 9px;
 
-      color: var(--gray);
+      font-size: 8px;
+
+      color: var(--gray-2);
     }
 
     /* =========================================================
@@ -233,83 +263,99 @@
     ========================================================== */
 
     .profile {
-      margin: 45px 0 30px;
+      margin-bottom: 32px;
 
       text-align: center;
     }
 
     .profile-handle {
       font-family: var(--mono);
-      font-size: 13px;
+
+      font-size: 12px;
 
       color: var(--orange);
     }
 
     .profile-links {
       display: flex;
-      justify-content: center;
-      gap: 10px;
 
-      margin-top: 14px;
+      justify-content: center;
+
+      gap: 8px;
+
+      margin-top: 12px;
     }
 
     .profile-link {
-      padding: 8px 12px;
+      padding: 8px 13px;
 
-      border: 1px solid var(--gray-dark);
+      border: 1px solid var(--line);
 
       font-family: var(--mono);
-      font-size: 10px;
+
+      font-size: 9px;
+
+      letter-spacing: 0.08em;
+
+      text-transform: uppercase;
 
       color: var(--gray);
 
       transition:
-        border-color 0.2s ease,
-        color 0.2s ease;
+        color 0.2s ease,
+        border-color 0.2s ease;
     }
 
     .profile-link:hover {
       border-color: var(--orange);
+
       color: var(--orange);
     }
 
     /* =========================================================
-       CARD
+       MAIN CARD
     ========================================================== */
 
     .card {
-      border: 1px solid var(--gray-dark);
+      border: 1px solid var(--line);
 
-      background: rgba(16, 16, 16, 0.9);
+      background:
+        rgba(12, 12, 12, 0.96);
 
       box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.35);
-
-      overflow: hidden;
+        0 25px 80px rgba(0, 0, 0, 0.45);
     }
 
     .card-header {
-      padding: 22px;
+      padding: 26px 22px;
 
-      border-bottom: 1px solid var(--gray-dark);
+      border-bottom: 1px solid var(--line);
 
       text-align: center;
     }
 
     .card-title {
-      font-family: var(--display);
-      font-size: clamp(34px, 8vw, 60px);
+      margin: 0;
 
-      letter-spacing: 0.02em;
+      font-family: var(--display);
+
+      font-size:
+        clamp(38px, 8vw, 68px);
+
+      line-height: 0.95;
+
       text-transform: uppercase;
     }
 
     .card-description {
-      max-width: 550px;
-      margin: 10px auto 0;
+      max-width: 600px;
+
+      margin: 12px auto 0;
 
       font-family: var(--mono);
-      font-size: 11px;
+
+      font-size: 10px;
+
       line-height: 1.7;
 
       color: var(--gray);
@@ -321,17 +367,17 @@
 
     .steps {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
 
-      border-bottom: 1px solid var(--gray-dark);
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      border-bottom: 1px solid var(--line);
     }
 
     .step {
-      position: relative;
+      padding: 13px 8px;
 
-      padding: 14px 8px;
-
-      border-right: 1px solid var(--gray-dark);
+      border-right: 1px solid var(--line);
 
       text-align: center;
     }
@@ -346,16 +392,20 @@
       margin-bottom: 4px;
 
       font-family: var(--mono);
-      font-size: 9px;
 
-      color: var(--gray);
+      font-size: 8px;
+
+      color: var(--gray-2);
     }
 
     .step-label {
       font-family: var(--mono);
-      font-size: 9px;
 
-      color: var(--gray);
+      font-size: 8px;
+
+      color: var(--gray-2);
+
+      text-transform: uppercase;
     }
 
     .step.active .step-number,
@@ -384,23 +434,52 @@
       display: block;
     }
 
-    .step-heading {
-      margin-bottom: 8px;
+    .heading {
+      margin: 0 0 8px;
 
       font-family: var(--display);
-      font-size: 36px;
+
+      font-size: 38px;
+
+      line-height: 1;
 
       text-transform: uppercase;
     }
 
-    .step-copy {
-      margin-bottom: 24px;
+    .copy {
+      margin: 0 0 25px;
 
       font-family: var(--mono);
-      font-size: 11px;
+
+      font-size: 10px;
+
       line-height: 1.8;
 
       color: var(--gray);
+    }
+
+    /* =========================================================
+       SPOTS
+    ========================================================== */
+
+    .spots {
+      margin-bottom: 24px;
+
+      text-align: center;
+
+      font-family: var(--mono);
+
+      font-size: 10px;
+
+      line-height: 1.7;
+
+      color: var(--gray);
+    }
+
+    .spots strong {
+      font-size: 14px;
+
+      color: var(--orange);
     }
 
     /* =========================================================
@@ -408,7 +487,7 @@
     ========================================================== */
 
     .field {
-      margin-bottom: 18px;
+      margin-bottom: 17px;
     }
 
     .field-label {
@@ -417,10 +496,13 @@
       margin-bottom: 8px;
 
       font-family: var(--mono);
-      font-size: 10px;
+
+      font-size: 9px;
+
       font-weight: 600;
 
       letter-spacing: 0.08em;
+
       text-transform: uppercase;
 
       color: var(--gray);
@@ -429,17 +511,21 @@
     .input {
       width: 100%;
 
-      padding: 15px 14px;
+      padding: 15px;
 
-      border: 1px solid var(--gray-dark);
+      border: 1px solid var(--line);
+
       outline: none;
 
-      background: #080808;
+      border-radius: 0;
+
+      background: #070707;
 
       color: var(--white);
 
       font-family: var(--mono);
-      font-size: 13px;
+
+      font-size: 12px;
 
       transition:
         border-color 0.2s ease,
@@ -454,52 +540,62 @@
     }
 
     .input::placeholder {
-      color: #555;
+      color: #4f4f4f;
     }
 
     /* =========================================================
-       BUTTONS
+       BUTTON
     ========================================================== */
 
     .button {
       width: 100%;
 
-      padding: 16px 18px;
+      min-height: 48px;
+
+      padding: 14px 18px;
 
       border: 1px solid var(--orange);
+
+      border-radius: 0;
 
       background: var(--orange);
 
       color: #000;
 
       font-family: var(--mono);
-      font-size: 11px;
+
+      font-size: 10px;
+
       font-weight: 700;
 
       letter-spacing: 0.12em;
+
       text-transform: uppercase;
 
       transition:
         background 0.2s ease,
-        color 0.2s ease,
+        border-color 0.2s ease,
         transform 0.2s ease;
     }
 
     .button:hover {
-      background: #ff7b1a;
+      background: var(--orange-light);
+
+      border-color: var(--orange-light);
+
       transform: translateY(-1px);
     }
 
     .button:disabled {
       cursor: not-allowed;
 
-      opacity: 0.4;
+      opacity: 0.45;
 
       transform: none;
     }
 
     .button.secondary {
-      border-color: var(--gray-dark);
+      border-color: var(--line);
 
       background: transparent;
 
@@ -508,6 +604,9 @@
 
     .button.secondary:hover {
       border-color: var(--orange);
+
+      background: transparent;
+
       color: var(--orange);
     }
 
@@ -518,11 +617,13 @@
     .status {
       min-height: 20px;
 
-      margin-top: 14px;
+      margin-top: 13px;
 
       font-family: var(--mono);
-      font-size: 10px;
-      line-height: 1.6;
+
+      font-size: 9px;
+
+      line-height: 1.7;
 
       color: var(--gray);
     }
@@ -540,45 +641,30 @@
     }
 
     /* =========================================================
-       SPOTS
-    ========================================================== */
-
-    .spots {
-      margin-bottom: 24px;
-
-      text-align: center;
-
-      font-family: var(--mono);
-      font-size: 11px;
-
-      color: var(--gray);
-    }
-
-    .spots strong {
-      color: var(--orange);
-    }
-
-    /* =========================================================
        WALLET
     ========================================================== */
 
     .wallet-options {
       display: grid;
-      gap: 10px;
 
-      margin-top: 20px;
+      gap: 9px;
+
+      margin-top: 18px;
     }
 
     .wallet-state {
-      margin-top: 16px;
+      margin-top: 15px;
+
       padding: 14px;
 
-      border: 1px solid var(--gray-dark);
+      border: 1px solid var(--line);
 
-      background: #080808;
+      background: #070707;
 
       font-family: var(--mono);
-      font-size: 10px;
+
+      font-size: 9px;
+
       line-height: 1.7;
 
       color: var(--gray);
@@ -592,41 +678,47 @@
       text-align: center;
     }
 
-    .result-spot {
-      margin: 20px 0;
-
-      font-family: var(--display);
-      font-size: clamp(70px, 20vw, 150px);
-      line-height: 0.85;
-
-      color: var(--orange);
-    }
-
     .result-label {
+      margin-top: 20px;
+
       font-family: var(--mono);
-      font-size: 10px;
+
+      font-size: 9px;
 
       letter-spacing: 0.15em;
+
       text-transform: uppercase;
 
       color: var(--gray);
     }
 
+    .result-spot {
+      margin: 12px 0 20px;
+
+      font-family: var(--display);
+
+      font-size:
+        clamp(90px, 22vw, 170px);
+
+      line-height: 0.8;
+
+      color: var(--orange);
+    }
+
     .nft-preview {
-      margin: 28px auto;
+      max-width: 440px;
 
-      max-width: 420px;
+      margin: 25px auto;
 
-      border: 1px solid var(--gray-dark);
+      border: 1px solid var(--line);
 
-      background: #080808;
+      background: #070707;
     }
 
     .nft-preview img {
-      display: block;
-
       width: 100%;
-      height: auto;
+
+      display: block;
     }
 
     /* =========================================================
@@ -634,28 +726,33 @@
     ========================================================== */
 
     .footer {
-      margin-top: 35px;
+      margin-top: 28px;
 
       text-align: center;
 
       font-family: var(--mono);
-      font-size: 9px;
-      line-height: 1.7;
 
-      color: #555;
+      font-size: 8px;
+
+      line-height: 1.8;
+
+      color: #454545;
     }
 
     /* =========================================================
-       RESPONSIVE
+       MOBILE
     ========================================================== */
 
     @media (max-width: 650px) {
       .page {
-        padding: 28px 14px 60px;
+        padding:
+          26px 13px
+          55px;
       }
 
       .steps {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+          repeat(2, 1fr);
       }
 
       .step:nth-child(2) {
@@ -663,16 +760,20 @@
       }
 
       .step:nth-child(-n + 2) {
-        border-bottom: 1px solid var(--gray-dark);
+        border-bottom: 1px solid var(--line);
       }
 
       .content {
-        padding: 24px 18px;
+        padding: 25px 17px;
       }
 
-      .journey-scene {
+      .scene {
         width: 46px;
         height: 46px;
+      }
+
+      .journey {
+        margin-bottom: 48px;
       }
 
       .profile-links {
@@ -685,10 +786,10 @@
 <body>
 
   <!-- =========================================================
-       TOP BANNER
+       TOP
   ========================================================== -->
 
-  <div class="top-banner">
+  <div class="topbar">
     THE ROAD PROVIDES
   </div>
 
@@ -699,16 +800,16 @@
   <main class="page">
 
     <!-- =======================================================
-         HERO
+         BRAND
     ======================================================== -->
 
-    <section class="hero">
+    <section class="brand">
 
-      <h1 class="hero-title">
+      <h1 class="brand-title">
         The Roadman
       </h1>
 
-      <p class="hero-subtitle">
+      <p class="brand-subtitle">
         One character. Many roads.
       </p>
 
@@ -724,36 +825,48 @@
 
       <div class="journey-scenes">
 
-        <div class="journey-scene">
+        <div class="scene">
           <img
             src="roadman-scenes/scene1.png"
             alt="Roadman scene 1"
-          />
-          <span class="journey-number">01</span>
+          >
+
+          <span class="scene-number">
+            01
+          </span>
         </div>
 
-        <div class="journey-scene">
+        <div class="scene">
           <img
             src="roadman-scenes/scene2.png"
             alt="Roadman scene 2"
-          />
-          <span class="journey-number">35</span>
+          >
+
+          <span class="scene-number">
+            35
+          </span>
         </div>
 
-        <div class="journey-scene">
+        <div class="scene">
           <img
             src="roadman-scenes/scene3.png"
             alt="Roadman scene 3"
-          />
-          <span class="journey-number">65</span>
+          >
+
+          <span class="scene-number">
+            65
+          </span>
         </div>
 
-        <div class="journey-scene">
+        <div class="scene">
           <img
             src="roadman-scenes/scene4.png"
             alt="Roadman scene 4"
-          />
-          <span class="journey-number">94</span>
+          >
+
+          <span class="scene-number">
+            94
+          </span>
         </div>
 
       </div>
@@ -795,12 +908,12 @@
     </section>
 
     <!-- =======================================================
-         MAIN CARD
+         CLAIM CARD
     ======================================================== -->
 
     <section class="card">
 
-      <!-- CARD HEADER -->
+      <!-- HEADER -->
 
       <header class="card-header">
 
@@ -809,48 +922,68 @@
         </h2>
 
         <p class="card-description">
-          One person. One NFT. One wallet.
+          One person · One NFT · One wallet.
           The first 100 participants enter the road.
         </p>
 
       </header>
 
       <!-- =====================================================
-           STEP NAVIGATION
+           STEP INDICATORS
       ====================================================== -->
 
       <div class="steps">
 
         <div
+          id="step1"
           class="step active"
-          id="stepIndicator1"
         >
-          <span class="step-number">01</span>
-          <span class="step-label">Identity</span>
+          <span class="step-number">
+            01
+          </span>
+
+          <span class="step-label">
+            Identity
+          </span>
         </div>
 
         <div
+          id="step2"
           class="step"
-          id="stepIndicator2"
         >
-          <span class="step-number">02</span>
-          <span class="step-label">Reserve</span>
+          <span class="step-number">
+            02
+          </span>
+
+          <span class="step-label">
+            Reserve
+          </span>
         </div>
 
         <div
+          id="step3"
           class="step"
-          id="stepIndicator3"
         >
-          <span class="step-number">03</span>
-          <span class="step-label">Wallet</span>
+          <span class="step-number">
+            03
+          </span>
+
+          <span class="step-label">
+            Wallet
+          </span>
         </div>
 
         <div
+          id="step4"
           class="step"
-          id="stepIndicator4"
         >
-          <span class="step-number">04</span>
-          <span class="step-label">Road</span>
+          <span class="step-number">
+            04
+          </span>
+
+          <span class="step-label">
+            Road
+          </span>
         </div>
 
       </div>
@@ -866,44 +999,50 @@
         ==================================================== -->
 
         <section
+          id="page1"
           class="page-step active"
-          id="pageStep1"
         >
 
-          <h3 class="step-heading">
+          <h3 class="heading">
             Enter
           </h3>
 
-          <p class="step-copy">
+          <p class="copy">
             Confirm your X identity before entering the road.
           </p>
 
           <div class="spots">
-            <strong id="spots">100 / 100</strong>
-            <br />
+
+            <strong id="spots">
+              100 / 100
+            </strong>
+
+            <br>
+
             spots remaining
+
           </div>
 
           <div class="field">
 
             <label
               class="field-label"
-              for="handle"
+              for="xHandle"
             >
               X handle
             </label>
 
             <input
-              id="handle"
+              id="xHandle"
               class="input"
               type="text"
               inputmode="text"
               autocomplete="off"
               autocapitalize="none"
               spellcheck="false"
-              placeholder="@theroadman"
               maxlength="50"
-            />
+              placeholder="@theroadprovides"
+            >
 
           </div>
 
@@ -928,23 +1067,23 @@
         ==================================================== -->
 
         <section
+          id="page2"
           class="page-step"
-          id="pageStep2"
         >
 
-          <h3 class="step-heading">
+          <h3 class="heading">
             Reserve
           </h3>
 
-          <p class="step-copy">
+          <p class="copy">
             Your identity is ready.
-            The next step is to reserve your place on the road.
+            Continue to reserve your place on the road.
           </p>
 
           <div class="field">
 
             <label class="field-label">
-              Your handle
+              Your X handle
             </label>
 
             <div
@@ -977,18 +1116,18 @@
         ==================================================== -->
 
         <section
+          id="page3"
           class="page-step"
-          id="pageStep3"
         >
 
-          <h3 class="step-heading">
+          <h3 class="heading">
             Wallet
           </h3>
 
-          <p class="step-copy">
+          <p class="copy">
             Connect a Solana wallet and sign the verification
-            message. The signature only proves wallet ownership.
-            It does not authorize a transaction.
+            message. The signature proves control of the wallet
+            and does not authorize a transaction.
           </p>
 
           <div class="wallet-options">
@@ -1030,7 +1169,7 @@
             id="signBtn"
             class="button"
             type="button"
-            style="margin-top: 14px; display: none;"
+            style="display: none; margin-top: 12px;"
           >
             Sign Verification
           </button>
@@ -1048,13 +1187,13 @@
         ==================================================== -->
 
         <section
+          id="page4"
           class="page-step"
-          id="pageStep4"
         >
 
           <div class="result">
 
-            <h3 class="step-heading">
+            <h3 class="heading">
               You're on the Road
             </h3>
 
@@ -1071,7 +1210,7 @@
 
             <div
               id="claimInfo"
-              class="step-copy"
+              class="copy"
             ></div>
 
             <div
@@ -1079,11 +1218,13 @@
               class="nft-preview"
               style="display: none;"
             >
+
               <img
                 id="nftImage"
                 src=""
                 alt="Roadman NFT preview"
-              />
+              >
+
             </div>
 
             <button
@@ -1113,9 +1254,13 @@
     ======================================================== -->
 
     <footer class="footer">
+
       THE ROAD PROVIDES · FIRST 100
-      <br />
+
+      <br>
+
       One person · One NFT · One wallet
+
     </footer>
 
   </main>
@@ -1128,7 +1273,7 @@
     "use strict";
 
     /* =========================================================
-       CONFIGURATION
+       CONFIG
     ========================================================== */
 
     const API_SPOTS = "/api/spots";
@@ -1143,28 +1288,54 @@
     const NFT_PREVIEW =
       "desert_roadman_badge.png";
 
+
     /* =========================================================
-       HELPERS
+       DOM HELPER
     ========================================================== */
 
     function $(id) {
       return document.getElementById(id);
     }
 
+
+    /* =========================================================
+       TEXT HELPER
+    ========================================================== */
+
     function setText(id, value) {
       const element = $(id);
 
       if (!element) {
+        console.warn(
+          "Missing element:",
+          id
+        );
+
         return;
       }
 
-      element.textContent = value;
+      element.textContent =
+        String(value ?? "");
     }
 
-    function setStatus(id, message, type = "") {
+
+    /* =========================================================
+       STATUS
+    ========================================================== */
+
+    function setStatus(
+      id,
+      message,
+      type = ""
+    ) {
       const element = $(id);
 
       if (!element) {
+        console.warn(
+          "Missing status element:",
+          id
+        );
+
         return;
       }
 
@@ -1174,17 +1345,25 @@
         element.classList.add(type);
       }
 
-      element.textContent = message || "";
+      element.textContent =
+        message || "";
     }
 
-    function escapeHandle(value) {
+
+    /* =========================================================
+       HANDLE
+    ========================================================== */
+
+    function cleanHandle(value) {
       return String(value || "")
         .trim()
         .replace(/^@+/, "");
     }
 
+
     function normalizeHandle(value) {
-      const clean = escapeHandle(value);
+      const clean =
+        cleanHandle(value);
 
       if (!clean) {
         return "";
@@ -1193,14 +1372,21 @@
       return "@" + clean;
     }
 
+
     function validHandle() {
-      const input = $("handle");
+      const input =
+        $("xHandle");
 
       if (!input) {
+        console.error(
+          "xHandle input was not found."
+        );
+
         return false;
       }
 
-      const clean = escapeHandle(input.value);
+      const clean =
+        cleanHandle(input.value);
 
       if (!clean) {
         setStatus(
@@ -1229,54 +1415,63 @@
       return true;
     }
 
+
     /* =========================================================
-       STEP MANAGEMENT
+       STEP CONTROL
     ========================================================== */
 
     function setStep(step) {
-      const pageSteps = [
-        $("pageStep1"),
-        $("pageStep2"),
-        $("pageStep3"),
-        $("pageStep4")
+      const pages = [
+        $("page1"),
+        $("page2"),
+        $("page3"),
+        $("page4")
       ];
 
       const indicators = [
-        $("stepIndicator1"),
-        $("stepIndicator2"),
-        $("stepIndicator3"),
-        $("stepIndicator4")
+        $("step1"),
+        $("step2"),
+        $("step3"),
+        $("step4")
       ];
 
-      pageSteps.forEach((element, index) => {
-        if (!element) {
-          return;
+      pages.forEach(
+        (page, index) => {
+          if (!page) {
+            return;
+          }
+
+          page.classList.toggle(
+            "active",
+            index === step - 1
+          );
         }
+      );
 
-        element.classList.toggle(
-          "active",
-          index === step - 1
-        );
-      });
+      indicators.forEach(
+        (indicator, index) => {
+          if (!indicator) {
+            return;
+          }
 
-      indicators.forEach((element, index) => {
-        if (!element) {
-          return;
+          indicator.classList.remove(
+            "active",
+            "completed"
+          );
+
+          if (index < step - 1) {
+            indicator.classList.add(
+              "completed"
+            );
+          }
+
+          if (index === step - 1) {
+            indicator.classList.add(
+              "active"
+            );
+          }
         }
-
-        element.classList.remove(
-          "active",
-          "completed"
-        );
-
-        if (index === step - 1) {
-          element.classList.add("active");
-        }
-
-        if (index < step - 1) {
-          element.classList.add("completed");
-        }
-      });
+      );
 
       window.scrollTo({
         top: 0,
@@ -1284,59 +1479,82 @@
       });
     }
 
+
     /* =========================================================
        SPOTS
     ========================================================== */
 
     async function updateSpots() {
       try {
-        const response = await fetch(
-          API_SPOTS,
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json"
-            },
-            cache: "no-store",
-            credentials: "same-origin"
-          }
-        );
+        const response =
+          await fetch(
+            API_SPOTS,
+            {
+              method: "GET",
+
+              headers: {
+                Accept:
+                  "application/json"
+              },
+
+              cache: "no-store",
+
+              credentials:
+                "same-origin"
+            }
+          );
 
         if (!response.ok) {
-          throw new Error("SPOTS_REQUEST_FAILED");
+          throw new Error(
+            "SPOTS_REQUEST_FAILED"
+          );
         }
 
-        const data = await response.json();
+        const data =
+          await response.json();
 
-        const remaining = Number(
-          data.remaining ??
-          data.spots_remaining ??
-          data.available ??
-          100
-        );
+        const remaining =
+          Number(
+            data.remaining ??
+            data.spots_remaining ??
+            data.available
+          );
 
-        const total = Number(
-          data.total ??
-          data.total_spots ??
-          100
-        );
+        const total =
+          Number(
+            data.total ??
+            data.total_spots ??
+            100
+          );
 
         if (
-          Number.isFinite(remaining) &&
-          Number.isFinite(total)
+          Number.isFinite(
+            remaining
+          )
         ) {
           setText(
             "spots",
-            `${remaining} / ${total}`
+            `${remaining} / ${
+              Number.isFinite(total)
+                ? total
+                : 100
+            }`
           );
 
-          const enterButton = $("enterBtn");
+          /*
+           * Only disable Enter if the API
+           * explicitly confirms zero spots.
+           */
 
           if (
-            enterButton &&
             remaining <= 0
           ) {
-            enterButton.disabled = true;
+            const button =
+              $("enterBtn");
+
+            if (button) {
+              button.disabled = true;
+            }
 
             setStatus(
               "status1",
@@ -1345,30 +1563,42 @@
             );
           }
         }
+
       } catch (error) {
+
         /*
          * IMPORTANT:
-         * A failed spots request must NOT block Step 1.
+         *
+         * A failed /api/spots request
+         * must NEVER prevent the user
+         * from clicking Enter.
          */
+
         console.warn(
-          "Could not update spot counter.",
+          "SPOTS:",
           error
         );
       }
     }
+
 
     /* =========================================================
        STEP 1 → STEP 2
     ========================================================== */
 
     function handleEnter() {
+      console.log(
+        "ENTER CLICKED"
+      );
+
       if (!validHandle()) {
         return;
       }
 
-      const handle = normalizeHandle(
-        $("handle").value
-      );
+      const handle =
+        normalizeHandle(
+          $("xHandle").value
+        );
 
       setText(
         "handlePreview",
@@ -1383,19 +1613,26 @@
       setStep(2);
     }
 
+
     /* =========================================================
        STEP 2 → STEP 3
     ========================================================== */
 
-    async function handleReserve() {
+    function handleReserve() {
+      console.log(
+        "RESERVE CLICKED"
+      );
+
       if (!validHandle()) {
         setStep(1);
+
         return;
       }
 
-      const handle = normalizeHandle(
-        $("handle").value
-      );
+      const handle =
+        normalizeHandle(
+          $("xHandle").value
+        );
 
       setText(
         "handlePreview",
@@ -1411,6 +1648,7 @@
       setStep(3);
     }
 
+
     /* =========================================================
        WALLET STATE
     ========================================================== */
@@ -1418,8 +1656,12 @@
     let connectedWallet = null;
     let connectedProvider = null;
 
+
     function maskWallet(wallet) {
-      if (!wallet || wallet.length < 10) {
+      if (
+        !wallet ||
+        wallet.length < 10
+      ) {
         return wallet || "";
       }
 
@@ -1430,32 +1672,42 @@
       );
     }
 
-    function setWalletState(wallet, provider) {
-      connectedWallet = wallet;
-      connectedProvider = provider;
 
-      const state = $("walletState");
+    function setWalletState(
+      wallet,
+      provider
+    ) {
+      connectedWallet =
+        wallet;
 
-      if (!state) {
-        return;
+      connectedProvider =
+        provider;
+
+      const state =
+        $("walletState");
+
+      if (state) {
+        if (wallet) {
+          state.textContent =
+            `${provider} connected · ${maskWallet(wallet)}`;
+        } else {
+          state.textContent =
+            "No wallet connected.";
+        }
       }
 
-      if (!wallet) {
-        state.textContent =
-          "No wallet connected.";
+      const signButton =
+        $("signBtn");
 
-        return;
-      }
-
-      state.textContent =
-        `${provider} connected · ${maskWallet(wallet)}`;
-
-      const signButton = $("signBtn");
-
-      if (signButton) {
-        signButton.style.display = "block";
+      if (
+        signButton &&
+        wallet
+      ) {
+        signButton.style.display =
+          "block";
       }
     }
+
 
     /* =========================================================
        PHANTOM
@@ -1479,15 +1731,15 @@
 
         if (!provider) {
           throw new Error(
-            "Phantom wallet was not detected."
+            "Phantom was not detected. Open this page with the Phantom wallet extension enabled."
           );
         }
 
-        const response =
+        const result =
           await provider.connect();
 
         const publicKey =
-          response?.publicKey ||
+          result?.publicKey ||
           provider.publicKey;
 
         if (!publicKey) {
@@ -1511,7 +1763,11 @@
         );
 
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "PHANTOM:",
+          error
+        );
 
         setStatus(
           "status3",
@@ -1521,6 +1777,7 @@
         );
       }
     }
+
 
     /* =========================================================
        SOLFLARE
@@ -1539,7 +1796,7 @@
 
         if (!provider) {
           throw new Error(
-            "Solflare wallet was not detected."
+            "Solflare was not detected."
           );
         }
 
@@ -1569,7 +1826,11 @@
         );
 
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "SOLFLARE:",
+          error
+        );
 
         setStatus(
           "status3",
@@ -1579,6 +1840,7 @@
         );
       }
     }
+
 
     /* =========================================================
        METAMASK
@@ -1603,7 +1865,8 @@
 
         if (
           !sdk ||
-          typeof sdk.connect !== "function"
+          typeof sdk.connect !==
+            "function"
         ) {
           throw new Error(
             "MetaMask Solana connector is unavailable."
@@ -1619,7 +1882,7 @@
 
         if (!wallet) {
           throw new Error(
-            "MetaMask did not return a wallet address."
+            "MetaMask did not return a Solana wallet address."
           );
         }
 
@@ -1635,7 +1898,11 @@
         );
 
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "METAMASK:",
+          error
+        );
 
         setStatus(
           "status3",
@@ -1646,11 +1913,14 @@
       }
     }
 
+
     /* =========================================================
        NONCE
     ========================================================== */
 
-    async function getNonce(wallet) {
+    async function getNonce(
+      wallet
+    ) {
       const response =
         await fetch(
           API_NONCE,
@@ -1670,14 +1940,23 @@
             credentials:
               "same-origin",
 
-            body: JSON.stringify({
-              wallet
-            })
+            body:
+              JSON.stringify({
+                wallet
+              })
           }
         );
 
-      const data =
-        await response.json();
+      let data = null;
+
+      try {
+        data =
+          await response.json();
+      } catch {
+        throw new Error(
+          "The verification server returned an invalid response."
+        );
+      }
 
       if (!response.ok) {
         throw new Error(
@@ -1688,6 +1967,7 @@
 
       return data;
     }
+
 
     /* =========================================================
        SIGN MESSAGE
@@ -1705,6 +1985,10 @@
         );
       }
 
+      /*
+       * PHANTOM
+       */
+
       if (
         connectedProvider ===
         "Phantom"
@@ -1715,14 +1999,13 @@
 
         if (!provider) {
           throw new Error(
-            "Phantom wallet is unavailable."
+            "Phantom is unavailable."
           );
         }
 
         const encoded =
-          new TextEncoder().encode(
-            message
-          );
+          new TextEncoder()
+            .encode(message);
 
         const result =
           await provider.signMessage(
@@ -1730,7 +2013,9 @@
             "utf8"
           );
 
-        if (!result?.signature) {
+        if (
+          !result?.signature
+        ) {
           throw new Error(
             "Phantom did not return a signature."
           );
@@ -1738,6 +2023,11 @@
 
         return result.signature;
       }
+
+
+      /*
+       * SOLFLARE
+       */
 
       if (
         connectedProvider ===
@@ -1757,9 +2047,8 @@
         }
 
         const encoded =
-          new TextEncoder().encode(
-            message
-          );
+          new TextEncoder()
+            .encode(message);
 
         const result =
           await provider.signMessage(
@@ -1772,10 +2061,19 @@
         );
       }
 
+
+      /*
+       * METAMASK
+       *
+       * This connector currently
+       * handles connection only here.
+       */
+
       throw new Error(
-        "Message signing is not available for this wallet yet."
+        "Message signing is not available for this wallet connection yet."
       );
     }
+
 
     /* =========================================================
        CLAIM
@@ -1784,7 +2082,7 @@
     async function submitClaim() {
       const handle =
         normalizeHandle(
-          $("handle").value
+          $("xHandle").value
         );
 
       if (!handle) {
@@ -1810,6 +2108,16 @@
           connectedWallet
         );
 
+      if (
+        !nonceData?.message ||
+        !nonceData?.nonce ||
+        !nonceData?.expires_at
+      ) {
+        throw new Error(
+          "The verification server returned incomplete data."
+        );
+      }
+
       const message =
         nonceData.message;
 
@@ -1829,6 +2137,12 @@
         await signWithWallet(
           message
         );
+
+      if (!signature) {
+        throw new Error(
+          "No wallet signature was received."
+        );
+      }
 
       setStatus(
         "status3",
@@ -1858,19 +2172,30 @@
             credentials:
               "same-origin",
 
-            body: JSON.stringify({
-              x_handle: handle,
-              wallet: connectedWallet,
-              signature,
-              message,
-              nonce,
-              expires_at: expiresAt
-            })
+            body:
+              JSON.stringify({
+                x_handle: handle,
+                wallet:
+                  connectedWallet,
+                signature,
+                message,
+                nonce,
+                expires_at:
+                  expiresAt
+              })
           }
         );
 
-      const data =
-        await response.json();
+      let data = null;
+
+      try {
+        data =
+          await response.json();
+      } catch {
+        throw new Error(
+          "The claim server returned an invalid response."
+        );
+      }
 
       if (!response.ok) {
         throw new Error(
@@ -1882,16 +2207,18 @@
       return data;
     }
 
+
     /* =========================================================
-       SIGN + CLAIM BUTTON
+       SIGN + CLAIM
     ========================================================== */
 
     async function handleSign() {
-      const signButton =
+      const button =
         $("signBtn");
 
-      if (signButton) {
-        signButton.disabled = true;
+      if (button) {
+        button.disabled =
+          true;
       }
 
       try {
@@ -1901,9 +2228,19 @@
         const token =
           data?.participation?.token;
 
+        /*
+         * SECURITY:
+         *
+         * Only accept the expected
+         * 64-character hexadecimal
+         * participation token.
+         */
+
         if (
           !token ||
-          !/^[a-f0-9]{64}$/i.test(token)
+          !/^[a-f0-9]{64}$/i.test(
+            token
+          )
         ) {
           throw new Error(
             "The server did not return a valid participation token."
@@ -1911,9 +2248,13 @@
         }
 
         /*
-         * SECURITY:
-         * The token is kept only in sessionStorage.
-         * It is never placed in the URL.
+         * Store token only for the
+         * current browser session.
+         *
+         * Never put it in:
+         * - URL
+         * - localStorage
+         * - HTML
          */
 
         sessionStorage.setItem(
@@ -1924,12 +2265,8 @@
         const claim =
           data.claim || {};
 
-        setText(
-          "spotNumber",
-          claim.spot
-            ? `#${claim.spot}`
-            : "—"
-        );
+        const spot =
+          claim.spot;
 
         const wallet =
           claim.wallet ||
@@ -1938,8 +2275,15 @@
         const handle =
           claim.x_handle ||
           normalizeHandle(
-            $("handle").value
+            $("xHandle").value
           );
+
+        setText(
+          "spotNumber",
+          spot
+            ? `#${spot}`
+            : "—"
+        );
 
         setText(
           "claimInfo",
@@ -1957,21 +2301,28 @@
         setStep(4);
 
       } catch (error) {
-        console.error(error);
+
+        console.error(
+          "CLAIM:",
+          error
+        );
 
         setStatus(
           "status3",
           error.message ||
-            "Something went wrong.",
+            "Something went wrong during the claim.",
           "error"
         );
 
       } finally {
-        if (signButton) {
-          signButton.disabled = false;
+
+        if (button) {
+          button.disabled =
+            false;
         }
       }
     }
+
 
     /* =========================================================
        NFT PREVIEW
@@ -1984,16 +2335,26 @@
       const image =
         $("nftImage");
 
-      if (!container || !image) {
+      if (
+        !container ||
+        !image
+      ) {
         return;
       }
 
       image.src =
         NFT_PREVIEW;
 
+      image.onerror =
+        function () {
+          container.style.display =
+            "none";
+        };
+
       container.style.display =
         "block";
     }
+
 
     /* =========================================================
        ROADMAP
@@ -2007,7 +2368,9 @@
 
       if (
         !token ||
-        !/^[a-f0-9]{64}$/i.test(token)
+        !/^[a-f0-9]{64}$/i.test(
+          token
+        )
       ) {
         setStatus(
           "status4",
@@ -2022,46 +2385,41 @@
         "roadmap.html";
     }
 
+
     /* =========================================================
        INITIALIZATION
     ========================================================== */
 
     function init() {
-      const enterButton =
-        $("enterBtn");
-
-      const reserveButton =
-        $("reserveBtn");
-
-      const phantomButton =
-        $("phantomBtn");
-
-      const solflareButton =
-        $("solflareBtn");
-
-      const metamaskButton =
-        $("metamaskBtn");
-
-      const signButton =
-        $("signBtn");
-
-      const roadmapButton =
-        $("roadmapBtn");
+      console.log(
+        "THE ROAD PROVIDES — claim.js initialized."
+      );
 
       /*
        * STEP 1
        */
+
+      const enterButton =
+        $("enterBtn");
 
       if (enterButton) {
         enterButton.addEventListener(
           "click",
           handleEnter
         );
+      } else {
+        console.error(
+          "enterBtn was not found."
+        );
       }
+
 
       /*
        * STEP 2
        */
+
+      const reserveButton =
+        $("reserveBtn");
 
       if (reserveButton) {
         reserveButton.addEventListener(
@@ -2070,9 +2428,13 @@
         );
       }
 
+
       /*
        * STEP 3
        */
+
+      const phantomButton =
+        $("phantomBtn");
 
       if (phantomButton) {
         phantomButton.addEventListener(
@@ -2081,12 +2443,20 @@
         );
       }
 
+
+      const solflareButton =
+        $("solflareBtn");
+
       if (solflareButton) {
         solflareButton.addEventListener(
           "click",
           connectSolflare
         );
       }
+
+
+      const metamaskButton =
+        $("metamaskBtn");
 
       if (metamaskButton) {
         metamaskButton.addEventListener(
@@ -2095,6 +2465,10 @@
         );
       }
 
+
+      const signButton =
+        $("signBtn");
+
       if (signButton) {
         signButton.addEventListener(
           "click",
@@ -2102,9 +2476,13 @@
         );
       }
 
+
       /*
        * STEP 4
        */
+
+      const roadmapButton =
+        $("roadmapBtn");
 
       if (roadmapButton) {
         roadmapButton.addEventListener(
@@ -2113,19 +2491,21 @@
         );
       }
 
+
       /*
        * ENTER KEY
        */
 
       const handleInput =
-        $("handle");
+        $("xHandle");
 
       if (handleInput) {
         handleInput.addEventListener(
           "keydown",
-          event => {
+          function (event) {
             if (
-              event.key === "Enter"
+              event.key ===
+              "Enter"
             ) {
               event.preventDefault();
 
@@ -2135,15 +2515,17 @@
         );
       }
 
+
       /*
-       * INITIAL SPOT CHECK
+       * SPOT COUNTER
        *
-       * This runs independently.
-       * If it fails, Step 1 still works.
+       * This is intentionally
+       * independent from Step 1.
        */
 
       updateSpots();
     }
+
 
     /* =========================================================
        START
