@@ -1,93 +1,98 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-
-  <meta
-    name="description"
-    content="THE ROAD PROVIDES — First 100. Your position, your status, and the road ahead."
-  />
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
 
   <meta
     name="theme-color"
     content="#050505"
-  />
+  >
+
+  <meta
+    name="referrer"
+    content="no-referrer"
+  >
+
+  <meta
+    name="robots"
+    content="noindex,nofollow,noarchive"
+  >
 
   <title>THE ROAD PROVIDES — Your Road</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap");
+
     :root {
       --bg: #050505;
-      --bg-soft: #0a0a0a;
-      --panel: #0d0d0d;
+      --panel: #0c0c0c;
       --panel-2: #111111;
-
+      --line: #262626;
+      --line-soft: #1a1a1a;
       --text: #f2f2f2;
-      --text-soft: #c9c9c9;
-
-      --muted: #8b8b8b;
-      --muted-2: #5d5d5d;
-
-      --line: #242424;
-
-      --orange: #ff5a00;
-      --orange-soft: rgba(255, 90, 0, 0.12);
-      --orange-line: rgba(255, 90, 0, 0.35);
-
-      --green: #7dff9a;
-      --red: #ff6868;
-
-      --max: 1080px;
+      --muted: #858585;
+      --soft: #bcbcbc;
+      --orange: #ff6a00;
+      --orange-soft: rgba(255, 106, 0, 0.12);
+      --green: #9cff57;
+      --red: #ff5c5c;
+      --yellow: #ffd166;
+      --max: 1100px;
     }
 
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
+      min-height: 100%;
       background: var(--bg);
-      scroll-behavior: smooth;
+      color-scheme: dark;
     }
 
     body {
+      margin: 0;
       min-height: 100vh;
-
       background:
         radial-gradient(
           circle at 50% 0%,
-          rgba(255, 90, 0, 0.08),
-          transparent 32rem
+          rgba(255, 106, 0, 0.08),
+          transparent 34%
         ),
         var(--bg);
-
       color: var(--text);
-      font-family: Inter, sans-serif;
-
+      font-family: "Inter", Arial, sans-serif;
       overflow-x: hidden;
     }
 
-    body.is-loading {
-      overflow: hidden;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,0.5) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,0.5) 1px,
+          transparent 1px
+        );
+      background-size: 44px 44px;
+      mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 75%
+      );
     }
 
     a {
@@ -96,2522 +101,2191 @@
     }
 
     button {
-      border: 0;
       font: inherit;
     }
 
-    /* =====================================================
-       LOADING SCREEN
-    ===================================================== */
-
-    .loading-screen {
-      position: fixed;
-      inset: 0;
-
-      z-index: 9999;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: #050505;
-
-      transition:
-        opacity 0.45s ease,
-        visibility 0.45s ease;
-    }
-
-    .loading-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .loading-inner {
-      width: min(100% - 40px, 420px);
-      text-align: center;
-    }
-
-    .loading-mark {
-      width: 8px;
-      height: 8px;
-
-      margin: 0 auto 22px;
-
-      background: var(--orange);
-
-      box-shadow:
-        0 0 18px rgba(255, 90, 0, 0.65);
-    }
-
-    .loading-label {
-      color: var(--muted);
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-
-      text-transform: uppercase;
-    }
-
-    .loading-status {
-      margin-top: 12px;
-
-      color: var(--text);
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-
-      text-transform: uppercase;
-    }
-
-    .loading-line {
-      width: 100%;
-      height: 1px;
-
-      margin-top: 24px;
-
-      background: var(--line);
-
-      overflow: hidden;
-    }
-
-    .loading-line::after {
-      content: "";
-
-      display: block;
-
-      width: 35%;
-      height: 100%;
-
-      background: var(--orange);
-
-      animation: loadingMove 1.2s ease-in-out infinite;
-    }
-
-    @keyframes loadingMove {
-      0% {
-        transform: translateX(-120%);
-      }
-
-      100% {
-        transform: translateX(360%);
-      }
+    .page {
+      width: min(
+        calc(100% - 32px),
+        var(--max)
+      );
+      margin: 0 auto;
+      padding:
+        24px
+        0
+        80px;
     }
 
     /* =====================================================
-       ERROR SCREEN
-    ===================================================== */
-
-    .error-screen {
-      position: fixed;
-      inset: 0;
-
-      z-index: 9998;
-
-      display: none;
-
-      align-items: center;
-      justify-content: center;
-
-      padding: 24px;
-
-      background: #050505;
-    }
-
-    .error-screen.visible {
-      display: flex;
-    }
-
-    .error-card {
-      width: min(100%, 520px);
-
-      padding: 36px;
-
-      border: 1px solid var(--line);
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255, 90, 0, 0.07),
-          rgba(255, 255, 255, 0.015)
-        );
-    }
-
-    .error-label {
-      color: var(--orange);
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-
-      text-transform: uppercase;
-    }
-
-    .error-card h1 {
-      margin-top: 18px;
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(48px, 9vw, 76px);
-      font-weight: 400;
-      line-height: 0.92;
-
-      text-transform: uppercase;
-    }
-
-    .error-card p {
-      margin-top: 22px;
-
-      color: var(--muted);
-
-      font-size: 14px;
-      line-height: 1.75;
-    }
-
-    .error-actions {
-      display: flex;
-      gap: 10px;
-
-      margin-top: 28px;
-    }
-
-    .error-button {
-      min-height: 48px;
-
-      padding: 0 20px;
-
-      border: 1px solid var(--orange);
-
-      background: var(--orange);
-      color: #050505;
-
-      cursor: pointer;
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-
-      text-transform: uppercase;
-    }
-
-    .error-button.secondary {
-      background: transparent;
-      color: var(--orange);
-    }
-
-    /* =====================================================
-       TOP BAR
-    ===================================================== */
+       TOP
+       ===================================================== */
 
     .topbar {
-      position: sticky;
-      top: 0;
-
-      z-index: 100;
-
-      width: 100%;
-
-      border-bottom: 1px solid var(--line);
-
-      background: rgba(5, 5, 5, 0.88);
-
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-    }
-
-    .topbar-inner {
-      width: min(100% - 32px, var(--max));
-
-      min-height: 64px;
-
-      margin: 0 auto;
-
       display: flex;
-      align-items: center;
       justify-content: space-between;
-
+      align-items: center;
       gap: 20px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--line);
     }
 
     .brand {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-
-      gap: 10px;
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-
-      text-transform: uppercase;
+      gap: 12px;
     }
 
     .brand-mark {
-      width: 8px;
-      height: 8px;
-
-      flex-shrink: 0;
-
-      background: var(--orange);
-
-      box-shadow:
-        0 0 14px rgba(255, 90, 0, 0.5);
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--orange);
+      display: grid;
+      place-items: center;
+      color: var(--orange);
+      font-family: "Anton", sans-serif;
+      font-size: 17px;
+      letter-spacing: 0.02em;
     }
 
-    .top-status {
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-name {
+      font-family: "Anton", sans-serif;
+      font-size: 19px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-sub {
       color: var(--muted);
-
       font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-
+      font-size: 9px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
+    }
+
+    .session-state {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .session-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow:
+        0 0 12px
+        rgba(255, 106, 0, 0.55);
     }
 
     /* =====================================================
        HERO
-    ===================================================== */
+       ===================================================== */
 
     .hero {
-      width: min(100% - 32px, var(--max));
-
-      margin: 0 auto;
-
-      padding: 90px 0 70px;
+      padding:
+        72px
+        0
+        56px;
+      max-width: 860px;
     }
 
     .eyebrow {
       margin-bottom: 18px;
-
       color: var(--orange);
-
       font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.18em;
-
+      letter-spacing: 0.2em;
       text-transform: uppercase;
     }
 
-    .hero h1 {
-      max-width: 850px;
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(58px, 10vw, 132px);
-      font-weight: 400;
+    h1 {
+      margin: 0;
+      font-family: "Anton", sans-serif;
+      font-size: clamp(
+        58px,
+        10vw,
+        116px
+      );
       line-height: 0.88;
       letter-spacing: -0.025em;
-
       text-transform: uppercase;
-    }
-
-    .hero h1 span {
-      color: var(--orange);
     }
 
     .hero-copy {
-      max-width: 650px;
-
-      margin-top: 32px;
-
-      color: #bdbdbd;
-
-      font-size: clamp(16px, 2vw, 20px);
-      line-height: 1.65;
+      margin-top: 28px;
+      max-width: 680px;
+      color: var(--soft);
+      font-size: 16px;
+      line-height: 1.75;
     }
 
-    .hero-line {
-      width: 100%;
-      height: 1px;
-
-      margin-top: 58px;
-
-      background:
-        linear-gradient(
-          90deg,
-          var(--orange),
-          var(--line) 35%,
-          transparent
-        );
+    .hero-copy strong {
+      color: var(--text);
     }
 
     /* =====================================================
-       POSITION
-    ===================================================== */
+       LOADING / ERROR
+       ===================================================== */
 
-    .position {
-      width: min(100% - 32px, var(--max));
-
-      margin: 0 auto 100px;
+    .state {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 26px;
+      margin-bottom: 24px;
     }
 
-    .section-label {
-      margin-bottom: 16px;
+    .state.hidden {
+      display: none;
+    }
 
-      color: var(--muted);
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-
+    .state-title {
+      margin-bottom: 8px;
+      font-family: "Anton", sans-serif;
+      font-size: 28px;
       text-transform: uppercase;
     }
 
-    .position-card {
+    .state-text {
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .state.error {
+      border-color: rgba(
+        255,
+        92,
+        92,
+        0.45
+      );
+    }
+
+    .state.error .state-title {
+      color: var(--red);
+    }
+
+    /* =====================================================
+       DASHBOARD
+       ===================================================== */
+
+    #dashboard.hidden {
+      display: none;
+    }
+
+    .grid {
       display: grid;
-      grid-template-columns: 1.3fr 1fr;
+      grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(280px, 0.8fr);
+      gap: 18px;
+    }
 
+    .card {
       border: 1px solid var(--line);
-
       background:
         linear-gradient(
-          135deg,
-          rgba(255, 90, 0, 0.08),
-          rgba(255, 255, 255, 0.015)
-        );
+          145deg,
+          rgba(255,255,255,0.025),
+          rgba(255,255,255,0)
+        ),
+        var(--panel);
+      padding: 28px;
     }
 
-    .position-main {
-      padding: 38px;
-
-      border-right: 1px solid var(--line);
+    .card.full {
+      grid-column: 1 / -1;
     }
 
-    .position-title {
+    .card-label {
       color: var(--muted);
-
       font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
+      margin-bottom: 14px;
     }
 
     .spot {
-      margin-top: 8px;
-
-      color: var(--orange);
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(72px, 10vw, 120px);
-      line-height: 0.9;
-    }
-
-    .position-subtitle {
-      margin-top: 22px;
-
-      color: var(--text);
-
-      font-size: 20px;
-      font-weight: 600;
-    }
-
-    .position-note {
-      margin-top: 8px;
-
-      color: var(--muted);
-
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .position-details {
-      padding: 38px;
-
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      gap: 24px;
+      align-items: flex-end;
+      gap: 12px;
+      line-height: 0.8;
     }
 
-    .detail {
-      min-width: 0;
+    .spot-number {
+      color: var(--orange);
+      font-family: "Anton", sans-serif;
+      font-size: clamp(
+        86px,
+        13vw,
+        150px
+      );
     }
 
-    .detail-label {
-      margin-bottom: 7px;
-
-      color: var(--muted-2);
-
+    .spot-total {
+      padding-bottom: 11px;
+      color: var(--muted);
       font-family: "IBM Plex Mono", monospace;
-      font-size: 9px;
-      letter-spacing: 0.14em;
-
-      text-transform: uppercase;
-    }
-
-    .detail-value {
-      overflow: hidden;
-
-      color: #d8d8d8;
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      line-height: 1.5;
-
-      text-overflow: ellipsis;
-
-      word-break: break-all;
+      font-size: 14px;
     }
 
     .status {
       display: inline-flex;
       align-items: center;
-
-      gap: 8px;
-
-      color: var(--green);
-
-      font-size: 11px;
+      gap: 9px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      color: var(--soft);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      font-weight: 600;
       letter-spacing: 0.08em;
-
       text-transform: uppercase;
     }
 
     .status-dot {
-      width: 6px;
-      height: 6px;
-
-      flex-shrink: 0;
-
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-
-      background: var(--green);
-
-      box-shadow:
-        0 0 10px rgba(125, 255, 154, 0.6);
-    }
-
-    .status.status-warning {
-      color: var(--orange);
-    }
-
-    .status-warning .status-dot {
       background: var(--orange);
-
-      box-shadow:
-        0 0 10px rgba(255, 90, 0, 0.6);
     }
 
-    .status.status-danger {
-      color: var(--red);
+    .status.active {
+      color: var(--green);
+      border-color:
+        rgba(156, 255, 87, 0.25);
     }
 
-    .status-danger .status-dot {
-      background: var(--red);
+    .status.active .status-dot {
+      background: var(--green);
+    }
 
-      box-shadow:
-        0 0 10px rgba(255, 104, 104, 0.6);
+    .status.changed {
+      color: var(--yellow);
+      border-color:
+        rgba(255, 209, 102, 0.25);
+    }
+
+    .status.changed .status-dot {
+      background: var(--yellow);
+    }
+
+    .status.delivered {
+      color: var(--orange);
+      border-color:
+        rgba(255, 106, 0, 0.35);
+    }
+
+    .status.delivered .status-dot {
+      background: var(--orange);
     }
 
     /* =====================================================
-       ROADMAP
-    ===================================================== */
+       IDENTITY
+       ===================================================== */
 
-    .roadmap {
-      width: min(100% - 32px, var(--max));
-
-      margin: 0 auto;
-
-      padding-bottom: 100px;
-    }
-
-    .roadmap-header {
-      margin-bottom: 42px;
-    }
-
-    .roadmap-header h2 {
-      font-family: Anton, sans-serif;
-      font-size: clamp(42px, 6vw, 72px);
-      font-weight: 400;
-      line-height: 0.95;
-
-      text-transform: uppercase;
-    }
-
-    .roadmap-header p {
-      max-width: 600px;
-
-      margin-top: 18px;
-
-      color: var(--muted);
-
-      font-size: 15px;
-      line-height: 1.7;
-    }
-
-    .timeline {
-      position: relative;
-
+    .identity {
       display: grid;
-      gap: 1px;
-
-      background: var(--line);
-
-      border: 1px solid var(--line);
+      gap: 16px;
     }
 
-    .timeline::before {
-      content: "";
-
-      position: absolute;
-
-      top: 0;
-      bottom: 0;
-
-      left: 44px;
-
-      width: 1px;
-
-      background: var(--orange-line);
-
-      pointer-events: none;
-    }
-
-    .step {
-      position: relative;
-
-      display: grid;
-      grid-template-columns: 88px 1fr;
-
-      min-height: 190px;
-
-      background: var(--bg-soft);
-    }
-
-    .step-number {
-      position: relative;
-
-      z-index: 2;
-
+    .identity-row {
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
-
-      padding-top: 32px;
-
-      color: var(--orange);
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      font-weight: 600;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-soft);
     }
 
-    .step-content {
-      padding: 30px 34px 34px 8px;
+    .identity-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
     }
 
-    .step-state {
-      display: inline-block;
-
-      margin-bottom: 10px;
-
-      color: var(--orange);
-
+    .identity-key {
+      color: var(--muted);
       font-family: "IBM Plex Mono", monospace;
       font-size: 9px;
       letter-spacing: 0.14em;
-
       text-transform: uppercase;
     }
 
-    .step h3 {
-      margin-bottom: 12px;
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(27px, 4vw, 42px);
-      font-weight: 400;
-      line-height: 1;
-
-      text-transform: uppercase;
-    }
-
-    .step p {
-      max-width: 680px;
-
-      color: #999;
-
-      font-size: 14px;
-      line-height: 1.75;
-    }
-
-    .step strong {
-      color: #ddd;
-      font-weight: 600;
+    .identity-value {
+      max-width: 70%;
+      overflow-wrap: anywhere;
+      color: var(--text);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      text-align: right;
     }
 
     /* =====================================================
-       RULES
-    ===================================================== */
+       ROAD STATUS
+       ===================================================== */
 
-    .rules {
-      width: min(100% - 32px, var(--max));
-
-      margin: 0 auto;
-
-      padding-bottom: 100px;
-    }
-
-    .rules-header {
-      margin-bottom: 36px;
-    }
-
-    .rules-header h2 {
-      max-width: 700px;
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(42px, 6vw, 72px);
-      font-weight: 400;
-      line-height: 0.95;
-
-      text-transform: uppercase;
-    }
-
-    .rules-grid {
+    .road-status {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-
+      grid-template-columns:
+        repeat(3, 1fr);
       gap: 1px;
-
       background: var(--line);
-
       border: 1px solid var(--line);
     }
 
-    .rule {
-      min-height: 190px;
-
-      padding: 30px;
-
+    .road-stat {
+      min-height: 130px;
+      padding: 22px;
       background: var(--panel);
     }
 
-    .rule-number {
-      color: var(--orange);
-
+    .road-stat-label {
+      color: var(--muted);
       font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
+      font-size: 9px;
       letter-spacing: 0.12em;
-    }
-
-    .rule h3 {
-      margin-top: 25px;
-
-      font-family: Anton, sans-serif;
-      font-size: 28px;
-      font-weight: 400;
-      line-height: 1;
-
       text-transform: uppercase;
     }
 
-    .rule p {
-      margin-top: 12px;
+    .road-stat-value {
+      margin-top: 18px;
+      font-family: "Anton", sans-serif;
+      font-size: 38px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
 
+    /* =====================================================
+       TIMELINE
+       ===================================================== */
+
+    .timeline {
+      display: grid;
+      gap: 0;
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 16px;
+      min-height: 100px;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 19px;
+      bottom: 0;
+      left: 8px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .timeline-item:last-child
+      .timeline-line {
+      display: none;
+    }
+
+    .timeline-dot {
+      position: relative;
+      z-index: 2;
+      width: 17px;
+      height: 17px;
+      margin-top: 3px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    .timeline-item.active
+      .timeline-dot {
+      border-color: var(--orange);
+      background: var(--orange);
+      box-shadow:
+        0 0 18px
+        rgba(255, 106, 0, 0.35);
+    }
+
+    .timeline-item.complete
+      .timeline-dot {
+      border-color: var(--green);
+      background: var(--green);
+    }
+
+    .timeline-title {
+      margin-bottom: 7px;
+      font-family: "Anton", sans-serif;
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+
+    .timeline-copy {
+      max-width: 680px;
       color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
 
+    /* =====================================================
+       NFT
+       ===================================================== */
+
+    .nft-box {
+      display: grid;
+      grid-template-columns:
+        minmax(180px, 320px)
+        1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .nft-image {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #080808;
+    }
+
+    .nft-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border:
+        1px solid
+        rgba(255, 106, 0, 0.15);
+    }
+
+    .nft-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .nft-placeholder {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .nft-number {
+      color: var(--orange);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .nft-title {
+      margin: 0;
+      font-family: "Anton", sans-serif;
+      font-size: 46px;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    .nft-copy {
+      margin-top: 18px;
+      color: var(--muted);
       font-size: 13px;
       line-height: 1.7;
     }
 
     /* =====================================================
-       NFT FUTURE
-    ===================================================== */
+       QUEST
+       ===================================================== */
 
-    .future {
-      width: min(100% - 32px, var(--max));
-
-      margin: 0 auto;
-
-      padding-bottom: 100px;
-    }
-
-    .future-card {
-      position: relative;
-
-      overflow: hidden;
-
-      padding: clamp(36px, 7vw, 80px);
-
-      border: 1px solid var(--orange-line);
-
+    .quest {
+      border:
+        1px solid
+        rgba(255, 106, 0, 0.28);
       background:
-        radial-gradient(
-          circle at 85% 20%,
-          rgba(255, 90, 0, 0.13),
-          transparent 22rem
+        linear-gradient(
+          135deg,
+          rgba(255,106,0,0.08),
+          transparent 60%
         ),
         var(--panel);
+      padding: 32px;
     }
 
-    .future-card::after {
-      content: "THE ROAD";
-
-      position: absolute;
-
-      right: -18px;
-      bottom: -35px;
-
-      color: rgba(255, 90, 0, 0.035);
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(90px, 16vw, 220px);
-      line-height: 1;
-
-      pointer-events: none;
-    }
-
-    .future-label {
-      color: var(--orange);
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-
-      text-transform: uppercase;
-    }
-
-    .future-card h2 {
-      position: relative;
-      z-index: 2;
-
-      max-width: 750px;
-
-      margin-top: 18px;
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(44px, 7vw, 86px);
-      font-weight: 400;
-      line-height: 0.94;
-
-      text-transform: uppercase;
-    }
-
-    .future-card p {
-      position: relative;
-      z-index: 2;
-
-      max-width: 700px;
-
-      margin-top: 26px;
-
-      color: #aaa;
-
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    .future-card p strong {
-      color: #eee;
-    }
-
-    /* =====================================================
-       NEXT
-    ===================================================== */
-
-    .next {
-      width: min(100% - 32px, var(--max));
-
-      margin: 0 auto;
-
-      padding-bottom: 100px;
-    }
-
-    .next-inner {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-
-      gap: 40px;
-
-      padding: 42px 0;
-
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .next-copy {
-      max-width: 620px;
-    }
-
-    .next-copy .label {
-      color: var(--orange);
-
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-
-      text-transform: uppercase;
-    }
-
-    .next-copy h2 {
-      margin-top: 14px;
-
-      font-family: Anton, sans-serif;
-      font-size: clamp(38px, 5vw, 62px);
-      font-weight: 400;
+    .quest-title {
+      margin: 0;
+      font-family: "Anton", sans-serif;
+      font-size: 42px;
       line-height: 0.95;
-
       text-transform: uppercase;
     }
 
-    .next-copy p {
-      margin-top: 15px;
-
-      color: var(--muted);
-
+    .quest-copy {
+      max-width: 720px;
+      margin-top: 16px;
+      color: var(--soft);
       font-size: 14px;
       line-height: 1.7;
     }
 
-    .cta {
-      flex-shrink: 0;
+    .quest-note {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      line-height: 1.7;
+      letter-spacing: 0.02em;
+    }
 
+    /* =====================================================
+       CTA
+       ===================================================== */
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .button {
+      min-height: 48px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
-      min-height: 54px;
-
-      padding: 0 26px;
-
+      padding: 0 20px;
       border: 1px solid var(--orange);
-
       background: var(--orange);
       color: #050505;
-
       cursor: pointer;
-
       font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.1em;
-
       text-transform: uppercase;
-
       transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        color 0.2s ease;
+        transform 0.15s ease,
+        opacity 0.15s ease,
+        background 0.15s ease;
     }
 
-    .cta:hover {
-      transform: translateY(-2px);
+    .button:hover {
+      transform: translateY(-1px);
+    }
 
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button.secondary {
+      border-color: var(--line);
       background: transparent;
-      color: var(--orange);
+      color: var(--text);
     }
 
-    .cta.disabled {
-      opacity: 0.45;
-
+    .button:disabled {
+      opacity: 0.5;
       cursor: not-allowed;
-
-      transform: none !important;
+      transform: none;
     }
 
     /* =====================================================
        FOOTER
-    ===================================================== */
+       ===================================================== */
 
     footer {
-      width: min(100% - 32px, var(--max));
-
-      margin: 0 auto;
-
-      padding: 0 0 42px;
-
+      margin-top: 70px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-
       gap: 20px;
-
-      color: var(--muted-2);
-
+      color: var(--muted);
       font-family: "IBM Plex Mono", monospace;
       font-size: 9px;
       letter-spacing: 0.1em;
-
       text-transform: uppercase;
     }
 
-    footer a {
-      transition: color 0.2s ease;
-    }
-
-    footer a:hover {
-      color: var(--orange);
-    }
-
     /* =====================================================
-       MOBILE
-    ===================================================== */
+       RESPONSIVE
+       ===================================================== */
 
-    @media (max-width: 720px) {
-      .topbar-inner,
-      .hero,
-      .position,
-      .roadmap,
-      .rules,
-      .future,
-      .next,
-      footer {
-        width: min(100% - 24px, var(--max));
+    @media (
+      max-width: 760px
+    ) {
+      .page {
+        width:
+          min(
+            calc(100% - 22px),
+            var(--max)
+          );
+        padding-top: 15px;
       }
 
-      .topbar-inner {
-        min-height: 58px;
+      .topbar {
+        align-items: flex-start;
       }
 
-      .top-status {
+      .session-state {
         display: none;
       }
 
       .hero {
-        padding: 62px 0 52px;
+        padding:
+          54px
+          0
+          40px;
       }
 
-      .hero h1 {
-        font-size: clamp(58px, 19vw, 92px);
+      h1 {
+        font-size:
+          clamp(
+            58px,
+            18vw,
+            100px
+          );
       }
 
-      .hero-copy {
-        margin-top: 24px;
-
-        font-size: 15px;
-      }
-
-      .hero-line {
-        margin-top: 40px;
-      }
-
-      .position {
-        margin-bottom: 70px;
-      }
-
-      .position-card {
+      .grid {
         grid-template-columns: 1fr;
       }
 
-      .position-main {
-        padding: 28px;
-
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
+      .card.full {
+        grid-column: auto;
       }
 
-      .position-details {
-        padding: 28px;
-      }
-
-      .spot {
-        font-size: 84px;
-      }
-
-      .roadmap,
-      .rules,
-      .future,
-      .next {
-        padding-bottom: 70px;
-      }
-
-      .timeline::before {
-        left: 30px;
-      }
-
-      .step {
-        grid-template-columns: 60px 1fr;
-
-        min-height: 0;
-      }
-
-      .step-number {
-        padding-top: 28px;
-      }
-
-      .step-content {
-        padding: 26px 20px 30px 4px;
-      }
-
-      .step h3 {
-        font-size: 30px;
-      }
-
-      .step p {
-        font-size: 13px;
-      }
-
-      .rules-grid {
+      .road-status {
         grid-template-columns: 1fr;
       }
 
-      .rule {
-        min-height: auto;
-
-        padding: 26px;
+      .nft-box {
+        grid-template-columns: 1fr;
       }
 
-      .future-card {
-        padding: 34px 26px;
-      }
-
-      .future-card h2 {
-        font-size: 48px;
-      }
-
-      .future-card p {
-        font-size: 14px;
-      }
-
-      .next-inner {
-        align-items: stretch;
-
-        flex-direction: column;
-
-        gap: 28px;
-      }
-
-      .cta {
-        width: 100%;
+      .nft-image {
+        max-width: 360px;
       }
 
       footer {
-        align-items: flex-start;
-
         flex-direction: column;
-
-        padding-bottom: 28px;
-      }
-
-      .error-actions {
-        flex-direction: column;
-      }
-
-      .error-button {
-        width: 100%;
-      }
-    }
-
-    /* =====================================================
-       REDUCED MOTION
-    ===================================================== */
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      .cta,
-      .loading-screen {
-        transition: none;
-      }
-
-      .loading-line::after {
-        animation: none;
       }
     }
   </style>
 </head>
 
-<body class="is-loading">
+<body>
+  <main class="page">
 
-  <!-- =====================================================
-       LOADING
-  ===================================================== -->
+    <!-- ===================================================
+         TOP BAR
+         =================================================== -->
 
-  <div
-    class="loading-screen"
-    id="loadingScreen"
-    aria-live="polite"
-  >
-    <div class="loading-inner">
-
-      <div class="loading-mark"></div>
-
-      <div class="loading-label">
-        THE ROAD PROVIDES
-      </div>
-
-      <div
-        class="loading-status"
-        id="loadingStatus"
-      >
-        VERIFYING YOUR ROAD
-      </div>
-
-      <div class="loading-line"></div>
-
-    </div>
-  </div>
-
-
-  <!-- =====================================================
-       ERROR
-  ===================================================== -->
-
-  <section
-    class="error-screen"
-    id="errorScreen"
-    aria-live="assertive"
-  >
-
-    <div class="error-card">
-
-      <div class="error-label">
-        ROAD ACCESS
-      </div>
-
-      <h1>
-        ROAD<br />
-        NOT FOUND.
-      </h1>
-
-      <p id="errorMessage">
-        This Road could not be verified.
-      </p>
-
-      <div class="error-actions">
-
-        <button
-          class="error-button"
-          id="retryButton"
-          type="button"
-        >
-          TRY AGAIN
-        </button>
-
-        <button
-          class="error-button secondary"
-          id="claimButton"
-          type="button"
-        >
-          RETURN TO CLAIM
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       TOP BAR
-  ===================================================== -->
-
-  <header class="topbar">
-
-    <div class="topbar-inner">
-
+    <header class="topbar">
       <a
         class="brand"
-        href="site.html"
+        href="index.html"
         aria-label="The Road Provides"
       >
-        <span class="brand-mark"></span>
-        THE ROAD PROVIDES
+        <div class="brand-mark">
+          R
+        </div>
+
+        <div class="brand-text">
+          <div class="brand-name">
+            THE ROADMAN
+          </div>
+
+          <div class="brand-sub">
+            The Road Provides
+          </div>
+        </div>
       </a>
 
-      <div class="top-status">
-        FIRST 100 / YOUR ROAD
+      <div
+        class="session-state"
+        aria-live="polite"
+      >
+        <span class="session-dot"></span>
+        <span id="sessionLabel">
+          SECURE SESSION
+        </span>
       </div>
-
-    </div>
-
-  </header>
-
-
-  <!-- =====================================================
-       MAIN
-  ===================================================== -->
-
-  <main>
+    </header>
 
     <!-- ===================================================
          HERO
-    =================================================== -->
+         =================================================== -->
 
     <section class="hero">
-
       <div class="eyebrow">
-        01 / YOUR ROAD
+        FIRST 100 / YOUR ROAD
       </div>
 
       <h1>
-        YOU<br />
-        ARE <span>IN.</span>
+        YOUR<br>
+        ROAD.
       </h1>
 
       <p class="hero-copy">
-        Your place in the First 100 has been recorded.
-        This is not the end of the journey.
-        It is the point where your Road begins.
+        Your position is sealed.
+        From here, the road is no longer
+        about entering. It is about
+        <strong>remaining on it.</strong>
       </p>
-
-      <div class="hero-line"></div>
-
     </section>
 
-
     <!-- ===================================================
-         POSITION
-    =================================================== -->
+         LOADING
+         =================================================== -->
 
-    <section class="position">
-
-      <div class="section-label">
-        YOUR POSITION
+    <section
+      id="loadingState"
+      class="state"
+      aria-live="polite"
+    >
+      <div class="state-title">
+        Reading the road...
       </div>
 
-      <div class="position-card">
-
-        <div class="position-main">
-
-          <div class="position-title">
-            First 100 Spot
-          </div>
-
-          <div
-            class="spot"
-            id="spotNumber"
-          >
-            #---
-          </div>
-
-          <div
-            class="position-subtitle"
-            id="positionSubtitle"
-          >
-            Your Road is Sealed.
-          </div>
-
-          <div class="position-note">
-            Your position is recorded in the First 100.
-            Keep this page as your entry record.
-          </div>
-
-        </div>
-
-
-        <div class="position-details">
-
-          <div class="detail">
-
-            <div class="detail-label">
-              X Handle
-            </div>
-
-            <div
-              class="detail-value"
-              id="xHandle"
-            >
-              —
-            </div>
-
-          </div>
-
-
-          <div class="detail">
-
-            <div class="detail-label">
-              Wallet
-            </div>
-
-            <div
-              class="detail-value"
-              id="walletAddress"
-            >
-              —
-            </div>
-
-          </div>
-
-
-          <div class="detail">
-
-            <div class="detail-label">
-              Current Status
-            </div>
-
-            <div
-              class="status"
-              id="currentStatus"
-            >
-
-              <span class="status-dot"></span>
-
-              <span id="statusText">
-                ON THE ROAD
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
+      <div class="state-text">
+        Verifying your participation session
+        with the Road Provides backend.
       </div>
-
     </section>
 
-
     <!-- ===================================================
-         ROADMAP
-    =================================================== -->
+         ERROR
+         =================================================== -->
 
-    <section class="roadmap">
-
-      <div class="roadmap-header">
-
-        <div class="section-label">
-          WHAT HAPPENS NEXT
-        </div>
-
-        <h2>
-          THE ROAD<br />
-          FROM HERE.
-        </h2>
-
-        <p>
-          The First 100 is a sequence, not a single moment.
-          Your entry is recorded. The next stages unlock as
-          the Road moves forward.
-        </p>
-
+    <section
+      id="errorState"
+      class="state error hidden"
+      aria-live="assertive"
+    >
+      <div
+        id="errorTitle"
+        class="state-title"
+      >
+        Session unavailable
       </div>
 
-
-      <div class="timeline">
-
-        <!-- STEP 01 -->
-
-        <article class="step">
-
-          <div class="step-number">
-            01
-          </div>
-
-          <div class="step-content">
-
-            <div class="step-state">
-              CURRENT
-            </div>
-
-            <h3>
-              First 100
-            </h3>
-
-            <p>
-              Your position has been recorded.
-              The initial chapter remains open until
-              the First 100 is completed.
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <!-- STEP 02 -->
-
-        <article class="step">
-
-          <div class="step-number">
-            02
-          </div>
-
-          <div class="step-content">
-
-            <div class="step-state">
-              NEXT
-            </div>
-
-            <h3>
-              The Road Opens
-            </h3>
-
-            <p>
-              When the First 100 stage is complete,
-              the next part of the experience can open.
-              Instructions will appear through the official
-              project channels.
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <!-- STEP 03 -->
-
-        <article class="step">
-
-          <div class="step-number">
-            03
-          </div>
-
-          <div class="step-content">
-
-            <div class="step-state">
-              CONDITIONS
-            </div>
-
-            <h3>
-              Your Status Can Change
-            </h3>
-
-            <p>
-              Your entry remains recorded, but future stages
-              may have their own eligibility conditions.
-              <strong>Being part of the First 100 does not
-              automatically guarantee every future stage.</strong>
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <!-- STEP 04 -->
-
-        <article class="step">
-
-          <div class="step-number">
-            04
-          </div>
-
-          <div class="step-content">
-
-            <div class="step-state">
-              NFT
-            </div>
-
-            <h3>
-              Your Entry Becomes Your Record
-            </h3>
-
-            <p>
-              The Roadman NFT represents participation in
-              this first chapter. Its delivery and future
-              utility are governed by the conditions announced
-              for each stage.
-            </p>
-
-          </div>
-
-        </article>
-
-
-        <!-- STEP 05 -->
-
-        <article class="step">
-
-          <div class="step-number">
-            05
-          </div>
-
-          <div class="step-content">
-
-            <div class="step-state">
-              FUTURE
-            </div>
-
-            <h3>
-              More Roads May Open
-            </h3>
-
-            <p>
-              Future experiences may include quests,
-              collaborations, events and other mechanics
-              connected to The Road Provides.
-              Details appear when each stage becomes active.
-            </p>
-
-          </div>
-
-        </article>
-
+      <div
+        id="errorText"
+        class="state-text"
+      >
+        Your participation session could not
+        be verified.
       </div>
 
-    </section>
-
-
-    <!-- ===================================================
-         RULES
-    =================================================== -->
-
-    <section class="rules">
-
-      <div class="rules-header">
-
-        <div class="section-label">
-          THE RULES OF THE ROAD
-        </div>
-
-        <h2>
-          ENTERED DOESN'T MEAN FINISHED.
-        </h2>
-
-      </div>
-
-
-      <div class="rules-grid">
-
-        <article class="rule">
-
-          <div class="rule-number">
-            RULE / 01
-          </div>
-
-          <h3>
-            First 100
-          </h3>
-
-          <p>
-            The first chapter is limited to 100 positions.
-            Each participant receives one recorded position
-            in the initial group.
-          </p>
-
-        </article>
-
-
-        <article class="rule">
-
-          <div class="rule-number">
-            RULE / 02
-          </div>
-
-          <h3>
-            One Road
-          </h3>
-
-          <p>
-            Your participation is associated with your
-            verified wallet and recorded position.
-            Duplicate participation is not part of the
-            First 100 structure.
-          </p>
-
-        </article>
-
-
-        <article class="rule">
-
-          <div class="rule-number">
-            RULE / 03
-          </div>
-
-          <h3>
-            Conditions Matter
-          </h3>
-
-          <p>
-            Eligibility may be checked again when future
-            stages require it. A previous entry does not
-            automatically guarantee future eligibility.
-          </p>
-
-        </article>
-
-
-        <article class="rule">
-
-          <div class="rule-number">
-            RULE / 04
-          </div>
-
-          <h3>
-            The Road Moves
-          </h3>
-
-          <p>
-            Future rules, quests and events will be announced
-            through the official project channels when each
-            stage is ready.
-          </p>
-
-        </article>
-
-      </div>
-
-    </section>
-
-
-    <!-- ===================================================
-         NFT FUTURE
-    =================================================== -->
-
-    <section class="future">
-
-      <div class="future-card">
-
-        <div class="future-label">
-          THE ROADMAN NFT
-        </div>
-
-        <h2>
-          THIS IS<br />
-          YOUR ENTRY.
-        </h2>
-
-        <p>
-          The NFT is more than an image from the first chapter.
-          It records that <strong>you were one of the First 100</strong>.
-        </p>
-
-        <p>
-          As The Road Provides evolves, the NFT may become
-          connected to future experiences, quests, events or
-          other project mechanics.
-          <strong>What comes next is defined as each stage opens.</strong>
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <!-- ===================================================
-         NEXT
-    =================================================== -->
-
-    <section class="next">
-
-      <div class="next-inner">
-
-        <div class="next-copy">
-
-          <div class="label">
-            NEXT DESTINATION
-          </div>
-
-          <h2>
-            KEEP<br />
-            WALKING.
-          </h2>
-
-          <p>
-            Your inscription is complete.
-            The next stage will be announced through
-            the official project channels.
-            Your Road continues from here.
-          </p>
-
-        </div>
-
-
-        <!--
-          IMPORTANT:
-
-          This currently points to the future Telegram
-          experience.
-
-          Replace the href only when the final Telegram
-          entry URL is ready.
-        -->
-
+      <div class="actions">
         <a
-          class="cta"
-          id="nextCta"
-          href="https://t.me/theroadprovides"
-          target="_blank"
-          rel="noopener noreferrer"
+          class="button"
+          href="claim.html"
         >
-          ENTER THE NEXT ROAD →
+          RETURN TO THE ROAD
         </a>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         DASHBOARD
+         =================================================== -->
+
+    <section
+      id="dashboard"
+      class="hidden"
+    >
+
+      <div class="grid">
+
+        <!-- ===============================================
+             SPOT
+             =============================================== -->
+
+        <article class="card">
+          <div class="card-label">
+            Your position
+          </div>
+
+          <div class="spot">
+            <div
+              id="spotNumber"
+              class="spot-number"
+            >
+              —
+            </div>
+
+            <div
+              id="spotTotal"
+              class="spot-total"
+            >
+              / 100
+            </div>
+          </div>
+
+          <div
+            id="statusBadge"
+            class="status active"
+            style="margin-top: 24px;"
+          >
+            <span class="status-dot"></span>
+
+            <span id="statusText">
+              ON THE ROAD
+            </span>
+          </div>
+        </article>
+
+        <!-- ===============================================
+             IDENTITY
+             =============================================== -->
+
+        <article class="card">
+          <div class="card-label">
+            Participant
+          </div>
+
+          <div class="identity">
+
+            <div class="identity-row">
+              <div class="identity-key">
+                X
+              </div>
+
+              <div
+                id="xHandle"
+                class="identity-value"
+              >
+                —
+              </div>
+            </div>
+
+            <div class="identity-row">
+              <div class="identity-key">
+                Wallet
+              </div>
+
+              <div
+                id="wallet"
+                class="identity-value"
+              >
+                —
+              </div>
+            </div>
+
+            <div class="identity-row">
+              <div class="identity-key">
+                Holding
+              </div>
+
+              <div
+                id="holdingStatus"
+                class="identity-value"
+              >
+                —
+              </div>
+            </div>
+
+            <div class="identity-row">
+              <div class="identity-key">
+                Phase
+              </div>
+
+              <div
+                id="phase"
+                class="identity-value"
+              >
+                FIRST 100
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- ===============================================
+             ROAD COUNTERS
+             =============================================== -->
+
+        <article class="card full">
+          <div class="card-label">
+            The road
+          </div>
+
+          <div class="road-status">
+
+            <div class="road-stat">
+              <div class="road-stat-label">
+                Active spots
+              </div>
+
+              <div
+                id="activeSpots"
+                class="road-stat-value"
+              >
+                —
+              </div>
+            </div>
+
+            <div class="road-stat">
+              <div class="road-stat-label">
+                Historical claims
+              </div>
+
+              <div
+                id="historicalClaims"
+                class="road-stat-value"
+              >
+                —
+              </div>
+            </div>
+
+            <div class="road-stat">
+              <div class="road-stat-label">
+                NFT status
+              </div>
+
+              <div
+                id="nftStatus"
+                class="road-stat-value"
+              >
+                —
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- ===============================================
+             JOURNEY
+             =============================================== -->
+
+        <article class="card full">
+          <div class="card-label">
+            The journey
+          </div>
+
+          <div class="timeline">
+
+            <div
+              id="timelineClaim"
+              class="timeline-item complete"
+            >
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+
+              <div>
+                <div class="timeline-title">
+                  ENTER
+                </div>
+
+                <div class="timeline-copy">
+                  Your wallet was verified and
+                  your place on the First 100
+                  was established.
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="timelineHold"
+              class="timeline-item active"
+            >
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+
+              <div>
+                <div class="timeline-title">
+                  REMAIN
+                </div>
+
+                <div class="timeline-copy">
+                  The position remains active
+                  while the required $ROAD
+                  holding condition is satisfied.
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="timelineQuest"
+              class="timeline-item"
+            >
+              <div class="timeline-dot"></div>
+              <div class="timeline-line"></div>
+
+              <div>
+                <div class="timeline-title">
+                  DISCOVER
+                </div>
+
+                <div class="timeline-copy">
+                  The road continues through
+                  the hidden experience.
+                  Telegram is the next gate.
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="timelineNFT"
+              class="timeline-item"
+            >
+              <div class="timeline-dot"></div>
+
+              <div>
+                <div class="timeline-title">
+                  RECEIVE
+                </div>
+
+                <div class="timeline-copy">
+                  The original Roadman NFT
+                  becomes part of your road
+                  when the qualification and
+                  redemption process is complete.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- ===============================================
+             NFT
+             =============================================== -->
+
+        <article
+          id="nftCard"
+          class="card full"
+        >
+          <div class="card-label">
+            Your Roadman
+          </div>
+
+          <div class="nft-box">
+
+            <div
+              id="nftImage"
+              class="nft-image"
+            >
+              <div
+                class="nft-placeholder"
+              >
+                YOUR ROADMAN WILL APPEAR
+                HERE WHEN ASSIGNED.
+              </div>
+            </div>
+
+            <div>
+
+              <div
+                id="nftNumber"
+                class="nft-number"
+              >
+                NFT / PENDING
+              </div>
+
+              <h2
+                id="nftTitle"
+                class="nft-title"
+              >
+                NOT YET
+                ASSIGNED.
+              </h2>
+
+              <p
+                id="nftCopy"
+                class="nft-copy"
+              >
+                Your participation is active.
+                The Roadman assignment remains
+                tied to the qualification and
+                redemption process.
+              </p>
+
+            </div>
+
+          </div>
+        </article>
+
+        <!-- ===============================================
+             QUEST
+             =============================================== -->
+
+        <article class="card full">
+
+          <div class="quest">
+
+            <div class="card-label">
+              NEXT ROAD
+            </div>
+
+            <h2 class="quest-title">
+              THE ROAD<br>
+              CONTINUES.
+            </h2>
+
+            <p
+              id="questCopy"
+              class="quest-copy"
+            >
+              Your next destination is Telegram.
+              Enter the experience and find the
+              next piece of the road.
+            </p>
+
+            <div class="quest-note">
+              The Road Provides does not ask for
+              your seed phrase, private key, or
+              wallet password. Never provide those
+              to anyone.
+            </div>
+
+            <div class="actions">
+
+              <a
+                id="nextCta"
+                class="button"
+                href="https://t.me/theroadprovides"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                ENTER TELEGRAM
+              </a>
+
+              <button
+                id="refreshBtn"
+                class="button secondary"
+                type="button"
+              >
+                REFRESH ROAD
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
 
       </div>
 
     </section>
+
+    <!-- ===================================================
+         FOOTER
+         =================================================== -->
+
+    <footer>
+      <span>
+        THE ROAD PROVIDES
+      </span>
+
+      <span>
+        FIRST 100 / YOUR ROAD
+      </span>
+    </footer>
 
   </main>
 
-
-  <!-- =====================================================
-       FOOTER
-  ===================================================== -->
-
-  <footer>
-
-    <div>
-      THE ROAD PROVIDES · FIRST 100
-    </div>
-
-    <a href="site.html">
-      RETURN TO THE ROAD
-    </a>
-
-  </footer>
-
-
-  <!-- =====================================================
-       APPLICATION
-  ===================================================== -->
-
   <script>
-    /*
-      ======================================================
-      THE ROAD PROVIDES
-      ROADMAP / PARTICIPATION ACCESS
-      ======================================================
+    "use strict";
 
-      SECURITY MODEL
+    // =====================================================
+    // CONFIG
+    // =====================================================
 
-      This page NEVER trusts:
+    const PARTICIPATION_STORAGE_KEY =
+      "roadman_participation_token";
 
-        ?spot=
-        ?wallet=
-        ?x=
+    const PARTICIPATION_API =
+      "/api/participation";
 
-      The participant data comes from the server.
+    const CLAIM_PAGE =
+      "claim.html";
 
-      The browser only presents a short-lived participation
-      token previously returned by /api/claim.
+    const TELEGRAM_URL =
+      "https://t.me/theroadprovides";
 
-      The token is expected to be stored in sessionStorage
-      by claim.html after a successful claim.
+    // =====================================================
+    // DOM
+    // =====================================================
 
-      Expected storage:
+    const loadingState =
+      document.getElementById(
+        "loadingState"
+      );
 
-        sessionStorage.setItem(
-          "roadman_participation_token",
-          result.participation.token
-        );
+    const errorState =
+      document.getElementById(
+        "errorState"
+      );
 
-      The token itself is never placed in the URL.
+    const errorTitle =
+      document.getElementById(
+        "errorTitle"
+      );
 
-      Expected API:
+    const errorText =
+      document.getElementById(
+        "errorText"
+      );
 
-        GET /api/participation
+    const dashboard =
+      document.getElementById(
+        "dashboard"
+      );
 
-      Header:
-
-        Authorization: Bearer <token>
-
-      Expected response:
-
-        {
-          "success": true,
-          "claim": {
-            "id": 123,
-            "spot": 19,
-            "x_handle": "@example",
-            "wallet": "...",
-            "status": "claimed",
-            "holding_status": "HOLDING",
-            "nft_status": "PENDING"
-          }
-        }
-
-      The API must validate the token against the
-      participation_tokens table on the server.
-    */
-
-
-    /* =====================================================
-       CONFIG
-    ===================================================== */
-
-    const CONFIG = {
-
-      participationEndpoint:
-        "/api/participation",
-
-      claimPage:
-        "claim.html",
-
-      sitePage:
-        "site.html",
-
-      /*
-        This is intentionally NOT the gallery.
-
-        The gallery should become accessible only when
-        the corresponding stage is opened.
-      */
-      nextStageUrl:
-        "https://t.me/theroadprovides",
-
-      tokenStorageKey:
-        "roadman_participation_token"
-
-    };
-
-
-    /* =====================================================
-       ELEMENTS
-    ===================================================== */
-
-    const $ = (id) =>
-      document.getElementById(id);
-
-
-    const loadingScreen =
-      $("loadingScreen");
-
-    const loadingStatus =
-      $("loadingStatus");
-
-    const errorScreen =
-      $("errorScreen");
-
-    const errorMessage =
-      $("errorMessage");
-
-    const retryButton =
-      $("retryButton");
-
-    const claimButton =
-      $("claimButton");
+    const sessionLabel =
+      document.getElementById(
+        "sessionLabel"
+      );
 
     const spotNumber =
-      $("spotNumber");
+      document.getElementById(
+        "spotNumber"
+      );
 
-    const xHandle =
-      $("xHandle");
+    const spotTotal =
+      document.getElementById(
+        "spotTotal"
+      );
 
-    const walletAddress =
-      $("walletAddress");
-
-    const currentStatus =
-      $("currentStatus");
+    const statusBadge =
+      document.getElementById(
+        "statusBadge"
+      );
 
     const statusText =
-      $("statusText");
+      document.getElementById(
+        "statusText"
+      );
 
-    const positionSubtitle =
-      $("positionSubtitle");
+    const xHandle =
+      document.getElementById(
+        "xHandle"
+      );
+
+    const wallet =
+      document.getElementById(
+        "wallet"
+      );
+
+    const holdingStatus =
+      document.getElementById(
+        "holdingStatus"
+      );
+
+    const phase =
+      document.getElementById(
+        "phase"
+      );
+
+    const activeSpots =
+      document.getElementById(
+        "activeSpots"
+      );
+
+    const historicalClaims =
+      document.getElementById(
+        "historicalClaims"
+      );
+
+    const nftStatus =
+      document.getElementById(
+        "nftStatus"
+      );
+
+    const timelineClaim =
+      document.getElementById(
+        "timelineClaim"
+      );
+
+    const timelineHold =
+      document.getElementById(
+        "timelineHold"
+      );
+
+    const timelineQuest =
+      document.getElementById(
+        "timelineQuest"
+      );
+
+    const timelineNFT =
+      document.getElementById(
+        "timelineNFT"
+      );
+
+    const nftImage =
+      document.getElementById(
+        "nftImage"
+      );
+
+    const nftNumber =
+      document.getElementById(
+        "nftNumber"
+      );
+
+    const nftTitle =
+      document.getElementById(
+        "nftTitle"
+      );
+
+    const nftCopy =
+      document.getElementById(
+        "nftCopy"
+      );
+
+    const questCopy =
+      document.getElementById(
+        "questCopy"
+      );
 
     const nextCta =
-      $("nextCta");
-
-
-    /* =====================================================
-       LOADING
-    ===================================================== */
-
-    function setLoading(message) {
-
-      loadingStatus.textContent =
-        message;
-
-    }
-
-
-    function hideLoading() {
-
-      loadingScreen.classList.add(
-        "hidden"
+      document.getElementById(
+        "nextCta"
       );
 
-      document.body.classList.remove(
-        "is-loading"
+    const refreshBtn =
+      document.getElementById(
+        "refreshBtn"
       );
 
-    }
-
-
-    function showLoading(message) {
-
-      setLoading(message);
-
-      loadingScreen.classList.remove(
-        "hidden"
-      );
-
-      document.body.classList.add(
-        "is-loading"
-      );
-
-    }
-
-
-    /* =====================================================
-       ERROR
-    ===================================================== */
-
-    function showError(message) {
-
-      errorMessage.textContent =
-        message;
-
-      errorScreen.classList.add(
-        "visible"
-      );
-
-      hideLoading();
-
-    }
-
-
-    function hideError() {
-
-      errorScreen.classList.remove(
-        "visible"
-      );
-
-    }
-
-
-    /* =====================================================
-       TOKEN
-    ===================================================== */
+    // =====================================================
+    // TOKEN
+    // =====================================================
 
     function getParticipationToken() {
-
       try {
+        const token =
+          sessionStorage.getItem(
+            PARTICIPATION_STORAGE_KEY
+          );
 
-        return sessionStorage.getItem(
-          CONFIG.tokenStorageKey
-        );
+        if (
+          typeof token !==
+            "string" ||
+          !/^[a-f0-9]{64}$/i.test(
+            token.trim()
+          )
+        ) {
+          return null;
+        }
 
+        return token.trim();
       } catch (error) {
-
         console.error(
-          "SESSION_STORAGE_ERROR",
+          "SESSION_STORAGE_READ_ERROR",
           error
         );
 
         return null;
-
       }
-
     }
 
+    function clearParticipationToken() {
+      try {
+        sessionStorage.removeItem(
+          PARTICIPATION_STORAGE_KEY
+        );
+      } catch (error) {
+        console.error(
+          "SESSION_STORAGE_REMOVE_ERROR",
+          error
+        );
+      }
+    }
 
-    /* =====================================================
-       WALLET MASK
-    ===================================================== */
+    // =====================================================
+    // UI STATE
+    // =====================================================
 
-    function maskWallet(wallet) {
+    function showLoading() {
+      loadingState.classList.remove(
+        "hidden"
+      );
 
-      if (
-        typeof wallet !== "string"
-      ) {
-        return "—";
+      errorState.classList.add(
+        "hidden"
+      );
+
+      dashboard.classList.add(
+        "hidden"
+      );
+    }
+
+    function showError(
+      title,
+      message,
+      clearToken = false
+    ) {
+      if (clearToken) {
+        clearParticipationToken();
       }
 
-      const clean =
-        wallet.trim();
+      loadingState.classList.add(
+        "hidden"
+      );
+
+      dashboard.classList.add(
+        "hidden"
+      );
+
+      errorTitle.textContent =
+        title;
+
+      errorText.textContent =
+        message;
+
+      errorState.classList.remove(
+        "hidden"
+      );
+
+      sessionLabel.textContent =
+        "SESSION UNAVAILABLE";
+    }
+
+    function showDashboard() {
+      loadingState.classList.add(
+        "hidden"
+      );
+
+      errorState.classList.add(
+        "hidden"
+      );
+
+      dashboard.classList.remove(
+        "hidden"
+      );
+
+      sessionLabel.textContent =
+        "SECURE SESSION";
+    }
+
+    // =====================================================
+    // HELPERS
+    // =====================================================
+
+    function safeText(
+      value,
+      fallback = "—"
+    ) {
+      if (
+        value === null ||
+        value === undefined ||
+        String(value).trim() === ""
+      ) {
+        return fallback;
+      }
+
+      return String(value);
+    }
+
+    function shortenWallet(
+      value
+    ) {
+      const text =
+        safeText(
+          value,
+          ""
+        );
 
       if (
-        clean.length <= 12
+        text.length <= 16
       ) {
-        return clean;
+        return text || "—";
       }
 
       return (
-        clean.slice(0, 6) +
+        text.slice(0, 8) +
         "..." +
-        clean.slice(-6)
+        text.slice(-8)
       );
-
     }
 
+    function formatDate(
+      value
+    ) {
+      if (!value) {
+        return "—";
+      }
 
-    /* =====================================================
-       X HANDLE
-    ===================================================== */
-
-    function formatHandle(handle) {
+      const date =
+        new Date(value);
 
       if (
-        typeof handle !== "string"
+        !Number.isFinite(
+          date.getTime()
+        )
       ) {
         return "—";
       }
 
-      const clean =
-        handle.trim();
-
-      if (!clean) {
-        return "—";
-      }
-
-      return clean.startsWith("@")
-        ? clean
-        : "@" + clean;
-
+      return date.toLocaleString(
+        undefined,
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
     }
 
+    function normalizeStatus(
+      value
+    ) {
+      return safeText(
+        value,
+        ""
+      )
+        .trim()
+        .toUpperCase();
+    }
 
-    /* =====================================================
-       SPOT
-    ===================================================== */
+    // =====================================================
+    // STATUS UI
+    // =====================================================
 
-    function formatSpot(spot) {
+    function applyStatus(
+      participant
+    ) {
+      const status =
+        normalizeStatus(
+          participant.status
+        );
 
-      const number =
-        Number(spot);
+      statusBadge.className =
+        "status";
 
       if (
-        !Number.isInteger(number) ||
-        number < 1 ||
-        number > 100
+        status ===
+        "ON THE ROAD"
       ) {
-        return "#---";
+        statusBadge.classList.add(
+          "active"
+        );
+      } else if (
+        status ===
+          "ROADMAN DELIVERED"
+      ) {
+        statusBadge.classList.add(
+          "delivered"
+        );
+      } else if (
+        status ===
+          "ROADMAN READY"
+      ) {
+        statusBadge.classList.add(
+          "delivered"
+        );
+      } else {
+        statusBadge.classList.add(
+          "changed"
+        );
       }
 
-      return (
-        "#" +
-        String(number).padStart(3, "0")
-      );
-
+      statusText.textContent =
+        safeText(
+          participant.status,
+          "STATUS UNKNOWN"
+        );
     }
 
+    // =====================================================
+    // TIMELINE
+    // =====================================================
 
-    /* =====================================================
-       STATUS
-    ===================================================== */
-
-    function normalizeStatus(claim) {
-
-      /*
-        The database currently uses:
-
-          holding_status = HOLDING
-          holding_status = DISQUALIFIED
-
-        Other fields can also be used to communicate
-        future stages.
-      */
-
+    function applyTimeline(
+      participant
+    ) {
       const holding =
-        String(
-          claim?.holding_status || ""
-        ).toUpperCase();
+        normalizeStatus(
+          participant.holding_status
+        );
 
       const nft =
-        String(
-          claim?.nft_status || ""
-        ).toUpperCase();
+        normalizeStatus(
+          participant.nft_status
+        );
 
-      const status =
-        String(
-          claim?.status || ""
-        ).toLowerCase();
+      const participantStatus =
+        normalizeStatus(
+          participant.status
+        );
 
+      timelineClaim.className =
+        "timeline-item complete";
+
+      timelineHold.className =
+        "timeline-item";
+
+      timelineQuest.className =
+        "timeline-item";
+
+      timelineNFT.className =
+        "timeline-item";
+
+      // ---------------------------------------------------
+      // Participant still active
+      // ---------------------------------------------------
 
       if (
-        holding === "DISQUALIFIED"
+        holding ===
+        "HOLDING"
       ) {
+        timelineHold.classList.add(
+          "active"
+        );
 
-        return {
-          text: "STATUS CHANGED",
-          className: "status-danger",
-          subtitle:
-            "Your recorded entry remains. Current eligibility has changed."
-        };
-
+        timelineQuest.classList.add(
+          "active"
+        );
       }
 
+      // ---------------------------------------------------
+      // Eligibility changed
+      // ---------------------------------------------------
+
+      if (
+        participantStatus ===
+          "ELIGIBILITY CHANGED" ||
+        participantStatus ===
+          "STATUS CHANGED"
+      ) {
+        timelineHold.classList.add(
+          "complete"
+        );
+
+        timelineQuest.classList.add(
+          "active"
+        );
+      }
+
+      // ---------------------------------------------------
+      // NFT assigned
+      // ---------------------------------------------------
+
+      if (
+        nft === "ASSIGNED" ||
+        nft === "MINTED" ||
+        nft === "READY"
+      ) {
+        timelineHold.classList.add(
+          "complete"
+        );
+
+        timelineQuest.classList.add(
+          "complete"
+        );
+
+        timelineNFT.classList.add(
+          "active"
+        );
+      }
+
+      // ---------------------------------------------------
+      // NFT delivered
+      // ---------------------------------------------------
 
       if (
         nft === "DELIVERED"
       ) {
+        timelineHold.classList.add(
+          "complete"
+        );
 
-        return {
-          text: "NFT DELIVERED",
-          className: "",
-          subtitle:
-            "Your Road has reached its NFT stage."
-        };
+        timelineQuest.classList.add(
+          "complete"
+        );
 
+        timelineNFT.classList.add(
+          "complete"
+        );
       }
-
-
-      if (
-        nft === "ASSIGNED"
-      ) {
-
-        return {
-          text: "NFT ASSIGNED",
-          className: "",
-          subtitle:
-            "Your Road has reached its NFT stage."
-        };
-
-      }
-
-
-      if (
-        status === "claimed" &&
-        holding === "HOLDING"
-      ) {
-
-        return {
-          text: "ON THE ROAD",
-          className: "",
-          subtitle:
-            "Your Road is Sealed."
-        };
-
-      }
-
-
-      return {
-        text: "RECORDED",
-        className: "status-warning",
-        subtitle:
-          "Your First 100 entry is recorded."
-      };
-
     }
 
+    // =====================================================
+    // NFT
+    // =====================================================
 
-    /* =====================================================
-       RENDER CLAIM
-    ===================================================== */
+    function clearNftImage() {
+      nftImage.innerHTML = "";
 
-    function renderClaim(claim) {
-
-      if (
-        !claim ||
-        typeof claim !== "object"
-      ) {
-
-        throw new Error(
-          "The server returned an invalid participation record."
+      const placeholder =
+        document.createElement(
+          "div"
         );
 
+      placeholder.className =
+        "nft-placeholder";
+
+      placeholder.textContent =
+        "YOUR ROADMAN WILL APPEAR HERE WHEN ASSIGNED.";
+
+      nftImage.appendChild(
+        placeholder
+      );
+    }
+
+    function loadNftImage(
+      number
+    ) {
+      if (
+        number === null ||
+        number === undefined ||
+        !Number.isFinite(
+          Number(number)
+        )
+      ) {
+        clearNftImage();
+        return;
       }
 
-
-      /*
-        Spot
-      */
-
-      spotNumber.textContent =
-        formatSpot(
-          claim.spot
+      const normalized =
+        String(
+          Number(number)
+        ).padStart(
+          3,
+          "0"
         );
 
+      const extensions = [
+        "png",
+        "webp",
+        "jpg",
+        "jpeg",
+      ];
 
-      /*
-        X
-      */
+      let index = 0;
+
+      nftImage.innerHTML = "";
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+      image.alt =
+        `Roadman NFT ${normalized}`;
+
+      image.loading =
+        "lazy";
+
+      image.decoding =
+        "async";
+
+      function tryNext() {
+        if (
+          index >=
+          extensions.length
+        ) {
+          clearNftImage();
+          return;
+        }
+
+        const extension =
+          extensions[index++];
+
+        image.src =
+          `images/${normalized}.${extension}`;
+      }
+
+      image.addEventListener(
+        "error",
+        tryNext
+      );
+
+      nftImage.appendChild(
+        image
+      );
+
+      tryNext();
+    }
+
+    function applyNft(
+      participant
+    ) {
+      const nft =
+        normalizeStatus(
+          participant.nft_status
+        );
+
+      const number =
+        participant.nft_number;
+
+      if (
+        number !== null &&
+        number !== undefined &&
+        Number.isFinite(
+          Number(number)
+        )
+      ) {
+        nftNumber.textContent =
+          `NFT / ${String(
+            Number(number)
+          ).padStart(3, "0")}`;
+      } else {
+        nftNumber.textContent =
+          "NFT / PENDING";
+      }
+
+      if (
+        nft === "DELIVERED"
+      ) {
+        nftTitle.textContent =
+          "ROADMAN\nDELIVERED.";
+
+        nftCopy.textContent =
+          participant.delivery_tx
+            ? "Your Roadman has been delivered to the registered wallet."
+            : "Your Roadman has been marked as delivered.";
+
+        loadNftImage(
+          number
+        );
+
+        return;
+      }
+
+      if (
+        nft === "ASSIGNED" ||
+        nft === "MINTED" ||
+        nft === "READY"
+      ) {
+        nftTitle.textContent =
+          "ROADMAN\nREADY.";
+
+        nftCopy.textContent =
+          "Your Roadman has been assigned. Continue through the redemption path.";
+
+        loadNftImage(
+          number
+        );
+
+        return;
+      }
+
+      nftTitle.textContent =
+        "NOT YET\nASSIGNED.";
+
+      nftCopy.textContent =
+        "Your participation is active. The Roadman assignment remains tied to the qualification and redemption process.";
+
+      clearNftImage();
+    }
+
+    // =====================================================
+    // PARTICIPANT
+    // =====================================================
+
+    function renderParticipant(
+      participant
+    ) {
+      if (
+        !participant ||
+        typeof participant !==
+          "object"
+      ) {
+        throw new Error(
+          "INVALID_PARTICIPANT_DATA"
+        );
+      }
+
+      // ---------------------------------------------------
+      // Spot
+      // ---------------------------------------------------
+
+      if (
+        participant.spot !== null &&
+        participant.spot !== undefined
+      ) {
+        spotNumber.textContent =
+          String(
+            participant.spot
+          );
+      } else {
+        spotNumber.textContent =
+          "—";
+      }
+
+      spotTotal.textContent =
+        `/ ${safeText(
+          participant.total_spots,
+          "100"
+        )}`;
+
+      // ---------------------------------------------------
+      // Identity
+      // ---------------------------------------------------
 
       xHandle.textContent =
-        formatHandle(
-          claim.x_handle
+        safeText(
+          participant.x_handle
         );
 
-
-      /*
-        Wallet
-      */
-
-      walletAddress.textContent =
-        maskWallet(
-          claim.wallet
+      wallet.textContent =
+        shortenWallet(
+          participant.wallet
         );
 
+      wallet.title =
+        safeText(
+          participant.wallet,
+          ""
+        );
 
-      /*
-        Status
-      */
+      holdingStatus.textContent =
+        safeText(
+          participant.holding_status
+        );
 
-      const state =
+      phase.textContent =
+        safeText(
+          participant.phase,
+          "FIRST 100"
+        );
+
+      // ---------------------------------------------------
+      // Counters
+      // ---------------------------------------------------
+
+      activeSpots.textContent =
+        safeText(
+          participant.active_spot_count
+        );
+
+      historicalClaims.textContent =
+        safeText(
+          participant.historical_claim_count
+        );
+
+      nftStatus.textContent =
+        safeText(
+          participant.nft_status
+        );
+
+      // ---------------------------------------------------
+      // Status
+      // ---------------------------------------------------
+
+      applyStatus(
+        participant
+      );
+
+      applyTimeline(
+        participant
+      );
+
+      applyNft(
+        participant
+      );
+
+      // ---------------------------------------------------
+      // Dates
+      // ---------------------------------------------------
+
+      const claimedDate =
+        formatDate(
+          participant.claimed_at
+        );
+
+      const statusDate =
+        participant.disqualified_at
+          ? formatDate(
+              participant.disqualified_at
+            )
+          : null;
+
+      if (
         normalizeStatus(
-          claim
-        );
-
-
-      statusText.textContent =
-        state.text;
-
-
-      currentStatus.className =
-        "status " +
-        state.className;
-
-
-      positionSubtitle.textContent =
-        state.subtitle;
-
-
-      /*
-        Prevent an invalid external destination
-        from being supplied by the API.
-
-        The CTA destination is defined locally.
-      */
-
-      nextCta.href =
-        CONFIG.nextStageUrl;
-
+          participant.status
+        ) ===
+        "ELIGIBILITY CHANGED"
+      ) {
+        questCopy.textContent =
+          statusDate
+            ? `Your participation changed state on ${statusDate}. Your historical record remains preserved.`
+            : "Your participation is no longer in the active holding state. Your historical record remains preserved.";
+      } else if (
+        normalizeStatus(
+          participant.status
+        ) ===
+        "STATUS CHANGED"
+      ) {
+        questCopy.textContent =
+          "Your participation status has changed. Your historical record remains preserved.";
+      } else {
+        questCopy.textContent =
+          `Your road began on ${claimedDate}. The next destination is Telegram. Enter the experience and find the next piece of the road.`;
+      }
     }
 
-
-    /* =====================================================
-       FETCH PARTICIPATION
-    ===================================================== */
+    // =====================================================
+    // API
+    // =====================================================
 
     async function fetchParticipation() {
-
       const token =
         getParticipationToken();
 
-
       if (!token) {
-
-        throw new Error(
-          "No active Road session was found. Return to the claim page and complete your entry again."
+        showError(
+          "No road session",
+          "This page requires the participation session created after your successful claim. Return to the claim page and complete the wallet verification again.",
+          false
         );
 
+        return;
       }
 
-
-      /*
-        Do not log the token.
-
-        Never place the token in:
-          - URL
-          - console
-          - DOM
-          - error messages
-      */
-
-      const response =
-        await fetch(
-          CONFIG.participationEndpoint,
-          {
-            method: "GET",
-
-            headers: {
-              "Authorization":
-                "Bearer " + token,
-
-              "Accept":
-                "application/json"
-            },
-
-            cache: "no-store",
-
-            credentials: "same-origin"
-          }
-        );
-
-
-      let data = null;
-
+      showLoading();
 
       try {
+        const response =
+          await fetch(
+            PARTICIPATION_API,
+            {
+              method: "GET",
 
-        data =
-          await response.json();
+              headers: {
+                Authorization:
+                  `Bearer ${token}`,
 
-      } catch {
+                Accept:
+                  "application/json",
+              },
 
-        throw new Error(
-          "The Road server returned an invalid response."
-        );
+              cache:
+                "no-store",
 
-      }
-
-
-      if (
-        !response.ok ||
-        !data?.success
-      ) {
-
-        const serverError =
-          String(
-            data?.error || ""
+              credentials:
+                "same-origin",
+            }
           );
 
+        let result = null;
 
-        /*
-          Do not expose backend internals.
-
-          Convert known authentication/session
-          failures into a user-facing message.
-        */
-
-        if (
-          response.status === 401 ||
-          response.status === 403 ||
-          serverError === "INVALID_TOKEN" ||
-          serverError === "TOKEN_EXPIRED" ||
-          serverError === "TOKEN_REVOKED"
-        ) {
-
-          throw new Error(
-            "Your Road session has expired or is no longer valid. Return to the claim page to create a new session."
-          );
-
+        try {
+          result =
+            await response.json();
+        } catch {
+          result = null;
         }
 
+        // -------------------------------------------------
+        // INVALID SESSION
+        // -------------------------------------------------
 
         if (
-          response.status === 404
+          response.status ===
+            401 ||
+          response.status ===
+            403
         ) {
+          clearParticipationToken();
 
-          throw new Error(
-            "Your Road could not be found."
+          showError(
+            "Session no longer valid",
+            "Your participation session is no longer valid. Return to the claim page to establish a new verified session.",
+            false
           );
 
+          return;
         }
 
+        // -------------------------------------------------
+        // SERVER ERROR
+        // -------------------------------------------------
 
-        throw new Error(
-          "The Road could not be verified right now. Please try again."
+        if (
+          !response.ok
+        ) {
+          throw new Error(
+            result?.message ||
+            result?.error ||
+            "PARTICIPATION_REQUEST_FAILED"
+          );
+        }
+
+        // -------------------------------------------------
+        // RESPONSE VALIDATION
+        // -------------------------------------------------
+
+        if (
+          !result ||
+          result.success !==
+            true ||
+          !result.participant
+        ) {
+          throw new Error(
+            "INVALID_PARTICIPATION_RESPONSE"
+          );
+        }
+
+        // -------------------------------------------------
+        // RENDER
+        // -------------------------------------------------
+
+        renderParticipant(
+          result.participant
         );
 
-      }
-
-
-      if (
-        !data.claim
-      ) {
-
-        throw new Error(
-          "The Road server confirmed access but returned no participation record."
-        );
-
-      }
-
-
-      return data;
-
-    }
-
-
-    /* =====================================================
-       LOAD ROAD
-    ===================================================== */
-
-    async function loadRoad() {
-
-      hideError();
-
-      showLoading(
-        "VERIFYING YOUR ROAD"
-      );
-
-
-      try {
-
-        const data =
-          await fetchParticipation();
-
-
-        setLoading(
-          "ROAD VERIFIED"
-        );
-
-
-        renderClaim(
-          data.claim
-        );
-
-
-        /*
-          Give the browser a short moment to display
-          the verification state before removing the
-          loading layer.
-        */
-
-        await new Promise(
-          resolve =>
-            setTimeout(
-              resolve,
-              350
-            )
-        );
-
-
-        hideLoading();
+        showDashboard();
 
       } catch (error) {
-
         console.error(
-          "ROADMAP_ACCESS_ERROR",
+          "ROADMAP_LOAD_ERROR",
           error
         );
 
-
         showError(
-          error?.message ||
-          "Unable to verify your Road."
+          "The road is unavailable",
+          "The Road Provides backend could not be reached right now. Refresh and try again.",
+          false
         );
-
       }
-
     }
 
+    // =====================================================
+    // EVENTS
+    // =====================================================
 
-    /* =====================================================
-       NAVIGATION
-    ===================================================== */
-
-    function goToClaim() {
-
-      window.location.href =
-        CONFIG.claimPage;
-
-    }
-
-
-    function retry() {
-
-      loadRoad();
-
-    }
-
-
-    retryButton.addEventListener(
+    refreshBtn.addEventListener(
       "click",
-      retry
-    );
-
-
-    claimButton.addEventListener(
-      "click",
-      goToClaim
-    );
-
-
-    /* =====================================================
-       PREVENT ACCIDENTAL TOKEN LEAKS
-    ===================================================== */
-
-    /*
-      We intentionally do NOT:
-
-        - read URL parameters
-        - write token into the URL
-        - use localStorage
-        - display token
-        - put token in DOM
-        - put token in console
-
-      The token exists only in sessionStorage and the
-      Authorization header during the API request.
-    */
-
-
-    /* =====================================================
-       START
-    ===================================================== */
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      function() {
-
-        loadRoad();
-
+      () => {
+        fetchParticipation();
       }
     );
 
+    nextCta.href =
+      TELEGRAM_URL;
+
+    // =====================================================
+    // INIT
+    // =====================================================
+
+    fetchParticipation();
   </script>
-
 </body>
 </html>
-```
