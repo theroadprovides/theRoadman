@@ -43,6 +43,30 @@ function json(res, statusCode, data) {
     "camera=(), microphone=(), geolocation=(), payment=()"
   );
 
+  const origin = process.env.ROADMAN_ORIGIN;
+
+  if (origin) {
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      origin
+    );
+
+    res.setHeader(
+      "Vary",
+      "Origin"
+    );
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "POST, OPTIONS"
+  );
+
   return res.json(data);
 }
 
@@ -70,10 +94,44 @@ function generateNonce() {
 }
 
 // =====================================================
+// WALLET-SPECIFIC ADVISORY LOCK
+// =====================================================
+//
+// PostgreSQL advisory locks permitem impedir que duas
+// requisições simultâneas criem/inutilizem nonces para
+// a mesma carteira ao mesmo tempo.
+//
+// O hash SHA-256 da carteira é convertido em um inteiro
+// signed 64-bit para pg_advisory_xact_lock(bigint).
+//
+// A trava existe somente durante a transação.
+// =====================================================
+
+function walletLockKey(wallet) {
+  const digest = crypto
+    .createHash("sha256")
+    .update(
+      `THE_ROAD_PROVIDES:NONCE_LOCK:${wallet}`,
+      "utf8"
+    )
+    .digest();
+
+  let value =
+    digest.readBigInt64BE(0);
+
+  // Evita valor negativo para facilitar diagnóstico.
+  if (value < 0n) {
+    value = -value;
+  }
+
+  return value;
+}
+
+// =====================================================
 // VERIFICATION MESSAGE
 // =====================================================
 //
-// THIS MUST MATCH api/claim.js EXACTLY.
+// MUST MATCH api/claim.js EXACTLY.
 // =====================================================
 
 function generateMessage(
@@ -101,6 +159,7 @@ module.exports = async function handler(
   req,
   res
 ) {
+
   // ---------------------------------------------------
   // OPTIONS
   // ---------------------------------------------------
@@ -160,6 +219,7 @@ module.exports = async function handler(
   }
 
   try {
+
     // =================================================
     // BODY
     // =================================================
@@ -218,34 +278,29 @@ module.exports = async function handler(
       );
 
     // =================================================
-    // REMOVE EXPIRED UNUSED NONCES
+    // LOCK KEY
     // =================================================
 
-    await sql`
-      DELETE FROM wallet_nonces
-      WHERE wallet = ${wallet}
-        AND used_at IS NULL
-        AND expires_at < NOW()
-    `;
+    const lockKey =
+      walletLockKey(wallet);
 
     // =================================================
-    // INVALIDATE PREVIOUS NONCES
+    // CREATE NONCE ATOMICALLY
     // =================================================
     //
-    // Only one active challenge should exist for a
-    // wallet at a time.
-    // =================================================
-
-    await sql`
-      UPDATE wallet_nonces
-      SET used_at = NOW()
-      WHERE wallet = ${wallet}
-        AND used_at IS NULL
-        AND expires_at >= NOW()
-    `;
-
-    // =================================================
-    // CREATE NEW NONCE
+    // Toda a operação acontece dentro de uma única
+    // transação:
+    //
+    // 1. trava esta carteira;
+    // 2. remove nonces expirados;
+    // 3. invalida nonce anterior;
+    // 4. cria novo nonce;
+    // 5. retorna o nonce criado.
+    //
+    // Outra requisição para a MESMA carteira espera a
+    // primeira terminar antes de executar.
+    //
+    // Outra carteira continua normalmente.
     // =================================================
 
     const nonce =
@@ -265,24 +320,92 @@ module.exports = async function handler(
         expiresAt
       );
 
-    // =================================================
-    // STORE NONCE
-    // =================================================
+    const transaction =
+      await sql.transaction([
 
-    await sql`
-      INSERT INTO wallet_nonces (
-        wallet,
-        nonce,
-        created_at,
-        expires_at
-      )
-      VALUES (
-        ${wallet},
-        ${nonce},
-        NOW(),
-        ${expiresAt.toISOString()}
-      )
-    `;
+        // ------------------------------------------------
+        // 1. WALLET LOCK
+        // ------------------------------------------------
+
+        sql`
+          SELECT
+            pg_advisory_xact_lock(
+              ${lockKey}
+            )
+        `,
+
+        // ------------------------------------------------
+        // 2. REMOVE EXPIRED UNUSED NONCES
+        // ------------------------------------------------
+
+        sql`
+          DELETE FROM wallet_nonces
+          WHERE wallet = ${wallet}
+            AND used_at IS NULL
+            AND expires_at < NOW()
+        `,
+
+        // ------------------------------------------------
+        // 3. INVALIDATE PREVIOUS ACTIVE NONCES
+        // ------------------------------------------------
+
+        sql`
+          UPDATE wallet_nonces
+          SET used_at = NOW()
+          WHERE wallet = ${wallet}
+            AND used_at IS NULL
+            AND expires_at >= NOW()
+        `,
+
+        // ------------------------------------------------
+        // 4. CREATE NEW NONCE
+        // ------------------------------------------------
+
+        sql`
+          INSERT INTO wallet_nonces (
+            wallet,
+            nonce,
+            created_at,
+            expires_at
+          )
+          VALUES (
+            ${wallet},
+            ${nonce},
+            NOW(),
+            ${expiresAt.toISOString()}
+          )
+          RETURNING
+            id,
+            wallet,
+            nonce,
+            created_at,
+            expires_at
+        `,
+      ]);
+
+    const createdRows =
+      transaction?.[3] || [];
+
+    if (
+      createdRows.length === 0
+    ) {
+      console.error(
+        "NONCE_INSERT_FAILED"
+      );
+
+      return json(
+        res,
+        500,
+        {
+          success: false,
+          error:
+            "NONCE_CREATION_FAILED",
+        }
+      );
+    }
+
+    const created =
+      createdRows[0];
 
     // =================================================
     // RESPONSE
@@ -294,19 +417,32 @@ module.exports = async function handler(
       {
         success: true,
 
-        wallet,
+        wallet:
+          created.wallet,
 
-        nonce,
+        nonce:
+          created.nonce,
 
-        message,
+        message:
+          generateMessage(
+            created.wallet,
+            created.nonce,
+            new Date(
+              created.expires_at
+            )
+          ),
 
         expires_at:
-          expiresAt.toISOString(),
+          new Date(
+            created.expires_at
+          ).toISOString(),
       }
     );
+
   } catch (error) {
+
     console.error(
-      "ROADMAN_NONCE_ERROR",
+      "ROADMAN_NONCE_ERROR:",
       error?.message ||
         "UNKNOWN_ERROR"
     );
